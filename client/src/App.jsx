@@ -13,7 +13,13 @@ class App extends Component {
         return (
             <div>
                 <div>Test</div>
-                <div>{ this.props.lux[ "Test" ] }</div>
+                <div>{ this.props.store[ "Test" ] }</div>
+
+                <button
+                    onClick={ () => {
+                        this.props.Lux.oprop("Lux", "Test", this.props.store[ "Test" ] + 1)
+                    }}
+                >Click Me</button>
             </div>
         );
     }
