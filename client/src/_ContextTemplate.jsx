@@ -1,13 +1,17 @@
 import React, { Component } from "react";
 
-import Lumen from "./Lumen";
+import Lumen from "./Lumen";    //? Import the React::Context from external file
 
 class App extends Component {
-    static contextType = Lumen;    // Effectively the "inject"
+    static contextType = Lumen;     //? This is what tells React to inject @Lumen into `this.context`
 
     componentDidMount() {
+        //? So that `this.context` can be used anywhere in the Component
+        //* Use either `.listen` or `.watch`, depending on what part of the "state" is useful for the Component
         // this.context.listen("prop-change", () => this.forceUpdate());
         this.context.watch("Bobs", () => this.forceUpdate());
+
+        //? Example showing that the addition of a prop will propagate to the React::Context as expected
         this.context.prop("Cats", 2452435);
     }
     
@@ -15,6 +19,7 @@ class App extends Component {
         return (
             <div>
                 <div>Bobs.Cat</div>
+                //? Including the render method
                 <div>{ this.context.oprop("Bobs", "Cat") }</div>
 
                 <button
@@ -22,6 +27,9 @@ class App extends Component {
                         this.context.oprop("Bobs", "Cat", this.context.oprop("Bobs", "Cat") + 1)
                     }}
                 >Add +1</button>
+
+                //? An example other Component connected to the React::Context, that will also see "Cats"
+                {/* <Fish /> */}
             </div>
         );
     }
