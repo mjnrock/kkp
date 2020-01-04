@@ -1,25 +1,29 @@
 import React, { Component } from "react";
+import LuxContext from "./LuxContext";
+import Fish from "./Fish";
 
 class App extends Component {
-    componentDidMount() {
-        console.log(this.props);
-    }
+    static contextType = LuxContext;    // Effectively the "inject"
 
-    componentDidUpdate() {
-        console.log(this.props);
+    componentDidMount() {
+        // this.context.listen("prop-change", () => this.forceUpdate());
+        this.context.watch("Bobs", () => this.forceUpdate());
+        this.context.prop("Cats", 2452435);
     }
     
     render() {
         return (
             <div>
-                <div>Test</div>
-                <div>{ this.props.store[ "Test" ] }</div>
+                <div>Bobs.Cat</div>
+                <div>{ this.context.oprop("Bobs", "Cat") }</div>
 
                 <button
                     onClick={ () => {
-                        this.props.Lux.oprop("Lux", "Test", this.props.store[ "Test" ] + 1)
+                        this.context.oprop("Bobs", "Cat", this.context.oprop("Bobs", "Cat") + 1)
                     }}
-                >Click Me</button>
+                >Add +1</button>
+
+                <Fish />
             </div>
         );
     }

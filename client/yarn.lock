@@ -1066,10 +1066,10 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
-"@lespantsfancy/lux@^0.1.22":
-  version "0.1.22"
-  resolved "https://registry.yarnpkg.com/@lespantsfancy/lux/-/lux-0.1.22.tgz#4f8486fc7c70ea0ecf0db961d3ee657b9195bf19"
-  integrity sha512-o2eGdHmFkuvDjJuYzRcNLfLjUQdi8e9YMf3OXWZKtxgHQWgSryOZ+VT2dPgLEWjlEw7AwIvPDiaIXQ0RpE+dfw==
+"@lespantsfancy/lux@^0.1.24":
+  version "0.1.24"
+  resolved "https://registry.yarnpkg.com/@lespantsfancy/lux/-/lux-0.1.24.tgz#ae87bf97c1ced44bb01c444baae4ba35ef0515d4"
+  integrity sha512-xIGVW3qJ/a7cww4WgFzl7hBJf1Tr8+8Aa8LGgZO/nSbK3c0BJeucPjz+wDRQ3mu+UH+HyRL3wNkKvZK4TDWl0Q==
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"

@@ -2,19 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import Lux from "@lespantsfancy/lux";
-import Provider from "./lux/Provider";
 import App from "./App.jsx";
-
-const lux = {
-    Test: 1,
-    Bobs: {
-        Cat: 5
-    }
-};
+import LuxContext from "./LuxContext";
 
 ReactDOM.render(
-    <Provider lux={ lux }>
-        <App />
-    </Provider>,
+    <App />,
     document.getElementById("root")
 );
