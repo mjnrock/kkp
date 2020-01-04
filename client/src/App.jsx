@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 
-import Lumen from "./Lumen";
+import Lumen from "./contexts/Lumen";
 
 class App extends Component {
-    static contextType = Lumen;    // Effectively the "inject"
+    static contextType = Lumen;
 
     componentDidMount() {
         // this.context.listen("prop-change", () => this.forceUpdate());
@@ -12,6 +12,8 @@ class App extends Component {
     }
     
     render() {
+        console.log(this.context);
+
         return (
             <div>
                 <div>Bobs.Cat</div>

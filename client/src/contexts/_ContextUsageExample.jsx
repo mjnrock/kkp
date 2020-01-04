@@ -1,5 +1,9 @@
 import React, { Component } from "react";
 
+// Documentation: https://reactjs.org/docs/context.html
+// There is clearly a better way to do this, as MobX uses this method, but this works and seems good enough
+// The obvious issue is the use of `this.forceUpdate()`, but I'm not sure if even MobX uses a different paradigm?
+
 import Lumen from "./Lumen";    //? Import the React::Context from external file
 
 class App extends Component {
