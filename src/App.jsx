@@ -32,7 +32,8 @@ function useAJAX(uri) {
 
 function App() {
     const CTX = useContext(Context.Context);
-    const [ lastUpdate, setLastUpdate ] = useState(CTX._lastUpdate);    // Flag variable appears to be the easiest way to force an update, but has obvious "overuse" implications
+    //* Flag variable appears to be the easiest way to force an update, but has obvious "overuse" implications
+    const [ lastUpdate, setLastUpdate ] = useState(CTX._lastUpdate);
     const [ count, setCount ] = useState(0);
     // const info = useAJAX("http://api.open-notify.org/astros.json");
     // const info = useAJAX("http://api.open-notify.org/iss-now.json");
