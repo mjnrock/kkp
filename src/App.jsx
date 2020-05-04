@@ -1,15 +1,27 @@
-import React, { useState } from "react";
-import Canvas from "./Canvas";
+import React from "react";
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route
+} from "react-router-dom";
+
+import Routes from "./routes/package";
 
 function App() {
-    const [ count, setCount ] = useState(0);
-
     return (
-        <div>
-            <p>Clicks: { count }</p>
-            <button onClick={ e => setCount(c => c + 1) }>Click Me</button>
-            <Canvas />
-        </div>
+        <Router>
+            <Switch>
+                <Route path="/login">
+                    <Routes.Login />
+                </Route>
+                <Route path="/signup">
+                    <Routes.SignUp />
+                </Route>
+                <Route path="/">
+                    <Routes.Home />
+                </Route>
+            </Switch>
+        </Router>
     );
 }
 
