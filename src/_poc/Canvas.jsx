@@ -17,7 +17,7 @@ function Canvas() {
             // img.src = "./pusheen.png";  //? The image is relative to the HTML file, NOT the JSX file
             img.src = URL.createObjectURL(file);
         }
-    }, [ file, canvasRef ]);
+    }, [ file ]);
 
     return (
         <Fragment>
