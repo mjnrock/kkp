@@ -5,7 +5,7 @@ import Post from "./Post";
 
 function Thread(props) {
     return (
-        <Comment.Group threaded>
+        <Comment.Group threaded collapsed={ props.collapsed }>
             {
                 (props.posts || []).map(post => (
                     <Post key={ post.id } message={ post.message } children={ post.children } />

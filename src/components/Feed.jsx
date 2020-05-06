@@ -2,8 +2,9 @@ import React from "react";
 import { Segment, Container, Header, Card } from "semantic-ui-react";
 
 import Thread from "./Thread";
-import AddComment from "./AddComment";
+import Comment from "./Comment";
 import ImageCard from "./ImageCard";
+
 
 const posts = [
     {
@@ -61,11 +62,10 @@ function Feed() {
                 <ImageCard />
                 <ImageCard />
                 <ImageCard />
-                
                 <ImageCard />
             </Card.Group>
             
-            <AddComment />
+            <Comment />
             <Segment>
                 <Thread posts={ posts } />
             </Segment>

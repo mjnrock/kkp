@@ -1,25 +1,34 @@
-import React from "react";
-import { Comment } from "semantic-ui-react";
+import React, { useState } from "react";
+import { Comment, Icon, Button } from "semantic-ui-react";
 
 import Thread from "./Thread";
 import ReactionBar from "./ReactionBar";
 
 const reactionPlaceholders = [
-    { icon: "heart", qty: 14 },
-    { icon: "smile outline", qty: 9 },
-    { icon: "paw", qty: 63 },
+    { emoji: "❤️", qty: 14 },
+    { emoji: "😀", qty: 9 },
+    { emoji: "👍🏼", qty: 63 },
+    { emoji: "🐾", qty: 54 },
 ];
 
 function Post(props) {
+    const [ collapsed, setCollapsed ] = useState(false);
+
     return (        
         <Comment>
             <Comment.Avatar as="a" src="./assets/pusheen.png" />
             <Comment.Content>
                 <Comment.Author as="a">Matt</Comment.Author>
-                
+
                 <Comment.Metadata>
                     <span>Today at 5:42PM</span>
                 </Comment.Metadata>
+
+                {
+                    props.children ? (
+                        <Icon style={{ cursor: "pointer" }} size="large" name={ collapsed ? "angle up orange" : "angle down grey" } onClick={ e => setCollapsed(!collapsed) } />
+                    ) : null
+                }
 
                 <Comment.Text>{ props.message }</Comment.Text>
 
@@ -29,7 +38,7 @@ function Post(props) {
             </Comment.Content>
 
             {
-                props.children ? <Thread posts={ props.children } /> : null
+                props.children ? <Thread posts={ props.children } collapsed={ collapsed } /> : null
             }
         </Comment>
     );

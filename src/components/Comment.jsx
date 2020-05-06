@@ -15,7 +15,11 @@ function Comment(props) {
             <Input
                 icon="comment outline"
                 iconPosition="left"
-                label={ <Button basic icon><Icon name="send orange" /></Button> }
+                label={(
+                    <Button basic icon>
+                        <Icon name="send orange" />
+                    </Button>
+                )}
                 labelPosition="right"
                 placeholder="Add a comment..."
                 fluid

@@ -1,0 +1,7 @@
+.emoji-popup-container {
+    padding: "2px";
+    border-radius: "5px";
+}
+.emoji-popup-container::before {
+    content: none !important;
+}
