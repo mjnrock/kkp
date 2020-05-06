@@ -7,6 +7,7 @@ export default function Home() {
             <p>This is the home page</p>
 
             <Link to="/login">Login</Link>
+            <Link to="/feed">Feed</Link>
         </Fragment>
     );
 }

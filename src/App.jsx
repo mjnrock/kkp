@@ -17,6 +17,9 @@ function App() {
                 <Route path="/signup">
                     <Routes.SignUp />
                 </Route>
+                <Route path="/feed">
+                    <Routes.Feed />
+                </Route>
                 <Route path="/">
                     <Routes.Home />
                 </Route>
