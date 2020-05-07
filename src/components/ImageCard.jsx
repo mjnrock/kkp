@@ -56,7 +56,8 @@ function ImageCard(props) {
             } */}
 
             <Card.Content extra>
-                <ReactionBar reactions={ reactionPlaceholders } />
+                <ReactionBar postId={ props.postId } reactions={ reactionPlaceholders } />
+                {/* <ReactionBar postId={ props.postId } /> */}
             </Card.Content>
         </Card>
     )

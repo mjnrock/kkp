@@ -8,7 +8,7 @@ function Thread(props) {
         <Comment.Group threaded collapsed={ props.collapsed }>
             {
                 (props.posts || []).map(post => (
-                    <Post key={ post.id } message={ post.message } children={ post.children } />
+                    <Post key={ post.id } postId={ post.id } message={ post.message } children={ post.children } />
                 ))
             }
         </Comment.Group>

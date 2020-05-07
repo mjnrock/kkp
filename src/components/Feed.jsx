@@ -1,9 +1,8 @@
-import React from "react";
-import { Segment, Container, Header, Card } from "semantic-ui-react";
+import React, { useState } from "react";
+import { Segment, Container, Header, Advertisement, Image } from "semantic-ui-react";
 
 import Thread from "./Thread";
 import Comment from "./Comment";
-import ImageCard from "./ImageCard";
 
 
 const posts = [
@@ -57,15 +56,16 @@ function Feed() {
             <Header as="h2" color="orange" textAlign="center">
                 <Header.Content>Kiszka at the Beach</Header.Content>
             </Header>
-
-            <Card.Group>
-                <ImageCard />
-                <ImageCard />
-                <ImageCard />
-                <ImageCard />
-            </Card.Group>
             
-            <Comment />
+            <Container style={{ backgroundColor: "rgba(0, 0, 0, 0.85)", border: "1px solid #000" }}>
+                <Image src="./assets/pusheen.png" centered />
+            </Container>
+            
+            <Comment
+                onSubmitComment={ console.log }     //TODO Dispatch message to a "add comment" handler
+                onEmojiSelect={ console.log }       //TODO Dispatch emoji to a "on user reaction" handler
+                onImageSelect={ console.log }       //TODO Dispatch file to a "on image upload" handler
+            />
             <Segment>
                 <Thread posts={ posts } />
             </Segment>

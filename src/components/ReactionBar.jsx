@@ -1,39 +1,30 @@
-import React from "react";
-import { Popup, Button, Icon } from "semantic-ui-react";
-import "emoji-mart/css/emoji-mart.css";
-import { Picker } from "emoji-mart";
+import React, { useContext } from "react";
+import { Segment, Dimmer, Icon, Button } from "semantic-ui-react";
 
+import { Context } from "./../App";
 import Reaction from "./Reaction";
+import EmojiPicker from "./EmojiPicker";
 
 function ReactionBar(props) {
+    const { dispatch } = useContext(Context);
+    const reactions = props.reactions || [];
+    
+    function onReaction(emoji) {
+        dispatch({
+            type: "REACTION",
+            data: {
+                emoji,
+                postId: props.postId
+            }
+        });
+    }
+
     return (
         <div style={ props.style || {} }>
-            <Popup
-                className="emoji-popup-container"
-                content={(
-                    <Picker
-                        title="Skin Tone:"
-                        emoji={ "raised_hand_with_fingers_splayed" }
-                        native={ true }
-                        onSelect={ emoji => console.log(emoji) }
-                    />
-                )}
-                on="click"
-                pinned
-                trigger={(
-                    <Button.Group>
-                        <Button basic icon>
-                            <Icon.Group>
-                                <Icon name="smile outline" />
-                                <Icon corner name="add" />
-                            </Icon.Group>
-                        </Button>
-                    </Button.Group>
-                )}
-            />
+            <EmojiPicker onSelect={ onReaction }/>
             {
-                props.reactions.map(rp => (
-                    <Reaction key={ rp.emoji } emoji={ rp.emoji } qty={ rp.qty } />
+                reactions.map(rp => (
+                    <Reaction onReaction={ onReaction } key={ rp.emoji } emoji={ rp.emoji } qty={ rp.qty } />
                 ))
             }
         </div>

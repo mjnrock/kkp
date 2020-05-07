@@ -1,8 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { Input, Button, Icon } from "semantic-ui-react";
 
+import EmojiPicker from "./EmojiPicker";
+
 function Comment(props) {
+    const [ comment, setComment ] = useState();
     let imageRef = React.createRef();
+
+    function onCommentKey(e) {
+        if(e.which === 13) {
+            props.onSubmitComment(comment);
+        }
+    }
 
     return (
         <div style={{
@@ -16,34 +25,33 @@ function Comment(props) {
                 icon="comment outline"
                 iconPosition="left"
                 label={(
-                    <Button basic icon>
+                    <Button basic icon onClick={ e => props.onSubmitComment(comment) }>
                         <Icon name="send orange" />
                     </Button>
                 )}
                 labelPosition="right"
                 placeholder="Add a comment..."
                 fluid
+                onChange={ e => setComment(e.target.value) }
+                onKeyUp={ onCommentKey }
             />
 
             <Button.Group style={{
                 marginTop: 6,
             }}>
-                <Button basic icon>
-                    <Icon.Group>
-                        <Icon name="smile outline" />
-                        <Icon corner name="add" />
-                    </Icon.Group>
-                </Button>
+                { props.onEmojiSelect ? <EmojiPicker onSelect={ emoji => props.onEmojiSelect(emoji)} /> : null }
 
-                <Button basic icon onClick={ e => imageRef.current.click() }>
-                    <Icon.Group>
-                        <Icon name="camera" />
-                        <Icon corner name="add" />
-                    </Icon.Group>
-                </Button>
+                { props.onImageSelect ? (
+                    <Button basic icon onClick={ e => imageRef.current.click() }>
+                        <Icon.Group>
+                            <Icon name="camera" />
+                            <Icon corner name="add" />
+                        </Icon.Group>
+                    </Button>
+                ) : null }
             </Button.Group>
 
-            <input ref={ imageRef } type="file" hidden />
+            <input ref={ imageRef } onChange={ e => props.onImageSelect(e.target.files[ 0 ]) } type="file" hidden />
         </div>
     )
 }

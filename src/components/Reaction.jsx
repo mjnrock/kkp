@@ -1,9 +1,9 @@
 import React from "react";
-import { Icon, Label } from "semantic-ui-react";
+import { Label } from "semantic-ui-react";
 
-function Reaction(props) {
+function Reaction(props) {    
     return (
-        <Label as="a" basic color="grey">
+        <Label as="a" basic color="grey" onClick={ e => props.onReaction(props.emoji) }>
             <span type="img" aria-label={ props.emoji }>{ props.emoji }</span>
             
             <Label.Detail>{ props.qty }</Label.Detail>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Comment, Icon, Button } from "semantic-ui-react";
+import { Comment, Icon } from "semantic-ui-react";
 
 import Thread from "./Thread";
 import ReactionBar from "./ReactionBar";
@@ -14,7 +14,7 @@ const reactionPlaceholders = [
 function Post(props) {
     const [ collapsed, setCollapsed ] = useState(false);
 
-    return (        
+    return (
         <Comment>
             <Comment.Avatar as="a" src="./assets/pusheen.png" />
             <Comment.Content>
@@ -33,7 +33,7 @@ function Post(props) {
                 <Comment.Text>{ props.message }</Comment.Text>
 
                 <Comment.Actions>
-                    <ReactionBar style={{ marginTop: 10 }} reactions={ reactionPlaceholders } />
+                    <ReactionBar postId={ props.postId } style={{ marginTop: 10 }} reactions={ reactionPlaceholders } />
                 </Comment.Actions>
             </Comment.Content>
 
