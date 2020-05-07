@@ -1,3 +1,13 @@
 .emoji-popup-container::before {
     content: none !important;
 }
+
+.medium-icon {
+    font-size: 1.15rem;
+}
+
+
+::selection {
+    color: #fff !important;
+    background-color: #f2711c !important;
+}

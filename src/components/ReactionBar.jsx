@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import { Segment, Dimmer, Icon, Button } from "semantic-ui-react";
 
 import { Context } from "./../App";
 import Reaction from "./Reaction";
@@ -21,7 +20,11 @@ function ReactionBar(props) {
 
     return (
         <div style={ props.style || {} }>
-            <EmojiPicker onSelect={ onReaction }/>
+            {
+                props.showPicker !== false ? (
+                    <EmojiPicker onSelect={ onReaction }/>
+                ) : null
+            }
             {
                 reactions.map(rp => (
                     <Reaction onReaction={ onReaction } key={ rp.emoji } emoji={ rp.emoji } qty={ rp.qty } />

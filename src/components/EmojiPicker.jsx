@@ -27,7 +27,7 @@ function EmojiPicker(props) {
                 <Button.Group>
                     <Button basic icon>
                         <Icon.Group>
-                            <Icon name="smile outline" />
+                            <Icon name="star outline" style={{ fontSize: "1.25rem" }} />
                             <Icon corner name="add" />
                         </Icon.Group>
                     </Button>

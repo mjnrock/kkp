@@ -22,14 +22,15 @@ function Comment(props) {
             }}>Post a Comment</div>
 
             <Input
-                icon="comment outline"
+                style={{ fontSize: "1.15rem" }}
+                icon="comment outline medium-icon orange"
                 iconPosition="left"
-                label={(
-                    <Button basic icon onClick={ e => props.onSubmitComment(comment) }>
-                        <Icon name="send orange" />
+                action={    //! Using "action" here causes a :focus bug, must convert to a flex box or similar
+                    <Button color="orange" basic icon onClick={ e => props.onSubmitComment(comment) }>
+                        <Icon name="send outline orange" className="medium-icon" />
+                        <span style={{ paddingLeft: 6 }}>Post</span>
                     </Button>
-                )}
-                labelPosition="right"
+                }
                 placeholder="Add a comment..."
                 fluid
                 onChange={ e => setComment(e.target.value) }
@@ -44,7 +45,7 @@ function Comment(props) {
                 { props.onImageSelect ? (
                     <Button basic icon onClick={ e => imageRef.current.click() }>
                         <Icon.Group>
-                            <Icon name="camera" />
+                            <Icon name="camera retro" style={{ fontSize: "1.35rem" }} />
                             <Icon corner name="add" />
                         </Icon.Group>
                     </Button>

@@ -16,7 +16,7 @@ function Post(props) {
 
     return (
         <Comment>
-            <Comment.Avatar as="a" src="./assets/pusheen.png" />
+            <Comment.Avatar as="a" src="/assets/pusheen.png" />
             <Comment.Content>
                 <Comment.Author as="a">Matt</Comment.Author>
 
@@ -30,7 +30,15 @@ function Post(props) {
                     ) : null
                 }
 
-                <Comment.Text>{ props.message }</Comment.Text>
+                {
+                    (false) // test if props.message is an image
+                    ? (
+                        null    //TODO Render the image response
+                    )
+                    : (
+                        <Comment.Text>{ props.message }</Comment.Text>
+                    )
+                }
 
                 <Comment.Actions>
                     <ReactionBar postId={ props.postId } style={{ marginTop: 10 }} reactions={ reactionPlaceholders } />

@@ -1,9 +1,16 @@
-import React, { useState } from "react";
-import { Segment, Container, Header, Advertisement, Image } from "semantic-ui-react";
+import React from "react";
+import { Segment, Container, Header, Image } from "semantic-ui-react";
 
 import Thread from "./Thread";
 import Comment from "./Comment";
+import ReactionBar from "./ReactionBar";
 
+const reactionPlaceholders = [
+    { emoji: "❤️", qty: 14 },
+    { emoji: "😀", qty: 9 },
+    { emoji: "👍🏼", qty: 63 },
+    { emoji: "🐾", qty: 54 },
+];
 
 const posts = [
     {
@@ -50,16 +57,20 @@ const posts = [
     },
 ];
 
-function Feed() {
+function Feed(props) {
+    const feedId = props.feedId;
+
     return (
         <Container style={{ marginTop: 30 }}>
+            { feedId }
             <Header as="h2" color="orange" textAlign="center">
                 <Header.Content>Kiszka at the Beach</Header.Content>
             </Header>
             
             <Container style={{ backgroundColor: "rgba(0, 0, 0, 0.85)", border: "1px solid #000" }}>
-                <Image src="./assets/pusheen.png" centered />
+                <Image src="/assets/pusheen.png" centered />
             </Container>
+            <ReactionBar style={{ marginTop: 10 }} showPicker={ false } reactions={ reactionPlaceholders } />
             
             <Comment
                 onSubmitComment={ console.log }     //TODO Dispatch message to a "add comment" handler
