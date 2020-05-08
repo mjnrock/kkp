@@ -1,7 +1,7 @@
-import Feed from "./Feed";
-import Thread from "./Thread";
+import Post from "./post/package";
+import Image from "./image/package";
 
 export default {
-    Feed,
-    Thread,
+    Post,
+    Image,
 };

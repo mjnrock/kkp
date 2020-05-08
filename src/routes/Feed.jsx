@@ -1,14 +1,14 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 
-import Components from "./../components/package";
+import Post from "../components/post/package";
 
 export default function Feed() {
     let { feedId } = useParams();
 
     return (
         <>
-            <Components.Feed feedId={ feedId } />
+            <Post.Feed feedId={ feedId } />
         </>
     );
 }

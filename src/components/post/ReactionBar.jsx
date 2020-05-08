@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 
-import { Context } from "./../App";
+import { Context } from "../../App";
 import Reaction from "./Reaction";
 import EmojiPicker from "./EmojiPicker";
 
