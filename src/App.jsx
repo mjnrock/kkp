@@ -29,6 +29,9 @@ function App() {
                     <Route path="/signup">
                         <Routes.SignUp />
                     </Route>
+                    <Route path="/album">
+                        <Routes.Album />
+                    </Route>
                     <Route path="/feed/:feedId?">
                         <Routes.Feed />
                     </Route>

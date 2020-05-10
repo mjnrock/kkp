@@ -16,6 +16,7 @@ function Comment(props) {
     return (
         <div style={{
             marginTop: 20,
+            ...(props.style || {})
         }}>
             <div style={{
                 marginBottom: 10

@@ -1,8 +1,11 @@
 import React from "react";
-import { Image } from "semantic-ui-react";
+import { Placeholder } from "semantic-ui-react";
 
 function Image(props) {
     return (
+        <Placeholder>
+            <Placeholder.Image square />
+        </Placeholder>
     )
 }
 
