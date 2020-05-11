@@ -1,12 +1,16 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 
 import { Context } from "../../App";
 import Reaction from "./Reaction";
 import EmojiPicker from "./EmojiPicker";
 
 function ReactionBar(props) {
+    const [ reactions, setReactions ] = useState([]);
     const { dispatch } = useContext(Context);
-    const reactions = props.reactions || [];
+    const reacts = [
+        ...(props.reactions || []),
+        ...(reactions || []),
+    ];
     
     function onReaction(emoji) {
         dispatch({
@@ -16,6 +20,15 @@ function ReactionBar(props) {
                 postId: props.postId
             }
         });
+        
+        let qty = 5;
+        setReactions([
+            ...reactions,
+            {
+                emoji: emoji,
+                qty: qty
+            }
+        ]);
     }
 
     return (
@@ -26,7 +39,7 @@ function ReactionBar(props) {
                 ) : null
             }
             {
-                reactions.map(rp => (
+                reacts.map(rp => (
                     <Reaction onReaction={ onReaction } key={ rp.emoji } emoji={ rp.emoji } qty={ rp.qty } size={ props.size } />
                 ))
             }

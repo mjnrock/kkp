@@ -3,13 +3,6 @@ import { Image, Card } from "semantic-ui-react";
 
 import ReactionBar from "./../comment/ReactionBar";
 
-const reactionPlaceholders = [
-    { emoji: "❤️", qty: 14 },
-    { emoji: "😀", qty: 9 },
-    { emoji: "👍🏼", qty: 63 },
-    { emoji: "🐾", qty: 54 },
-];
-
 function ImageCard(props) {
     return (
         <Card>
