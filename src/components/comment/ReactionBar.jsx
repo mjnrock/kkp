@@ -27,7 +27,7 @@ function ReactionBar(props) {
             }
             {
                 reactions.map(rp => (
-                    <Reaction onReaction={ onReaction } key={ rp.emoji } emoji={ rp.emoji } qty={ rp.qty } />
+                    <Reaction onReaction={ onReaction } key={ rp.emoji } emoji={ rp.emoji } qty={ rp.qty } size={ props.size } />
                 ))
             }
         </div>

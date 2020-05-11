@@ -3,7 +3,7 @@ import { Input, Button, Icon } from "semantic-ui-react";
 
 import EmojiPicker from "./EmojiPicker";
 
-function Comment(props) {
+function InputComment(props) {
     const [ comment, setComment ] = useState();
     let imageRef = React.createRef();
 
@@ -58,4 +58,4 @@ function Comment(props) {
     )
 }
 
-export default Comment;
+export default InputComment;

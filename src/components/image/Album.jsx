@@ -1,10 +1,10 @@
 import React from "react";
-import { Container, Header, Grid, Divider, Segment } from "semantic-ui-react";
+import { Container, Header, Grid, Divider } from "semantic-ui-react";
 
 import Image from "./Image";
-import ReactionBar from "./../post/ReactionBar";
-import Comment from "./../post/Comment";
-import Thread from "./../post/Thread";
+import ImageCard from "./ImageCard";
+import ReactionBar from "../comment/ReactionBar";
+import CommentContainer from "../comment/CommentContainer";
 
 const reactionPlaceholders = [
     { emoji: "❤️", qty: 14 },
@@ -78,22 +78,14 @@ function Album(props) {
                 {
                     images.map(image => (
                         <Grid.Column key={ image }>
+                            {/* <ImageCard reactions={ reactionPlaceholders } postId={ 999 } /> */}
                             <Image />
                         </Grid.Column>
                     ))
                 }
             </Grid>
-            <ReactionBar style={{ marginTop: 20 }} showPicker={ false } reactions={ reactionPlaceholders } />
-            
-            <Comment
-                style={{ marginTop: 40 }}
-                onSubmitComment={ console.log }     //TODO Dispatch message to a "add comment" handler
-                onEmojiSelect={ console.log }       //TODO Dispatch emoji to a "on user reaction" handler
-                onImageSelect={ console.log }       //TODO Dispatch file to a "on image upload" handler
-            />
-            <Segment>
-                <Thread posts={ posts } />
-            </Segment>
+                        
+            <CommentContainer posts={ posts } reactions={ reactionPlaceholders } />
         </Container>
     );
 }

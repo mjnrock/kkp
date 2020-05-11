@@ -1,9 +1,8 @@
 import React from "react";
-import { Segment, Container, Header, Image } from "semantic-ui-react";
+import { Container, Header, Image } from "semantic-ui-react";
 
-import Thread from "./Thread";
-import Comment from "./Comment";
-import ReactionBar from "./ReactionBar";
+import CommentContainer from "../comment/CommentContainer";
+import ReactionBar from "../comment/ReactionBar";
 
 const reactionPlaceholders = [
     { emoji: "❤️", qty: 14 },
@@ -70,16 +69,8 @@ function Feed(props) {
             <Container style={{ backgroundColor: "rgba(0, 0, 0, 0.85)", border: "1px solid #000" }}>
                 <Image src="/assets/pusheen.png" centered />
             </Container>
-            <ReactionBar style={{ marginTop: 10 }} showPicker={ false } reactions={ reactionPlaceholders } />
-            
-            <Comment
-                onSubmitComment={ console.log }     //TODO Dispatch message to a "add comment" handler
-                onEmojiSelect={ console.log }       //TODO Dispatch emoji to a "on user reaction" handler
-                onImageSelect={ console.log }       //TODO Dispatch file to a "on image upload" handler
-            />
-            <Segment>
-                <Thread posts={ posts } />
-            </Segment>
+                        
+            <CommentContainer posts={ posts } reactions={ reactionPlaceholders } />
         </Container>
     )
 }
