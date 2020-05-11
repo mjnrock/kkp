@@ -32,6 +32,9 @@ function App() {
                     <Route path="/album">
                         <Routes.Album />
                     </Route>
+                    <Route path="/upload">
+                        <Routes.Upload />
+                    </Route>
                     <Route path="/feed/:feedId?">
                         <Routes.Feed />
                     </Route>

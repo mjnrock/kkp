@@ -7,7 +7,10 @@ export default function Home() {
             <p>This is the home page</p>
 
             <Link to="/login">Login</Link>
+            <Link to="/signup">Sign Up</Link>
             <Link to="/feed">Feed</Link>
+            <Link to="/album">Album</Link>
+            <Link to="/upload">Upload</Link>
         </Fragment>
     );
 }
