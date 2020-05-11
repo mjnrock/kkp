@@ -1,25 +1,50 @@
 import React, { useState } from "react";
 import { Step, Header, Icon, Segment, Button, Grid, Divider, Image, Container } from "semantic-ui-react";
 
+function Page(props) {
+    if(props.page === "capture") {
+        return <CaptureMedia image={ props.image } onContinue={ props.onContinue } />;
+    } else if(props.page === "draw") {
+        return <DrawMedia image={ props.image } onContinue={ props.onContinue } />;
+    } else if(props.page === "upload") {
+        return <UploadMedia onContinue={ props.onContinue } />;
+    }
+
+    return null;
+}
+
 function UploadMedia() {
+    const [ page, setPage ] = useState("capture");
+    const [ image, setImage ] = useState();
+
+    function onContinue(page, img) {
+        if(page) {
+            setPage(page);
+        }
+
+        if(img) {
+            setImage(img);
+        }
+    }
+
     return (
         <>
-            <Header as="h2" color="orange" textAlign="center">
-                <Header.Content>Upload Media</Header.Content>
-            </Header>
-
             <Step.Group attached="top">
-                <Step active onClick={ console.log }>
-                    {/* <Step disabled onClick={ console.log }> */ }
-                    <Icon name="camera retro" />
+                <Step active={ page === "capture" } disabled={ image ? true : false } onClick={ e => setPage("capture") }>
+                    {
+                        image ? (
+                            <Icon name="check" color="green"/>
+                        ) : (
+                            <Icon name="camera retro" />
+                        )
+                    }
                     <Step.Content>
                         <Step.Title>Capture</Step.Title>
                         <Step.Description>Take or upload an image</Step.Description>
                     </Step.Content>
                 </Step>
 
-                <Step active onClick={ console.log }>
-                    {/* <Step disabled onClick={ console.log }> */ }
+                <Step active={ page === "draw" } disabled={ image ? false : true } onClick={ e => setPage("draw") }>
                     <Icon name="pencil" />
                     <Step.Content>
                         <Step.Title>Draw</Step.Title>
@@ -27,8 +52,7 @@ function UploadMedia() {
                     </Step.Content>
                 </Step>
 
-                <Step active onClick={ console.log }>
-                    {/* <Step disabled onClick={ console.log }> */ }
+                <Step active={ page === "upload" } disabled={ image ? false : true } >
                     <Icon name="upload" />
                     <Step.Content>
                         <Step.Title>Upload</Step.Title>
@@ -38,14 +62,13 @@ function UploadMedia() {
             </Step.Group>
 
             <Segment attached>
-                <CaptureMedia />
+                <Page image={ image } page={ page } onContinue={ onContinue } />
             </Segment>
         </>
     );
 }
 
-function CaptureMedia() {
-    const imageRef = React.createRef();
+function CaptureMedia(props) {
     const photoRef = React.createRef();
     const fileRef = React.createRef();
     const [ photo, setPhoto ] = useState();
@@ -58,57 +81,121 @@ function CaptureMedia() {
         fileRef.current.click();
     }
 
-    let source = photo || file ? URL.createObjectURL(photo || file) : null;
-
-    if(!source) {
-        return (
-            <Segment placeholder>
-                <Grid columns={ 2 } stackable textAlign="center">
-                    <Divider vertical>Or</Divider>
-
-                    <Grid.Row verticalAlign="middle">
-                        <Grid.Column>
-                            <Button icon labelPosition="left" color="blue" size="large" onClick={ onPhoto }>
-                                <Icon name="camera retro" />
-                                Take Photo
-                            </Button>
-                        </Grid.Column>
-
-                        <Grid.Column>
-                            <Button icon labelPosition="left" color="blue" size="large" onClick={ onFile }>
-                                <Icon name="file images outline" />
-                                Upload Image
-                            </Button>
-                        </Grid.Column>
-                    </Grid.Row>
-                </Grid>
-
-                <input ref={ photoRef } type="file" accept="image/*;capture=camera" hidden onChange={ e => setPhoto(e.target.files[ 0 ]) } />
-                <input ref={ fileRef } type="file" accept="image/*;" hidden onChange={ e => setFile(e.target.files[ 0 ]) } />
-            </Segment>
-        );
+    if(photo || file || props.image) {
+        props.onContinue("draw", photo || file || props.image);
     }
 
     return (
-        <Segment basic>
-            <Container style={{ backgroundColor: "rgba(0, 0, 0, 0.85)", marginBottom: 10 }}>
-                <Image src={ source } centered/>
-            </Container>
+        <Segment placeholder>
+            <Grid columns={ 2 } stackable textAlign="center">
+                <Divider vertical>Or</Divider>
 
-            <Button.Group basic attached="bottom">                
-                <Button icon onClick={ onPhoto }>
-                    <Icon name="camera retro" />
-                </Button>
+                <Grid.Row verticalAlign="middle">
+                    <Grid.Column>
+                        <Button icon labelPosition="left" color="blue" size="large" onClick={ onPhoto }>
+                            <Icon name="camera retro" />
+                            Take Photo
+                        </Button>
+                    </Grid.Column>
+
+                    <Grid.Column>
+                        <Button icon labelPosition="left" color="blue" size="large" onClick={ onFile }>
+                            <Icon name="file images outline" />
+                            Choose Image
+                        </Button>
+                    </Grid.Column>
+                </Grid.Row>
+            </Grid>
+
+            <input ref={ photoRef } type="file" accept="image/*;capture=camera" hidden onChange={ e => setPhoto(e.target.files[ 0 ]) } />
+            <input ref={ fileRef } type="file" accept="image/*;" hidden onChange={ e => setFile(e.target.files[ 0 ]) } />
+        </Segment>
+    );
+}
+
+function DrawMedia(props) {
+    const photoRef = React.createRef();
+    const fileRef = React.createRef();
+    const [ photo, setPhoto ] = useState();
+    const [ file, setFile ] = useState();
+
+    function onPhoto(e) {
+        photoRef.current.click();
+    }
+    function onFile(e) {
+        fileRef.current.click();
+    }
+
+    let source = props.image || photo || file ? URL.createObjectURL(photo || file || props.image) : null;
+
+    return (
+        <Segment basic >
+            <Segment inverted>
+                <Image src={ source } centered />
+            </Segment>
                 
-                <Button icon onClick={ onFile }>
-                    <Icon name="file images outline" />
+            <Button.Group>
+                <Button icon>
+                    <Icon name="align left" />
+                </Button>
+                <Button icon>
+                    <Icon name="align center" />
+                </Button>
+                <Button icon>
+                    <Icon name="align right" />
+                </Button>
+                <Button icon>
+                    <Icon name="align justify" />
                 </Button>
             </Button.Group>
-                
-            <Button.Group fluid style={{ marginTop: 20 }}>   
-                <Button icon labelPosition="right" color="blue" size="large">
-                    <Icon name="long arrow alternate right" />
-                    Continue
+            {" "}
+            <Button.Group>
+                <Button icon>
+                    <Icon name="bold" />
+                </Button>
+                <Button icon>
+                    <Icon name="underline" />
+                </Button>
+                <Button icon>
+                    <Icon name="text width" />
+                </Button>
+            </Button.Group>
+            {" "}
+            <Button.Group>
+                <Button icon>
+                    <Icon name="paint brush" />
+                </Button>
+                <Button icon>
+                    <Icon name="tint" />
+                </Button>
+            </Button.Group>
+            {" "}
+            <Button.Group>
+                <Button icon>
+                    <Icon name="smile outline" />
+                </Button>
+            </Button.Group>
+
+            <Button.Group fluid style={{ marginTop: 20 }}>
+                <Button.Group basic size="huge">
+                    <Button icon onClick={ onPhoto }>
+                        <Icon.Group>
+                            <Icon name="camera retro" />
+                            <Icon corner="bottom right" name="add" />
+                        </Icon.Group>
+                    </Button>
+                    
+                    <Button icon onClick={ onFile }>
+                        <Icon.Group>
+                            <Icon name="file images outline" />
+                            <Icon corner="bottom right" name="add" />
+                        </Icon.Group>
+                    </Button>
+                </Button.Group>
+
+                <Button icon labelPosition="left" color="blue" size="large" onClick={ e => props.onContinue("draw", photo || file || props.image) }>
+                    <Icon name="upload" />
+                    Upload
                 </Button>
             </Button.Group>
 
