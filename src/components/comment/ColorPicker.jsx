@@ -112,8 +112,8 @@ function ColorPicker(props) {
 
     function copyToClipboard() {
         const el = document.createElement("textarea");
-        const value = `#${ convert.hsl.hex(hue, saturation, luminance) }`;
-        el.value = value;
+        const value = convert.hsl.hex(hue, saturation, luminance);
+        el.value = `#${ value }`;
         document.body.appendChild(el);
         el.select();
         document.execCommand("copy");
@@ -121,7 +121,7 @@ function ColorPicker(props) {
 
         console.info(`Copied ${ value }`);
 
-        addToFavorites(value);
+        addToFavorites(`#${ value }`);
 
         //! FireFox requires HTTPS to access the Clipboard API (which is gated by the Permissions API)
         //* https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API
@@ -203,7 +203,14 @@ function ColorPicker(props) {
                                 margin: 2,
                                 backgroundColor: fav
                             }}
-                        ></div>
+                            onClick={ e => {
+                                const [ h, s, l ] = convert.hex.hsl(fav);
+
+                                setHue(h);
+                                setSaturation(s);
+                                setLuminance(l);
+                            }}
+                        />
                     ))
                 }
             </Form.Group>
