@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Segment, Button, Icon, Form } from "semantic-ui-react";
+import { Button, Icon, Form } from "semantic-ui-react";
 import convert from "color-convert";
 
 function ColorPicker(props) {

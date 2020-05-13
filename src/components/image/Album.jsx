@@ -2,8 +2,6 @@ import React from "react";
 import { Container, Header, Grid, Divider } from "semantic-ui-react";
 
 import Image from "./Image";
-import ImageCard from "./ImageCard";
-import ReactionBar from "../comment/ReactionBar";
 import CommentContainer from "../comment/CommentContainer";
 
 const reactionPlaceholders = [

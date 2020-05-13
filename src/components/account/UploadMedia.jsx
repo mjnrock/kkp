@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { Step, Header, Icon, Segment, Button, Grid, Divider, Image, Popup } from "semantic-ui-react";
+import { Step, Icon, Segment, Button, Grid, Divider, Image } from "semantic-ui-react";
+import { Picker } from "emoji-mart";
 import ColorPicker from "./../comment/ColorPicker";
+import ButtonPopup from "./ButtonPopup";
 
 function Page(props) {
     if(props.page === "capture") {
@@ -163,36 +165,35 @@ function DrawMedia(props) {
             </Button.Group>
             {" "}
             <Button.Group>
-                <Button icon>
-                    <Icon name="paint brush" />
-                </Button>
-                <Popup
-                    style={{
-                        padding: 2,
-                        borderRadius: 5,
-                        backgroundColor: "rgba(0, 0, 0, 0.05)",
-                        ...(props.style || {})
-                    }}
-                    className="popup-container"
-                    content={(
-                        <Segment>
-                            <ColorPicker onHex={ console.log } hue={ 250 } favorites={ [ "#000", "#FFF", "#21BA45", "#A333C8", "#2185D0" ] } />
-                        </Segment>
-                    )}
-                    on="click"
-                    pinned
-                    trigger={(
-                        <Button icon>
-                            <Icon name="tint" />
-                        </Button>
-                    )}
-                />
+                <ButtonPopup icon="paint brush" >                    
+                    <Segment>
+                        <input
+                            type="range"
+                            min={ 0 }
+                            max={ 100 }
+                            defaultValue={ 15 }
+                            onChange={ e => console.log(e.target.value) }
+                        />
+                    </Segment>
+                </ButtonPopup>
+
+                <ButtonPopup icon="tint" >                    
+                    <Segment>
+                        <ColorPicker onHex={ console.log } hue={ 250 } favorites={ [ "#000", "#FFF", "#21BA45", "#A333C8", "#2185D0" ] } />
+                    </Segment>
+                </ButtonPopup>
             </Button.Group>
             {" "}
             <Button.Group>
-                <Button icon>
-                    <Icon name="smile outline" />
-                </Button>
+                <ButtonPopup icon="smile outline">
+                    <Picker
+                        title="Skin Tone:"
+                        emoji={ "raised_hand_with_fingers_splayed" }
+                        native={ true }
+                        // onSelect={ emoji => props.onSelect(emoji.native) }
+                        onSelect={ console.log }
+                    />
+                </ButtonPopup>
             </Button.Group>
 
             <Button.Group fluid style={{ marginTop: 20 }}>
