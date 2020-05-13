@@ -7,7 +7,7 @@ export default function Home() {
         <Fragment>
             <p>This is the home page</p>
 
-            <ColorPicker />
+            <ColorPicker hue={ 250 } favorites={ [ "#FFF", "#000" ] } />
 
             <Link to="/login">Login</Link>
             <Link to="/signup">Sign Up</Link>

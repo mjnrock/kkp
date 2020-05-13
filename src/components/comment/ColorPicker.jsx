@@ -8,9 +8,9 @@ function ColorPicker(props) {
     const lumRef = React.createRef();
 
     const [ favorites, setFavorites ] = useState(props.favorites || []);
-    const [ hue, setHue ] = useState(0);
-    const [ saturation, setSaturation ] = useState(100);
-    const [ luminance, setLuminance ] = useState(50);
+    const [ hue, setHue ] = useState(props.hue || 0);
+    const [ saturation, setSaturation ] = useState(props.saturation || 100);
+    const [ luminance, setLuminance ] = useState(props.luminance || 50);
     
     useEffect(() => {
         const hueCanvas = hueRef.current;
@@ -191,8 +191,10 @@ function ColorPicker(props) {
             <Form.Group inline>
                 {
                     // This currently does not wrap when the quantity is high enough
+                    //TODO Add an onClick "recovery" feature that sets the color to this favorite
                     favorites.map(fav => (
                         <div
+                            key={ fav }
                             style={{
                                 width: 36,
                                 height: 36,
