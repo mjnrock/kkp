@@ -138,10 +138,16 @@ function ColorPicker(props) {
     }
 
     function addToFavorites(hex) {
-        setFavorites([
+        const newFavs = [
             ...favorites,
             hex
-        ]);
+        ];
+
+        if(typeof props.favorites === "function") {
+            props.favorites(newFavs);
+        }
+
+        setFavorites(newFavs);
     }
 
     return (
