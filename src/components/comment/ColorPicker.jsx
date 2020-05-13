@@ -7,7 +7,7 @@ function ColorPicker(props) {
     const satRef = React.createRef();
     const lumRef = React.createRef();
 
-    const [ favorites, setFavorites ] = useState([]);
+    const [ favorites, setFavorites ] = useState(props.favorites || []);
     const [ hue, setHue ] = useState(0);
     const [ saturation, setSaturation ] = useState(100);
     const [ luminance, setLuminance ] = useState(50);
@@ -66,18 +66,18 @@ function ColorPicker(props) {
     }, [ hueRef, satRef, lumRef, hue, saturation, luminance ]);
 
     useEffect(() => {
-        if(typeof props.rgb === "function") {
+        if(typeof props.onRgb === "function") {
             const [ r, g, b ] = convert.hsl.rgb(hue, saturation, luminance);
-            props.rgb([ r, g, b ], `rgb(${ r }, ${ g }, ${ b })`);
+            props.onRgb([ r, g, b ], `rgb(${ r }, ${ g }, ${ b })`);
         }
 
-        if(typeof props.hex === "function") {
+        if(typeof props.onHex === "function") {
             const hex = convert.hsl.hex(hue, saturation, luminance);
-            props.hex(hex, `#${ hex }`);
+            props.onHex(hex, `#${ hex }`);
         }
 
-        if(typeof props.hsl === "function") {
-            props.hsl([ hue, saturation, luminance ], `hsl(${ hue }, ${ saturation }%, ${ luminance }%)`);
+        if(typeof props.onHsl === "function") {
+            props.onHsl([ hue, saturation, luminance ], `hsl(${ hue }, ${ saturation }%, ${ luminance }%)`);
         }
     }, [ props, hue, saturation, luminance ]);
 
@@ -143,8 +143,8 @@ function ColorPicker(props) {
             hex
         ];
 
-        if(typeof props.favorites === "function") {
-            props.favorites(newFavs);
+        if(typeof props.onFavorite === "function") {
+            props.onFavorite(newFavs);
         }
 
         setFavorites(newFavs);
