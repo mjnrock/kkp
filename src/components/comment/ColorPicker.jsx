@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Segment, Button, Icon, Message } from "semantic-ui-react";
+import { Segment, Button, Icon, Form } from "semantic-ui-react";
 import convert from "color-convert";
 
 function ColorPicker(props) {
@@ -7,6 +7,7 @@ function ColorPicker(props) {
     const satRef = React.createRef();
     const lumRef = React.createRef();
 
+    const [ favorites, setFavorites ] = useState([]);
     const [ hue, setHue ] = useState(0);
     const [ saturation, setSaturation ] = useState(100);
     const [ luminance, setLuminance ] = useState(50);
@@ -120,6 +121,8 @@ function ColorPicker(props) {
 
         console.info(`Copied ${ value }`);
 
+        addToFavorites(value);
+
         //! FireFox requires HTTPS to access the Clipboard API (which is gated by the Permissions API)
         //* https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API
         //* https://developer.mozilla.org/en-US/docs/Web/API/Permissions_API
@@ -134,31 +137,69 @@ function ColorPicker(props) {
         // });
     }
 
-    return (
-        <Segment>
-            <Segment
-                style={{
-                    backgroundColor: `hsl(${ hue }, ${ saturation }%, ${ luminance }%)`,
-                    width: 255,
-                    height: 255,
-                }}
-            />
-            
-            <Button basic icon labelPosition="left" onClick={ copyToClipboard }>
-                <Icon name="hashtag" />
-                { convert.hsl.hex(hue, saturation, luminance) }
-            </Button>
-            <br />
+    function addToFavorites(hex) {
+        setFavorites([
+            ...favorites,
+            hex
+        ]);
+    }
 
-            <Icon name="tint" />
-            <canvas style={{ border: "1px solid #000", borderRadius: 4 }} ref={ hueRef } width={ 360 } height={ 40 } onMouseDown={ handleHue } onMouseMove={ handleHue } />
-            <br />
-            <Icon name="adjust" />
-            <canvas style={{ border: "1px solid #000", borderRadius: 4 }} ref={ satRef } width={ 360 } height={ 40 } onMouseDown={ handleSaturation } onMouseMove={ handleSaturation } />
-            <br />
-            <Icon name="sun outline" />
-            <canvas style={{ border: "1px solid #000", borderRadius: 4 }} ref={ lumRef } width={ 360 } height={ 40 } onMouseDown={ handleLuminance } onMouseMove={ handleLuminance } />            
-        </Segment>
+    return (
+        <Form>                
+            <Form.Group inline>
+                <label><Icon name="paint brush" circular color="grey" /></label>
+                <div
+                    style={{
+                        border: "1px solid #000",
+                        borderRadius: 4,
+                        backgroundColor: `hsl(${ hue }, ${ saturation }%, ${ luminance }%)`,
+                        width: 360,
+                        height: 84,
+                        marginBottom: 20
+                    }}
+                ></div>
+            </Form.Group>
+
+            <Form.Group inline>
+                <label><Icon name="tint" circular color="grey" /></label>
+                <canvas style={{ border: "1px solid #000", borderRadius: 4 }} ref={ hueRef } width={ 360 } height={ 40 } onMouseDown={ handleHue } onMouseMove={ handleHue } />
+            </Form.Group>
+
+            <Form.Group inline>
+                <label><Icon name="adjust" circular color="grey" /></label>
+                <canvas style={{ border: "1px solid #000", borderRadius: 4 }} ref={ satRef } width={ 360 } height={ 40 } onMouseDown={ handleSaturation } onMouseMove={ handleSaturation } />
+            </Form.Group>
+
+            <Form.Group inline>
+                <label><Icon name="sun" circular color="grey" /></label>
+                <canvas style={{ border: "1px solid #000", borderRadius: 4 }} ref={ lumRef } width={ 360 } height={ 40 } onMouseDown={ handleLuminance } onMouseMove={ handleLuminance } />            
+            </Form.Group>
+
+            <Form.Group inline>
+                <label><Icon name="hashtag" circular color="grey" /></label>
+                <Button basic icon style={{ width: 360 }} onClick={ copyToClipboard }>
+                    { convert.hsl.hex(hue, saturation, luminance) }
+                </Button>
+            </Form.Group>
+
+            <Form.Group inline>
+                {
+                    // This currently does not wrap when the quantity is high enough
+                    favorites.map(fav => (
+                        <div
+                            style={{
+                                width: 36,
+                                height: 36,
+                                border: "1px solid #000",
+                                borderRadius: 4,
+                                margin: 2,
+                                backgroundColor: fav
+                            }}
+                        ></div>
+                    ))
+                }
+            </Form.Group>
+        </Form>
     );
 }
 
