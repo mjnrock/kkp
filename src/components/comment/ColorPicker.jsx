@@ -201,6 +201,7 @@ function ColorPicker(props) {
                                 border: "1px solid #000",
                                 borderRadius: 4,
                                 margin: 2,
+                                cursor: "pointer",
                                 backgroundColor: fav
                             }}
                             onClick={ e => {

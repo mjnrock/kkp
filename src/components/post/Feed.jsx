@@ -1,8 +1,7 @@
 import React from "react";
-import { Container, Header, Image } from "semantic-ui-react";
+import { Container, Header, Image, Segment } from "semantic-ui-react";
 
 import CommentContainer from "../comment/CommentContainer";
-import ReactionBar from "../comment/ReactionBar";
 
 const reactionPlaceholders = [
     { emoji: "❤️", qty: 14 },
@@ -66,9 +65,9 @@ function Feed(props) {
                 <Header.Content>Kiszka at the Beach</Header.Content>
             </Header>
             
-            <Container style={{ backgroundColor: "rgba(0, 0, 0, 0.85)", border: "1px solid #000" }}>
+            <Segment inverted>
                 <Image src="/assets/pusheen.png" centered />
-            </Container>
+            </Segment>
                         
             <CommentContainer posts={ posts } reactions={ reactionPlaceholders } />
         </Container>

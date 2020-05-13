@@ -19,8 +19,13 @@
     z-index: 2;
 }
 
-.emoji-popup-container::before {
+.popup-container::before {
     content: none !important;
+}
+.popup-container {
+    padding: 2px;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.05);
 }
 
 .medium-icon {

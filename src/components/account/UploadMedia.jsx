@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Step, Header, Icon, Segment, Button, Grid, Divider, Image, Container } from "semantic-ui-react";
+import { Step, Header, Icon, Segment, Button, Grid, Divider, Image, Popup } from "semantic-ui-react";
+import ColorPicker from "./../comment/ColorPicker";
 
 function Page(props) {
     if(props.page === "capture") {
@@ -165,9 +166,27 @@ function DrawMedia(props) {
                 <Button icon>
                     <Icon name="paint brush" />
                 </Button>
-                <Button icon>
-                    <Icon name="tint" />
-                </Button>
+                <Popup
+                    style={{
+                        padding: 2,
+                        borderRadius: 5,
+                        backgroundColor: "rgba(0, 0, 0, 0.05)",
+                        ...(props.style || {})
+                    }}
+                    className="popup-container"
+                    content={(
+                        <Segment>
+                            <ColorPicker onHex={ console.log } hue={ 250 } favorites={ [ "#000", "#FFF", "#21BA45", "#A333C8", "#2185D0" ] } />
+                        </Segment>
+                    )}
+                    on="click"
+                    pinned
+                    trigger={(
+                        <Button icon>
+                            <Icon name="tint" />
+                        </Button>
+                    )}
+                />
             </Button.Group>
             {" "}
             <Button.Group>

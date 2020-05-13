@@ -12,7 +12,7 @@ function EmojiPicker(props) {
                 backgroundColor: "rgba(0, 0, 0, 0.05)",
                 ...(props.style || {})
             }}
-            className="emoji-popup-container"
+            className="popup-container"
             content={(
                 <Picker
                     title="Skin Tone:"
