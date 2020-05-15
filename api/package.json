@@ -1,0 +1,15 @@
+{
+    "name": "web-chat-api",
+    "version": "0.1.0",
+    "main": "esm-index.js",
+    "license": "MIT",
+    "scripts": {
+        "start": "node esm-index.js"
+    },
+    "dependencies": {
+        "esm": "^3.2.25",
+        "express": "^4.17.1",
+        "express-ws": "^4.0.0",
+        "ws": "^7.3.0"
+    }
+}

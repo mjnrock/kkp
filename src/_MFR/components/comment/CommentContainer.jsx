@@ -1,9 +1,9 @@
 import React from "react";
 import { Segment } from "semantic-ui-react";
 
-import Thread from "../comment/Thread";
-import InputComment from "../comment/InputComment";
-import ReactionBar from "../comment/ReactionBar";
+import Thread from "./Thread";
+import InputComment from "./InputComment";
+import ReactionBar from "./ReactionBar";
 
 function CommentContainer(props) {
     return (
