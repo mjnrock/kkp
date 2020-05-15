@@ -14,6 +14,16 @@ APP.use((req, res, next) => {
     next();
 });
 
+//* ================= <AUTHENTICATION> =========================
+    APP.post("/login", (req, res) => {
+        const message = req.body;
+    });
+    APP.post("/signup", (req, res) => {
+        const message = req.body;
+    });
+//* ================= </AUTHENTICATION> =========================
+
+
 APP.get("/feed", (req, res) => {
     fs.readFile("./data/messages.json", function (err, buff) {
         return res.send(buff.toString());
