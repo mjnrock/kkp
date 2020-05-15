@@ -15,11 +15,27 @@ APP.use((req, res, next) => {
 });
 
 //* ================= <AUTHENTICATION> =========================
-    APP.post("/login", (req, res) => {
+    APP.post("/auth", (req, res) => {
         const message = req.body;
+        const { email, password } = message;
+
+        console.log(message);
+
+        //TODO Make a real auth token
+        return res.send({
+            token: Date.now()
+        });
     });
     APP.post("/signup", (req, res) => {
         const message = req.body;
+        const { email, password } = message;
+
+        console.log(message);
+
+        //TODO Make a real signup
+        return res.send({
+            token: Date.now()
+        });
     });
 //* ================= </AUTHENTICATION> =========================
 

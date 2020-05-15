@@ -2,19 +2,39 @@
 import React, { useContext, useState } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { Icon, Button, Form, Grid, Header, Message, Segment } from "semantic-ui-react";
-import { Context } from "../App";
+import { Context, EnumMessageType } from "../App";
 
 function LoginForm(props) {
-    const { state } = useContext(Context);
+    const { state, dispatch } = useContext(Context);
 
     const [ email, setEmail ] = useState("");
     const [ password, setPassword ] = useState("");
 
-    function attemptLogin() {
-        props.onAuthAttempt(
-            email,
-            password
-        );
+    function attemptAuth() {
+        //TODO Encrypt password before sending
+        if(email.length && password.length > 7) {
+            fetch("http://localhost:3001/auth", {
+                method: "POST",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    
+                },
+                body: JSON.stringify({
+                    "email": email,
+                    "password": password,
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.token) {
+                    dispatch({
+                        type: EnumMessageType.ASSIGN_TOKEN,
+                        payload: data.token
+                    });
+                }
+            });
+        }
     }
 
     if(state.auth.token) {
@@ -50,7 +70,7 @@ function LoginForm(props) {
                             type="password"
                         />
 
-                        <Button color="orange" fluid size="large" onClick={ attemptLogin }>
+                        <Button color="orange" fluid size="large" onClick={ attemptAuth }>
                             Login
                         </Button>
                     </Segment>

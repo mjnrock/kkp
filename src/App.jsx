@@ -3,7 +3,6 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Link,
     Redirect,
     withRouter
 } from "react-router-dom";
@@ -16,14 +15,14 @@ import SignUpForm from "./auth/SignUpForm";
 const reducer = (state, message) => {
     console.log("Dispatch:", message);
 
-    if(message.type === "ASSIGN_TOKEN") {
+    if(message.type === EnumMessageType.ASSIGN_TOKEN) {
         return {
             ...state,
             auth: {
                 token: message.payload
             }
         }
-    } else if(message.type === "LOGOUT") {
+    } else if(message.type === EnumMessageType.LOGOUT) {
         return {
             ...state,
             auth: {
@@ -41,6 +40,11 @@ const initialState = {
 };
 export const Context = React.createContext(initialState);
 
+export const EnumMessageType = {
+    ASSIGN_TOKEN: "ASSIGN_TOKEN",
+    LOGOUT: "LOGOUT",
+};
+
 function PrivateRoute({ children, auth, ...rest }) {
     if(auth.token) {
         return (
@@ -57,7 +61,7 @@ function PrivateRoute({ children, auth, ...rest }) {
 
 const AuthButton = withRouter(({ history, auth, dispatch }) => {
     function logout() {
-        dispatch({ type: "LOGOUT" });
+        dispatch({ type: EnumMessageType.LOGOUT });
         history.push("/");
     }
 
@@ -66,18 +70,12 @@ const AuthButton = withRouter(({ history, auth, dispatch }) => {
             <button onClick={ logout }>Sign out</button>
         );
     }
-    
-    return (
-        <p>You are not logged in.</p>
-    );
+
+    return null;
 });
 
 function App() {
     const [ state, dispatch ] = React.useReducer(reducer, initialState);
-
-    function authAttempt(username, password) {
-        dispatch({ type: "ASSIGN_TOKEN", payload: Date.now() });
-    }
 
     return (
         <Router>
@@ -86,10 +84,10 @@ function App() {
 
                 <Switch>
                     <Route path="/login">
-                        <LoginForm onAuthAttempt={ authAttempt } />
+                        <LoginForm />
                     </Route>
                     <Route path="/signup">
-                        <SignUpForm onAuthAttempt={ dispatch } />
+                        <SignUpForm />
                     </Route>
 
                     <PrivateRoute path="/" auth={ state.auth }>
