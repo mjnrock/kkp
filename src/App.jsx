@@ -45,19 +45,29 @@ export const EnumMessageType = {
     LOGOUT: "LOGOUT",
 };
 
-function PrivateRoute({ children, auth, ...rest }) {
+// eslint-disable-next-line
+function AuthRoutes({ children, auth }) {
     if(auth.token) {
-        return (
-            <Route { ...rest }>
-                { children }
-            </Route>
-        );
+        return children;
     }
 
     return (        
         <Redirect to="/login" />
     );
 }
+// function PrivateRoute({ children, auth, ...rest }) {
+//     if(auth.token) {
+//         return (
+//             <Route { ...rest }>
+//                 { children }
+//             </Route>
+//         );
+//     }
+
+//     return (        
+//         <Redirect to="/login" />
+//     );
+// }
 
 const AuthButton = withRouter(({ history, auth, dispatch }) => {
     function logout() {
@@ -89,10 +99,15 @@ function App() {
                     <Route path="/signup">
                         <SignUpForm />
                     </Route>
-
-                    <PrivateRoute path="/" auth={ state.auth }>
-                        <Routes.Home />
-                    </PrivateRoute>
+                    
+                    {/* <AuthRoutes auth={ state.auth }> */}
+                        <Route path="/post/:postId">
+                            <Routes.Post />
+                        </Route>
+                        <Route path="/">
+                            <Routes.Home />
+                        </Route>
+                    {/* </AuthRoutes> */}
                 </Switch>
             </Context.Provider>
         </Router>

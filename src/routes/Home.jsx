@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { Link } from "react-router-dom";
 import { Context } from "./../App";
 
 function Home() {
@@ -7,7 +8,9 @@ function Home() {
     console.log(state, dispatch);
 
     return (
-        <div>Home</div>
+        <div>
+            <Link to="/post/5">Post #5</Link>
+        </div>
     );
 }
 

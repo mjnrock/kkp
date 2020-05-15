@@ -19,7 +19,7 @@ APP.use((req, res, next) => {
         const message = req.body;
         const { email, password } = message;
 
-        console.log(message);
+        console.log("/auth", message);
 
         //TODO Make a real auth token
         return res.send({
@@ -30,7 +30,7 @@ APP.use((req, res, next) => {
         const message = req.body;
         const { email, password } = message;
 
-        console.log(message);
+        console.log("/signup", message);
 
         //TODO Make a real signup
         return res.send({
@@ -39,28 +39,48 @@ APP.use((req, res, next) => {
     });
 //* ================= </AUTHENTICATION> =========================
 
-
-APP.get("/feed", (req, res) => {
-    fs.readFile("./data/messages.json", function (err, buff) {
-        return res.send(buff.toString());
-    });
-});
-APP.post("/message/", (req, res) => {
+APP.post("/react/post", (req, res) => {
     const filepath = "./data/messages.json";
     const message = req.body;
+    const { pid, emoji, token: user } = message;
+
+    console.log("/react/post", message);
 
     fs.readFile(filepath, "utf8", (err, data) => {
         if(err) {
             console.log(err);
         } else {
-            let obj = JSON.parse(data);
-            obj.push(message);
+            let posts = JSON.parse(data);
+            let resPost;
+            posts.map(post => {
+                if(post.id === pid) {
+                    post.reactions = post.reactions || [];
+                    post.reactions.push({
+                        emoji,
+                        user
+                    });
 
-            let json = JSON.stringify(obj);
+                    resPost = {
+                        id: post.id,
+                        reactions: post.reactions
+                    };
+                }
+            });
+
+            let json = JSON.stringify(posts);
             fs.writeFile(filepath, json, () => {
-                res.sendStatus(200);
+                res.send(resPost);
             });
         }
+    });
+});
+
+APP.get("/post/:pid", (req, res) => {
+    const postId = req.params.pid;
+    console.log(`/post/${ postId }`);
+
+    fs.readFile("./data/messages.json", function (err, buff) {
+        return res.send(buff.toString());
     });
 });
 
