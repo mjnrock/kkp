@@ -14,14 +14,13 @@ import LoginForm from "./auth/LoginForm";
 import SignUpForm from "./auth/SignUpForm";
 
 const reducer = (state, message) => {
+    console.log("Dispatch:", message);
 
-    console.log(state, message);
-
-    if(message.type === "FAKE_AUTH") {
+    if(message.type === "ASSIGN_TOKEN") {
         return {
             ...state,
             auth: {
-                token: Date.now()
+                token: message.payload
             }
         }
     } else if(message.type === "LOGOUT") {
@@ -57,23 +56,28 @@ function PrivateRoute({ children, auth, ...rest }) {
 }
 
 const AuthButton = withRouter(({ history, auth, dispatch }) => {
+    function logout() {
+        dispatch({ type: "LOGOUT" });
+        history.push("/");
+    }
+
+    if(auth.token) {
+        return (
+            <button onClick={ logout }>Sign out</button>
+        );
+    }
     
     return (
-        auth.token ? (
-            <button onClick={ e => {
-                dispatch({ type: "LOGOUT" });
-                history.push("/");
-            }}>Sign out</button>
-        ) : (
-            <p>You are not logged in.</p>
-        )
+        <p>You are not logged in.</p>
     );
 });
 
 function App() {
     const [ state, dispatch ] = React.useReducer(reducer, initialState);
 
-    console.log(state)
+    function authAttempt(username, password) {
+        dispatch({ type: "ASSIGN_TOKEN", payload: Date.now() });
+    }
 
     return (
         <Router>
@@ -82,7 +86,7 @@ function App() {
 
                 <Switch>
                     <Route path="/login">
-                        <LoginForm onAuthAttempt={ dispatch } />
+                        <LoginForm onAuthAttempt={ authAttempt } />
                     </Route>
                     <Route path="/signup">
                         <SignUpForm onAuthAttempt={ dispatch } />

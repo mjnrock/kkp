@@ -1,25 +1,20 @@
 /* eslint-disable */
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { Icon, Button, Form, Grid, Header, Message, Segment } from "semantic-ui-react";
 import { Context } from "../App";
 
 function LoginForm(props) {
     const { state } = useContext(Context);
-    // let emailRef = React.createRef();
-    // let passwordRef = React.createRef();
+
+    const [ email, setEmail ] = useState("");
+    const [ password, setPassword ] = useState("");
 
     function attemptLogin() {
-        // const email = emailRef.current.value;
-        // const password = passwordRef.current.value;
-
-        props.onAuthAttempt({
-            type: "FAKE_AUTH",
-            // payload: {
-            //     email,
-            //     password
-            // }
-        });
+        props.onAuthAttempt(
+            email,
+            password
+        );
     }
 
     if(state.auth.token) {
@@ -37,7 +32,8 @@ function LoginForm(props) {
                 <Form size="large">
                     <Segment stacked>
                         <Form.Input
-                            // ref={ emailRef }
+                            value={ email }
+                            onChange={ e => setEmail(e.target.value) }
                             fluid
                             icon="mail"
                             iconPosition="left"
@@ -45,7 +41,8 @@ function LoginForm(props) {
                         />
 
                         <Form.Input
-                            // ref={ passwordRef }
+                            value={ password }
+                            onChange={ e => setPassword(e.target.value) }
                             fluid
                             icon="lock"
                             iconPosition="left"
