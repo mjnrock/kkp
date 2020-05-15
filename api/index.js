@@ -1,5 +1,6 @@
 import express from "express";
 import fs from "fs";
+import path from "path";
 
 const APP = express();
 const PORT = 3001;
@@ -13,6 +14,10 @@ APP.use((req, res, next) => {
     //? Whatever middleware work .next() is doing is ESSENTIAL to actually making this work
     next();
 });
+APP.use(express.static(path.join(__dirname, "data")));
+// APP.use(serveStatic(path.join(__dirname, "public")));
+
+console.log(path.join(__dirname, "public"));
 
 //* ================= <AUTHENTICATION> =========================
     APP.post("/auth", (req, res) => {
@@ -82,6 +87,15 @@ APP.get("/post/:pid", (req, res) => {
     fs.readFile("./data/messages.json", function (err, buff) {
         return res.send(buff.toString());
     });
+});
+
+APP.get("/image/:iid", (req, res) => {
+    const imageId = "pusheen" || req.params.iid;
+    const imageExt = "png";
+    const filepath = `/data/image/${ imageId }.${ imageExt }`;
+    console.log(`/image/${ imageId }`);
+
+    return res.sendFile(filepath , { root : __dirname });
 });
 
 APP.listen(PORT, () =>
