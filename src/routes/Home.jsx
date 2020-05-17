@@ -9,6 +9,11 @@ function Home() {
 
     return (
         <div>
+            <form action={ `http://localhost:3001/media/upload` } method="post" encType="multipart/form-data">
+                <input type="file" name="avatar" />                
+                <input type="submit" name="upload-button" value="Upload" />
+            </form>
+
             <Link to="/post/5">Post #5</Link>
         </div>
     );

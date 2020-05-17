@@ -9,6 +9,7 @@
         "color-convert": "^2.0.1",
         "emoji-mart": "^3.0.0",
         "fabric": "^3.6.3",
+        "multer": "^1.4.2",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
         "react-router": "^5.1.2",

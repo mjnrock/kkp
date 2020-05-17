@@ -1,6 +1,7 @@
 import express from "express";
 import fs from "fs";
 import path from "path";
+import multer from "multer";
 
 const APP = express();
 const PORT = 3001;
@@ -20,29 +21,88 @@ APP.use(express.static(path.join(__dirname, "data")));
 console.log(path.join(__dirname, "public"));
 
 //* ================= <AUTHENTICATION> =========================
-    APP.post("/auth", (req, res) => {
-        const message = req.body;
-        const { email, password } = message;
+APP.post("/auth", (req, res) => {
+    const message = req.body;
+    const { email, password } = message;
 
-        console.log("/auth", message);
+    console.log("/auth", message);
 
-        //TODO Make a real auth token
-        return res.send({
-            token: Date.now()
-        });
+    //TODO Make a real auth token
+    return res.send({
+        token: Date.now()
     });
-    APP.post("/signup", (req, res) => {
-        const message = req.body;
-        const { email, password } = message;
+});
+APP.post("/signup", (req, res) => {
+    const message = req.body;
+    const { email, password } = message;
 
-        console.log("/signup", message);
+    console.log("/signup", message);
 
-        //TODO Make a real signup
-        return res.send({
-            token: Date.now()
-        });
+    //TODO Make a real signup
+    return res.send({
+        token: Date.now()
     });
+});
 //* ================= </AUTHENTICATION> =========================
+
+
+//* ================= <UPLOAD> =========================
+    // //? An example <FORM> 
+    // <form action={ `http://localhost:3001/media/upload` } method="post" encType="multipart/form-data">
+    //     <input type="file" name="avatar" />                
+    //     <input type="submit" name="upload-button" value="Upload" />
+    // </form>
+
+    const MULTER_STORAGE = multer.diskStorage({
+        destination: function (req, file, cb) {
+            cb(null, "./data/image");
+        },
+
+        // By default, multer removes file extensions so let"s add them back
+        filename: function (req, file, cb) {
+            console.log(file);
+            console.log(path.extname(file.originalname));
+            cb(null, `${ file.fieldname }-${ Date.now() }${ path.extname(file.originalname) }`);
+        }
+    });
+
+    APP.post("/media/upload", (req, res) => {
+        console.log("/media/upload");
+        // "profile_pic" is the name of our file input field in the HTML form
+        let upload = multer({
+            storage: MULTER_STORAGE,
+            fileFilter: (req, file, cb) => {
+                // Accept images only
+                if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
+                    req.fileValidationError = "Only image files are allowed!";
+                    return cb(new Error("Only image files are allowed!"), false);
+                }
+                cb(null, true);
+            }
+        }).single("avatar");    // ("avatar") is the <input name="avatar" type="file" /> element
+
+        upload(req, res, function (err) {
+            // req.file contains information of uploaded file
+            // req.body contains information of text fields, if there were any
+
+            if (req.fileValidationError) {
+                return res.send(req.fileValidationError);
+            }
+            else if (!req.file) {
+                return res.send("Please select an image to upload");
+            }
+            else if (err instanceof multer.MulterError) {
+                return res.send(err);
+            }
+            else if (err) {
+                return res.send(err);
+            }
+
+            // Display uploaded image for user validation
+            res.send(`You have uploaded this image: <hr/><img src="${req.file.path}" width="500"><hr /><a href="./">Upload another image</a>`);
+        });
+    });
+//* ================= </UPLOAD> =========================
 
 APP.post("/react/post", (req, res) => {
     const filepath = "./data/messages.json";
@@ -52,13 +112,13 @@ APP.post("/react/post", (req, res) => {
     console.log("/react/post", message);
 
     fs.readFile(filepath, "utf8", (err, data) => {
-        if(err) {
+        if (err) {
             console.log(err);
         } else {
             let posts = JSON.parse(data);
             let resPost;
             posts.map(post => {
-                if(post.id === pid) {
+                if (post.id === pid) {
                     post.reactions = post.reactions || [];
                     post.reactions.push({
                         emoji,
@@ -82,7 +142,7 @@ APP.post("/react/post", (req, res) => {
 
 APP.get("/post/:pid", (req, res) => {
     const postId = req.params.pid;
-    console.log(`/post/${ postId }`);
+    console.log(`/post/${postId}`);
 
     fs.readFile("./data/messages.json", function (err, buff) {
         return res.send(buff.toString());
@@ -92,10 +152,10 @@ APP.get("/post/:pid", (req, res) => {
 APP.get("/image/:iid", (req, res) => {
     const imageId = "pusheen" || req.params.iid;
     const imageExt = "png";
-    const filepath = `/data/image/${ imageId }.${ imageExt }`;
-    console.log(`/image/${ imageId }`);
+    const filepath = `/data/image/${imageId}.${imageExt}`;
+    console.log(`/image/${imageId}`);
 
-    return res.sendFile(filepath , { root : __dirname });
+    return res.sendFile(filepath, { root: __dirname });
 });
 
 APP.listen(PORT, () =>
