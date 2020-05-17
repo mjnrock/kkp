@@ -27,7 +27,7 @@ function Response(props) {
         const token = state.auth.token || "Matt";
         
         // if(state.auth.token) {
-            fetch(`http://localhost:3001/react/post`, {
+            fetch(`http://localhost:3001/post/react/`, {
                 method: "POST",
                 headers: {
                     "Accept": "application/json",

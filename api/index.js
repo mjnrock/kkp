@@ -104,41 +104,52 @@ APP.post("/signup", (req, res) => {
     });
 //* ================= </UPLOAD> =========================
 
-APP.post("/react/post", (req, res) => {
-    const filepath = "./data/messages.json";
-    const message = req.body;
-    const { pid, emoji, token: user } = message;
 
-    console.log("/react/post", message);
+//* ================= <POSTS> =========================
+    APP.post("/post/react/", (req, res) => {
+        const filepath = "./data/messages.json";
+        const message = req.body;
+        const { pid, emoji, token: user } = message;
 
-    fs.readFile(filepath, "utf8", (err, data) => {
-        if (err) {
-            console.log(err);
-        } else {
-            let posts = JSON.parse(data);
-            let resPost;
-            posts.map(post => {
-                if (post.id === pid) {
-                    post.reactions = post.reactions || [];
-                    post.reactions.push({
-                        emoji,
-                        user
-                    });
+        console.log("/post/react/", message);
 
-                    resPost = {
-                        id: post.id,
-                        reactions: post.reactions
-                    };
-                }
-            });
+        fs.readFile(filepath, "utf8", (err, data) => {
+            if (err) {
+                console.log(err);
+            } else {
+                let posts = JSON.parse(data);
+                let resPost;
+                posts.map(post => {
+                    if (post.id === pid) {
+                        post.reactions = post.reactions || [];
+                        post.reactions.push({
+                            emoji,
+                            user
+                        });
 
-            let json = JSON.stringify(posts);
-            fs.writeFile(filepath, json, () => {
-                res.send(resPost);
-            });
-        }
+                        resPost = {
+                            id: post.id,
+                            reactions: post.reactions
+                        };
+                    }
+                });
+
+                let json = JSON.stringify(posts);
+                fs.writeFile(filepath, json, () => {
+                    res.send(resPost);
+                });
+            }
+        });
     });
-});
+    APP.post("/post/response/", (req, res) => {
+        const filepath = "./data/messages.json";
+        const message = req.body;
+
+        console.log("/post/response/", message);
+
+        //TODO Save comments to a post
+    });
+//* ================= </POSTS> =========================
 
 APP.get("/post/:pid", (req, res) => {
     const postId = req.params.pid;
