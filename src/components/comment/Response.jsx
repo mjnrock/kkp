@@ -8,7 +8,7 @@ import ReactionBar from "./ReactionBar";
 function Response(props) {
     const { post } = props;
 
-    const { state, dispatch } = useContext(Context);
+    const { state } = useContext(Context);
     const [ collapsed, setCollapsed ] = useState(false);
     const [ reactions, setReactions ] = useState(post.reactions || []);
 

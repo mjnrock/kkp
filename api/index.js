@@ -5,7 +5,22 @@ import multer from "multer";
 
 const APP = express();
 const PORT = 3001;
+const SERVERS = {
+    ALBUM: {
+        protocol: "http",
+        host: "localhost",
+        port: PORT,
+        endpoint: "/",
+        uri: function(extra) {
+            let scope = SERVERS.ALBUM;
+            let endpoint = `/${ scope.endpoint }/${ extra }`.replace(/[/]{2,}/g, "/");
 
+            return `${ scope.protocol }://${ scope.host }:${ scope.port }${ endpoint }`;
+        }
+    }
+};
+
+APP.use("/img", express.static(__dirname + "/data/image"));
 APP.use(express.urlencoded({ extended: true }));
 APP.use(express.json());
 APP.use(express.raw());
@@ -15,10 +30,6 @@ APP.use((req, res, next) => {
     //? Whatever middleware work .next() is doing is ESSENTIAL to actually making this work
     next();
 });
-APP.use(express.static(path.join(__dirname, "data")));
-// APP.use(serveStatic(path.join(__dirname, "public")));
-
-console.log(path.join(__dirname, "public"));
 
 //* ================= <AUTHENTICATION> =========================
 APP.post("/auth", (req, res) => {
@@ -60,8 +71,6 @@ APP.post("/signup", (req, res) => {
 
         // By default, multer removes file extensions so let"s add them back
         filename: function (req, file, cb) {
-            console.log(file);
-            console.log(path.extname(file.originalname));
             cb(null, `${ file.fieldname }-${ Date.now() }${ path.extname(file.originalname) }`);
         }
     });
@@ -150,6 +159,21 @@ APP.post("/signup", (req, res) => {
         //TODO Save comments to a post
     });
 //* ================= </POSTS> =========================
+
+APP.get("/album/:aid", (req, res) => {
+    const albumId = req.params.aid;
+    console.log(`/album/${ albumId }`);
+
+    fs.readdir(path.join(__dirname, "/data/image/"), function (err, files) {
+        if(err) {
+            return;
+        } 
+
+        const uris = files.map(file => SERVERS.ALBUM.uri(`/img/${ file }`));
+
+        res.send(uris);
+    });
+});
 
 APP.get("/post/:pid", (req, res) => {
     const postId = req.params.pid;
