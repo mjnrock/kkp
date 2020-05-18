@@ -41,7 +41,7 @@ const reducer = (state, message) => {
 const initialState = {
     auth: {
         token: Date.now(),
-        user: "SignoreFancypants",
+        user: "MrStretch",
         email: "email@host.com",
         first: "Matt",
         last: "Kiszkabuddhaski",

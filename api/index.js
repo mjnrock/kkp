@@ -77,7 +77,7 @@ APP.post("/signup", (req, res) => {
 
     APP.post("/media/upload", (req, res) => {
         console.log("/media/upload");
-        // "profile_pic" is the name of our file input field in the HTML form
+
         let upload = multer({
             storage: MULTER_STORAGE,
             fileFilter: (req, file, cb) => {
@@ -88,7 +88,7 @@ APP.post("/signup", (req, res) => {
                 }
                 cb(null, true);
             }
-        }).single("avatar");    // ("avatar") is the <input name="avatar" type="file" /> element
+        }).single("photo");    // ("avatar") is the <input name="avatar" type="file" /> element
 
         upload(req, res, function (err) {
             // req.file contains information of uploaded file
@@ -107,7 +107,10 @@ APP.post("/signup", (req, res) => {
                 return res.send(err);
             }
 
-            return res.redirect(req.get("Referrer"));   // Send the user back to the referring page (e.g. /upload)
+            return res.send({
+                imageId: req.file.filename,
+            });
+            // return res.redirect(req.get("Referrer"));   // Send the user back to the referring page (e.g. /upload)
             // return res.sendStatus(200);
             // // Display uploaded image for user validation
             // res.send(`You have uploaded this image: <hr/><img src="${req.file.path}" width="500"><hr /><a href="./">Upload another image</a>`);
@@ -190,7 +193,7 @@ APP.get("/user/:handle", (req, res) => {
 APP.get("/family/:handle", (req, res) => {
     const handle = req.params.handle.toLowerCase();
     const filename = `./data/family/${ handle }.json`;
-    console.log(`/user/${handle}`);
+    console.log(`/family/${handle}`);
 
     fs.readFile(filename, function (err, buff) {
         return res.send(buff.toString());

@@ -67,6 +67,20 @@ function NavBar(props) {
 
             <Menu.Item
                 as={ Link }
+                to="/upload"
+            >
+                Upload
+            </Menu.Item>
+
+            <Menu.Item
+                as={ Link }
+                to="/friends"
+            >
+                Friends
+            </Menu.Item>
+
+            <Menu.Item
+                as={ Link }
                 to="/post/1"
             >
                 Post #1
@@ -77,13 +91,6 @@ function NavBar(props) {
                 to="/album/1"
             >
                 Album #1
-            </Menu.Item>
-
-            <Menu.Item
-                as={ Link }
-                to="/upload"
-            >
-                Upload
             </Menu.Item>
 
             {/* <Menu.Item

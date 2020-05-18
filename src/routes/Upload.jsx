@@ -1,12 +1,10 @@
 import React, { Fragment } from "react";
+import UploadWizard from "../components/upload/UploadWizard";
 
 function Upload() {
     return (
         <Fragment>
-            <form action={ `http://localhost:3001/media/upload` } method="post" encType="multipart/form-data">
-                <input type="file" name="avatar" />                
-                <input type="submit" name="upload-button" value="Upload" />
-            </form>
+            <UploadWizard />
         </Fragment>
     );
 }
