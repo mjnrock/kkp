@@ -107,8 +107,10 @@ APP.post("/signup", (req, res) => {
                 return res.send(err);
             }
 
-            // Display uploaded image for user validation
-            res.send(`You have uploaded this image: <hr/><img src="${req.file.path}" width="500"><hr /><a href="./">Upload another image</a>`);
+            return res.redirect(req.get("Referrer"));   // Send the user back to the referring page (e.g. /upload)
+            // return res.sendStatus(200);
+            // // Display uploaded image for user validation
+            // res.send(`You have uploaded this image: <hr/><img src="${req.file.path}" width="500"><hr /><a href="./">Upload another image</a>`);
         });
     });
 //* ================= </UPLOAD> =========================

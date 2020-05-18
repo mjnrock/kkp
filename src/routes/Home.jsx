@@ -1,8 +1,6 @@
-import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import React, { Fragment, useContext } from "react";
 import { Context } from "./../App";
-import { Button } from "semantic-ui-react";
-import Album from "../components/image/Album";
+import { Header } from "semantic-ui-react";
 
 function Home() {
     const { state, dispatch } = useContext(Context);
@@ -10,17 +8,11 @@ function Home() {
     console.log(state, dispatch);
 
     return (
-        <div>
-            <Album albumId={ 5 } />
-
-            <hr />
-            <form action={ `http://localhost:3001/media/upload` } method="post" encType="multipart/form-data">
-                <input type="file" name="avatar" />                
-                <input type="submit" name="upload-button" value="Upload" />
-            </form>
-
-            <Button as={ Link } to="/post/5">Post #5</Button>
-        </div>
+        <Fragment>
+            <Header as="h2" color="orange" textAlign="center">
+                <Header.Content>Kiki Pupus</Header.Content>
+            </Header>
+        </Fragment>
     );
 }
 

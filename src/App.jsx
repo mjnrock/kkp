@@ -4,13 +4,13 @@ import {
     Switch,
     Route,
     Redirect,
-    withRouter
 } from "react-router-dom";
 
 import Routes from "./routes/package";
 
 import LoginForm from "./auth/LoginForm";
 import SignUpForm from "./auth/SignUpForm";
+import NavBar from "./NavBar";
 
 const reducer = (state, message) => {
     console.log("Dispatch:", message);
@@ -33,9 +33,18 @@ const reducer = (state, message) => {
 
     return state;
 };
+// const initialState = {
+//     auth: {
+//         token: null
+//     },
+// };
 const initialState = {
     auth: {
-        token: null
+        token: Date.now(),
+        user: "SignoreFancypants",
+        email: "email@host.com",
+        first: "Matt",
+        last: "Kiszkabuddhaski",
     },
 };
 export const Context = React.createContext(initialState);
@@ -69,28 +78,13 @@ function AuthRoutes({ children, auth }) {
 //     );
 // }
 
-const AuthButton = withRouter(({ history, auth, dispatch }) => {
-    function logout() {
-        dispatch({ type: EnumMessageType.LOGOUT });
-        history.push("/");
-    }
-
-    if(auth.token) {
-        return (
-            <button onClick={ logout }>Sign out</button>
-        );
-    }
-
-    return null;
-});
-
 function App() {
     const [ state, dispatch ] = React.useReducer(reducer, initialState);
 
     return (
         <Router>
             <Context.Provider value={{ state, dispatch }}>
-                <AuthButton auth={ state.auth } dispatch={ dispatch } />
+                <NavBar auth={ state.auth } dispatch={ dispatch } />
 
                 <Switch>
                     <Route path="/login">
@@ -100,14 +94,23 @@ function App() {
                         <SignUpForm />
                     </Route>
                     
-                    {/* <AuthRoutes auth={ state.auth }> */}
+                    <AuthRoutes auth={ state.auth }>
+                        <Route path="/upload">
+                            <Routes.Upload />
+                        </Route>
+                        <Route path="/profile">
+                            <Routes.Profile />
+                        </Route>
+                        <Route path="/album/:albumId">
+                            <Routes.Album />
+                        </Route>
                         <Route path="/post/:postId">
                             <Routes.Post />
                         </Route>
-                        <Route path="/">
+                        <Route exact path="/">
                             <Routes.Home />
                         </Route>
-                    {/* </AuthRoutes> */}
+                    </AuthRoutes>
                 </Switch>
             </Context.Provider>
         </Router>

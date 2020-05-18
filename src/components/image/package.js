@@ -1,7 +1,7 @@
 import Album from "./Album";
-import Image from "./Image";
+import ImageBanner from "./ImageBanner";
 
 export default {
     Album,
-    Image,
+    ImageBanner,
 };

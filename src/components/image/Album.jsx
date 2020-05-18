@@ -14,7 +14,7 @@ function Album(props) {
         <Container style={{ marginTop: 30 }}>
             <Header as="h2" color="orange" textAlign="center">
                 <Header.Content>
-                    Kiszka at the Beach                    
+                    Kiszka at the Beach
                     <Header as="h4" color="grey" textAlign="center">
                         <Header.Content>A Journey to Kiszka and Back</Header.Content>
                     </Header>
