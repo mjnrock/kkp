@@ -178,7 +178,7 @@ APP.get("/album/:aid", (req, res) => {
 });
 
 APP.get("/user/:handle", (req, res) => {
-    const handle = req.params.handle;
+    const handle = req.params.handle.toLowerCase();
     const filename = `./data/user/${ handle }.json`;
     console.log(`/user/${handle}`);
 
@@ -188,7 +188,7 @@ APP.get("/user/:handle", (req, res) => {
 });
 
 APP.get("/family/:handle", (req, res) => {
-    const handle = req.params.handle;
+    const handle = req.params.handle.toLowerCase();
     const filename = `./data/family/${ handle }.json`;
     console.log(`/user/${handle}`);
 

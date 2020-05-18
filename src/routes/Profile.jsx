@@ -1,6 +1,6 @@
 import React, { Fragment, useContext, useEffect } from "react";
-import { Header, Divider, Icon, Card, Segment, Item, Accordion } from "semantic-ui-react";
-import { useParams } from "react-router-dom";
+import { Header, Divider, Icon, Card, Segment, Item, Accordion, List, Image } from "semantic-ui-react";
+import { useParams, Link } from "react-router-dom";
 
 import { Context } from "./../App";
 import ImageBanner from "./../components/image/ImageBanner";
@@ -8,7 +8,7 @@ import PetCard from "../components/profile/PetCard";
 import { useState } from "react";
 
 function Profile() {
-    const [ user, setUser ] = useState([]);
+    const [ user, setUser ] = useState();
     const [ family, setFamily ] = useState([]);
     const { state, dispatch } = useContext(Context);
     const { handle } = useParams();
@@ -27,19 +27,25 @@ function Profile() {
 
     console.log(state, dispatch);
 
+    if(!user) {
+        return (
+            <div>Loading...</div>
+        )
+    }
+
     return (
         <Fragment>            
             <Segment basic>
                 <Header as="h2" color="orange" textAlign="center">
                     <Header.Content>
-                        { state.auth.first } { state.auth.last }
+                        { user.name.first } { user.name.last }
                         <Header as="h4" color="grey" textAlign="center">
-                            <Header.Content>@{ state.auth.user }</Header.Content>
+                            <Header.Content>@{ user.handle }</Header.Content>
                         </Header>
                     </Header.Content>
                 </Header>
 
-                <ImageBanner name="profile-1.jpg" />
+                <ImageBanner name={ `${ handle }.jpg` } />
 
                 <Accordion>
                     <Accordion.Title
@@ -85,6 +91,33 @@ function Profile() {
                                 ))
                             }
                         </Card.Group>
+                    </Accordion.Content>
+
+                    <Accordion.Title
+                        active={ true }
+                        index={ 0 }
+                    >
+                        <Divider horizontal>
+                            <Header as="h4">
+                                <Icon name="users" />
+                                Friends
+                            </Header>
+                        </Divider>
+                    </Accordion.Title>
+
+                    <Accordion.Content active={ true }>
+                        <List selection verticalAlign="middle">
+                            {
+                                user.friends.map(friend => (
+                                    <List.Item key={ friend } as={ Link } to={ `/profile/${ friend }` }>
+                                        <Image avatar src={ `http://localhost:3001/img/${ friend }.jpg` } />
+                                        <List.Content>
+                                            <List.Header>{ friend }</List.Header>
+                                        </List.Content>
+                                    </List.Item>
+                                ))
+                            }
+                        </List>
                     </Accordion.Content>
                 </Accordion>
             </Segment>
