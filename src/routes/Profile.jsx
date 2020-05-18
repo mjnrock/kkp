@@ -1,6 +1,5 @@
 import React, { Fragment, useContext } from "react";
-import { Header, Table, Divider, Icon, Card, Image, Segment, Item, Accordion } from "semantic-ui-react";
-import { Emoji } from "emoji-mart";
+import { Header, Divider, Icon, Card, Segment, Item, Accordion } from "semantic-ui-react";
 
 import { Context } from "./../App";
 import ImageBanner from "./../components/image/ImageBanner";

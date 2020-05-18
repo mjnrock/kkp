@@ -8,6 +8,7 @@ function Album(props) {
         fetch(`http://localhost:3001/album/${ props.albumId }`)
         .then(response => response.json())
         .then(setFileNames);
+    // eslint-disable-next-line
     }, []);
 
     return (

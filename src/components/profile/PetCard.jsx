@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Table, Image } from "semantic-ui-react";
+import { Card, Table, Image, Segment } from "semantic-ui-react";
 import { Emoji } from "emoji-mart";
 
 function PetCard(props) {
@@ -7,15 +7,17 @@ function PetCard(props) {
 
     return (
         <Card>
-            <Image className="clipped" src={ `http://localhost:3001/img/${ info.image }` } width={ 300 } height={ 200 } centered />
+            <Segment inverted style={{ marginBottom: 0 }}>
+                <Image className="clipped" src={ `http://localhost:3001/img/${ info.image }` } width={ 300 } height={ 200 } centered />
+            </Segment>            
             
-            <Card.Content>
+            <Card.Content style={{ padding: 2, paddingTop: 14 }}>
                 <Card.Header textAlign="center">
                     { info.name }
                 </Card.Header>
 
                 <Card.Description>
-                    <Table definition>
+                    <Table definition style={{ borderRadius: 0 }}>
                         <Table.Body>
                             <Table.Row textAlign="center">
                                 <Table.Cell width={2}>Type</Table.Cell>

@@ -1,7 +1,5 @@
 import React, { Fragment } from "react";
 
-import Images from "../components/image/package";
-
 function Upload() {
     return (
         <Fragment>

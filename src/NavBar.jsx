@@ -4,6 +4,7 @@ import {
     withRouter,
 } from "react-router-dom";
 
+// eslint-disable-next-line
 import { Menu, Icon, Button, Radio } from "semantic-ui-react";
 import { useContext } from "react";
 import { Context, EnumMessageType } from "./App";
