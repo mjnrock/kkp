@@ -98,7 +98,7 @@ function App() {
                         <Route path="/upload">
                             <Routes.Upload />
                         </Route>
-                        <Route path="/profile">
+                        <Route path="/profile/:handle">
                             <Routes.Profile />
                         </Route>
                         <Route path="/album/:albumId">

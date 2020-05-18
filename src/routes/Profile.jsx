@@ -1,49 +1,29 @@
-import React, { Fragment, useContext } from "react";
+import React, { Fragment, useContext, useEffect } from "react";
 import { Header, Divider, Icon, Card, Segment, Item, Accordion } from "semantic-ui-react";
+import { useParams } from "react-router-dom";
 
 import { Context } from "./../App";
 import ImageBanner from "./../components/image/ImageBanner";
 import PetCard from "../components/profile/PetCard";
-
-const bio = "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aspernatur laudantium officia nisi fugiat. Veniam, minus incidunt eum debitis soluta fugiat. Tempore nisi odit tenetur natus architecto, ducimus nam saepe quasi! Deserunt fugit dolorem odit dolor architecto, sed illum libero animi incidunt quos reiciendis ducimus tenetur minus? Dolore magnam asperiores quibusdam maxime quisquam nemo et atque? Minima impedit rem sit ad. Recusandae similique tempora quo repellat commodi quidem iure quos reiciendis dignissimos sunt ipsam, pariatur in iste vitae quia quisquam corrupti? Aspernatur fuga molestiae ut veniam aliquam ad natus inventore laboriosam.";
-const family = [
-    {
-        image: "kiszka-1.jpg",
-        name: "Kiszka",
-        detail: {
-            type: "cat",
-            sex: "female",
-            breed: "Domestic Medium Hair (DMH)",
-            weight: "12 lbs.",
-            color: "Calico",
-        }
-    },
-    {
-        image: "buddha-1.jpg",
-        name: "Buddha",
-        detail: {
-            type: "cat",
-            sex: "male",
-            breed: "Domestic Short Hair (DSH)",
-            weight: "9 lbs.",
-            color: "Black",
-        }
-    },
-    {
-        image: "king-cavalier.jpg",
-        name: "Margery Stuart Baxter",
-        detail: {
-            type: "dog",
-            sex: "female",
-            breed: "Cavalier King Charles Spaniel",
-            weight: "16 lbs.",
-            color: "Brown",
-        }
-    },
-];
+import { useState } from "react";
 
 function Profile() {
+    const [ user, setUser ] = useState([]);
+    const [ family, setFamily ] = useState([]);
     const { state, dispatch } = useContext(Context);
+    const { handle } = useParams();
+
+    useEffect(() => {
+        if(handle) {
+            fetch(`http://localhost:3001/user/${ handle }`)
+            .then(response => response.json())
+            .then(setUser);
+
+            fetch(`http://localhost:3001/family/${ handle }`)
+            .then(response => response.json())
+            .then(setFamily);
+        }
+    }, [ handle ]);
 
     console.log(state, dispatch);
 
@@ -77,7 +57,7 @@ function Profile() {
                     <Accordion.Content active={ true }>
                         <Item>
                             <Item.Content>
-                                { bio }
+                                { user.bio }
                             </Item.Content>
                         </Item>
                     </Accordion.Content>

@@ -177,6 +177,26 @@ APP.get("/album/:aid", (req, res) => {
     });
 });
 
+APP.get("/user/:handle", (req, res) => {
+    const handle = req.params.handle;
+    const filename = `./data/user/${ handle }.json`;
+    console.log(`/user/${handle}`);
+
+    fs.readFile(filename, function (err, buff) {
+        return res.send(buff.toString());
+    });
+});
+
+APP.get("/family/:handle", (req, res) => {
+    const handle = req.params.handle;
+    const filename = `./data/family/${ handle }.json`;
+    console.log(`/user/${handle}`);
+
+    fs.readFile(filename, function (err, buff) {
+        return res.send(buff.toString());
+    });
+});
+
 APP.get("/post/:pid", (req, res) => {
     const postId = req.params.pid;
     console.log(`/post/${postId}`);
