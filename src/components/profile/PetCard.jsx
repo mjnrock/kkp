@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Table, Image, Segment } from "semantic-ui-react";
+import { Card, Table, Image, Segment, Icon } from "semantic-ui-react";
 import { Emoji } from "emoji-mart";
 
 function PetCard(props) {
@@ -23,16 +23,20 @@ function PetCard(props) {
                                 <Table.Cell width={2}>Type</Table.Cell>
                                 <Table.Cell>
                                     <Emoji emoji={ info.detail.type === "cat" ? ":cat2:" : ":dog2:" } size={ 20 } native={ true } />
+                                    <Icon name={ info.detail.sex === "male" ? "man" : "woman" } color={ info.detail.sex === "male" ? "blue" : "red" } size="large" />
                                 </Table.Cell>
                             </Table.Row>
+
                             <Table.Row textAlign="center">
                                 <Table.Cell>Breed</Table.Cell>
                                 <Table.Cell>{ info.detail.breed }</Table.Cell>
                             </Table.Row>
+
                             <Table.Row textAlign="center">
                                 <Table.Cell>Weight</Table.Cell>
                                 <Table.Cell>{ info.detail.weight }</Table.Cell>
                             </Table.Row>
+
                             <Table.Row textAlign="center">
                                 <Table.Cell>Color</Table.Cell>
                                 <Table.Cell>{ info.detail.color }</Table.Cell>
