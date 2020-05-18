@@ -108,24 +108,24 @@ APP.post("/signup", (req, res) => {
             }
 
             const postFilename = `./data/post/${ req.body.handle.toLowerCase() }.json`;
+            const postData = {
+                id: `${ req.body.handle }-${ Date.now() }`,
+                image: req.file.filename,
+            };
+
             fs.readFile(postFilename, "utf8", (err, data) => {
                 if (err) {
                     console.log(err);
                 } else {
                     let posts = JSON.parse(data);
                     
-                    posts.push({
-                        id: `${ req.body.handle }-${ Date.now() }`,
-                        image: req.file.filename,
-                    });
+                    posts.push(postData);
     
                     let json = JSON.stringify(posts);
-                    fs.writeFile(postFilename, json, () => true);
+                    fs.writeFile(postFilename, json, () => {
+                        return res.send(postData);
+                    });
                 }
-            });
-
-            return res.send({
-                imageId: req.file.filename,
             });
         });
     });

@@ -14,9 +14,6 @@ function Friends() {
         }
     }, []);
 
-    console.log(handle)
-    console.log(friends)
-
     if(!friends.length) {
         return (
             <div>Loading...</div>

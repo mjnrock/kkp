@@ -1,11 +1,7 @@
-import React, { Fragment, useContext } from "react";
-import { Context } from "./../App";
+import React, { Fragment } from "react";
 import { Header } from "semantic-ui-react";
 
 function Home() {
-    const { state, dispatch } = useContext(Context);
-
-    console.log(state, dispatch);
 
     return (
         <Fragment>

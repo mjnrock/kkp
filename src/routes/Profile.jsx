@@ -25,8 +25,6 @@ function Profile() {
         }
     }, [ handle ]);
 
-    console.log(state, dispatch);
-
     if(!user) {
         return (
             <div>Loading...</div>

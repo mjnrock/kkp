@@ -22,8 +22,6 @@ function Response(props) {
         //     }
         // });
 
-        console.log(post.id, emoji)
-
         const token = state.auth.token || "Matt";
         
         // if(state.auth.token) {
@@ -43,7 +41,6 @@ function Response(props) {
             .then(response => response.json())
             .then(data => {
                 if(data) {
-                    console.log(data.id, post.id)
                     if(data.id === post.id) {
                         setReactions(data.reactions);
                     }                

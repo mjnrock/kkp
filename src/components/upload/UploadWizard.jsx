@@ -35,7 +35,7 @@ function UploadWizard() {
         })
         .then(response => response.json())
         .then(data => {
-            if(data.imageId) {
+            if(data.id) {
                 setResponse(data);
                 setStep(2);
             } else {

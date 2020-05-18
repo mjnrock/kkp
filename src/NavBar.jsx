@@ -17,8 +17,6 @@ const AuthButton = withRouter(({ history }) => {
         history.push("/");
     }
 
-    console.log(state)
-
     if(state.auth.token) {
         return (
             <Button
