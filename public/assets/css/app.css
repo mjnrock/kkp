@@ -47,3 +47,8 @@
     color: #fff !important;
     background-color: #f2711c !important;
 }
+
+.clipped {
+    object-fit: cover;
+    overflow: hidden !important;
+}
