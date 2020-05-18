@@ -48,8 +48,9 @@ const AuthButton = withRouter(({ history }) => {
 });
 
 function NavBar(props) {
-    return (
+    const { state } = useContext(Context);
 
+    return (
         <Menu stackable>
             <Menu.Item
                 as={ Link }
@@ -60,7 +61,7 @@ function NavBar(props) {
 
             <Menu.Item
                 as={ Link }
-                to="/profile"
+                to={ `/profile/${ state.auth.handle }` }
             >
                 Profile
             </Menu.Item>
@@ -74,24 +75,24 @@ function NavBar(props) {
 
             <Menu.Item
                 as={ Link }
-                to="/friends"
+                to={ `/friends/${ state.auth.handle }` }
             >
                 Friends
             </Menu.Item>
 
             <Menu.Item
                 as={ Link }
-                to="/post/1"
+                to={ `/feed/${ state.auth.handle }` }
             >
-                Post #1
+                Feed
             </Menu.Item>
 
-            <Menu.Item
+            {/* <Menu.Item
                 as={ Link }
                 to="/album/1"
             >
                 Album #1
-            </Menu.Item>
+            </Menu.Item> */}
 
             {/* <Menu.Item
                 as={ Link }

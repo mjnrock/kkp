@@ -33,7 +33,7 @@ const reducer = (state, message) => {
 
     return state;
 };
-// const initialState = {
+// const initialState = {a
 //     auth: {
 //         token: null
 //     },
@@ -41,7 +41,7 @@ const reducer = (state, message) => {
 const initialState = {
     auth: {
         token: Date.now(),
-        user: "MrStretch",
+        handle: "MrStretch",
         email: "email@host.com",
         first: "Matt",
         last: "Kiszkabuddhaski",
@@ -97,6 +97,12 @@ function App() {
                     <AuthRoutes auth={ state.auth }>
                         <Route path="/upload">
                             <Routes.Upload />
+                        </Route>
+                        <Route path="/feed/:handle">
+                            <Routes.Feed />
+                        </Route>
+                        <Route path="/friends/:handle">
+                            <Routes.Friends />
                         </Route>
                         <Route path="/profile/:handle">
                             <Routes.Profile />

@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Step, Icon, Segment } from "semantic-ui-react";
 
+import { Context } from "./../../App";
 import CaptureImage from "./CaptureImage";
 import UploadImage from "./UploadImage";
 import CustomizeImage from "./CustomizeImage";
+import { useContext } from "react";
 
 function UploadWizard() {
+    const { state } = useContext(Context);
     const [ response, setResponse ] = useState({});
     const [ image, setImage ] = useState();
     const [ step, setStep ] = useState(0);
@@ -24,6 +27,7 @@ function UploadWizard() {
         let formData = new FormData();
 
         formData.append("photo", image);
+        formData.append("handle", state.auth.handle);
 
         fetch("http://localhost:3001/media/upload", {
             method: "POST",

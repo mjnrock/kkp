@@ -107,13 +107,26 @@ APP.post("/signup", (req, res) => {
                 return res.send(err);
             }
 
+            const postFilename = `./data/post/${ req.body.handle.toLowerCase() }.json`;
+            fs.readFile(postFilename, "utf8", (err, data) => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    let posts = JSON.parse(data);
+                    
+                    posts.push({
+                        id: `${ req.body.handle }-${ Date.now() }`,
+                        image: req.file.filename,
+                    });
+    
+                    let json = JSON.stringify(posts);
+                    fs.writeFile(postFilename, json, () => true);
+                }
+            });
+
             return res.send({
                 imageId: req.file.filename,
             });
-            // return res.redirect(req.get("Referrer"));   // Send the user back to the referring page (e.g. /upload)
-            // return res.sendStatus(200);
-            // // Display uploaded image for user validation
-            // res.send(`You have uploaded this image: <hr/><img src="${req.file.path}" width="500"><hr /><a href="./">Upload another image</a>`);
         });
     });
 //* ================= </UPLOAD> =========================
@@ -200,11 +213,48 @@ APP.get("/family/:handle", (req, res) => {
     });
 });
 
+APP.get("/friends/:handle", (req, res) => {
+    const handle = req.params.handle;
+    const filename = `./data/user/${ handle.toLowerCase() }.json`;
+    console.log(`/friends/${handle}`);
+
+    fs.readFile(filename, "utf8", (err, data) => {
+        if (err) {
+            console.log(err);
+        } else {
+            let profile = JSON.parse(data);
+            
+            return res.send(profile.friends);
+        }
+    });
+});
+
 APP.get("/post/:pid", (req, res) => {
     const postId = req.params.pid;
+    const filename = `./data/post/${ postId.split("-")[ 0 ].toLowerCase() }.json`;
     console.log(`/post/${postId}`);
 
-    fs.readFile("./data/messages.json", function (err, buff) {
+    fs.readFile(filename, "utf8", (err, data) => {
+        if (err) {
+            console.log(err);
+        } else {
+            let posts = JSON.parse(data);
+            let post = posts.filter(post => post.id === postId);
+    
+            if(post) {
+                return res.send(post[ 0 ]);
+            }
+
+            return res.sendStatus(404);
+        }
+    });
+});
+
+APP.get("/feed/:handle", (req, res) => {
+    const handle = req.params.handle;
+    console.log(`/feed/${handle}`);
+
+    fs.readFile(`./data/post/${ handle.toLowerCase() }.json`, function (err, buff) {
         return res.send(buff.toString());
     });
 });
