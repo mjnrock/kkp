@@ -100,7 +100,7 @@ function Profile() {
                         <Divider horizontal>
                             <Header as="h4">
                                 <Icon name="users" />
-                                Friends
+                                Friends ({ user.friends.length })
                             </Header>
                         </Divider>
                     </Accordion.Title>
