@@ -243,3 +243,198 @@ BEGIN
 	END IF;
 END//
 DELIMITER ;
+
+    
+DROP PROCEDURE IF EXISTS CreatePostDetail;
+
+DELIMITER //
+CREATE PROCEDURE CreatePostDetail
+(IN
+	$PostID INT,
+    $Tags TEXT,
+    $Pets TEXT
+)
+BEGIN    
+	INSERT INTO PostDetail (PostID, Tags, Pets)
+    VALUES (
+		$PostID,
+		CAST($Tags AS JSON),
+		CAST($Pets AS JSON)
+    );
+END//
+DELIMITER ;
+
+    
+DROP PROCEDURE IF EXISTS CreatePost;
+
+DELIMITER //
+CREATE PROCEDURE CreatePost
+(IN
+	$UserID INT,
+    $Type VARCHAR(255),
+    $Content TEXT,
+    $ImageID INT,
+    $ParentPostID INT
+)
+BEGIN
+    DECLARE $PostID INT;
+    
+	INSERT INTO Post (UserID, Type, Content, ImageID, ParentPostID)
+    VALUES ($UserID, $Type, $Content, $ImageID, $ParentPostID);
+    
+    SET $PostID = LAST_INSERT_ID();
+    
+    INSERT INTO PostDetail (PostID, Tags, Reactions, Pets)
+    VALUES (
+		$PostID,
+        JSON_OBJECT(),
+        JSON_OBJECT(),
+        JSON_OBJECT()
+	);
+END//
+DELIMITER ;
+
+    
+DROP PROCEDURE IF EXISTS CreateCommentPost;
+
+DELIMITER //
+CREATE PROCEDURE CreateCommentPost
+(IN
+	$UserID INT,
+    $Content TEXT,
+    $ParentPostID INT
+)
+BEGIN
+	CALL CreatePost($UserID, "Comment", $Content, NULL, $ParentPostID);
+END//
+DELIMITER ;
+
+    
+DROP PROCEDURE IF EXISTS CreateImagePost;
+
+DELIMITER //
+CREATE PROCEDURE CreateImagePost
+(IN
+	$UserID INT,
+    $ImageID INT,
+    $ParentPostID INT
+)
+BEGIN
+	CALL CreatePost($UserID, "Image", NULL, $ImageID, $ParentPostID);
+END//
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS AddPostReaction;
+
+DELIMITER //
+CREATE PROCEDURE AddPostReaction
+(IN
+	$PostID INT,
+	$UserID INT,
+    $Reaction VARCHAR(255)
+)
+BEGIN
+	-- DECLARE $Reactions JSON;
+    
+	IF(EXISTS(SELECT * FROM `PostDetail` WHERE PostID = $PostID)) THEN
+        -- SET $Reactions = (SELECT COALESCE(JSON_EXTRACT(c, CONCAT('$."', $UserID, '"')), JSON_ARRAY()) FROM `PostDetail` WHERE PostID = $PostID);
+        
+		BEGIN            
+			UPDATE `PostDetail`
+			SET
+				Reactions = JSON_SET(Reactions, CONCAT('$."', $UserID, '"'), $Reaction)
+			WHERE
+				PostID = $PostID;
+		END;
+	END IF;
+END//
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS AddPostPet;
+
+DELIMITER //
+CREATE PROCEDURE AddPostPet
+(IN
+	$PostID INT,
+    $PetID INT
+)
+BEGIN
+	IF(EXISTS(SELECT * FROM `PostDetail` WHERE PostID = $PostID)) THEN
+		BEGIN
+			UPDATE `PostDetail`
+			SET
+				Pets = JSON_SET(Pets, CONCAT('$."', $PetID, '"'), $PetID)
+			WHERE
+				PostID = $PostID;
+		END;
+	END IF;
+END//
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS AddPostTag;
+
+DELIMITER //
+CREATE PROCEDURE AddPostTag
+(IN
+	$PostID INT,
+    $Tag VARCHAR(255)
+)
+BEGIN
+	IF(EXISTS(SELECT * FROM `PostDetail` WHERE PostID = $PostID)) THEN
+		BEGIN
+			UPDATE `PostDetail`
+			SET
+				Tags = JSON_SET(Tags, CONCAT('$."', $Tag, '"'), $Tag)
+			WHERE
+				PostID = $PostID;
+		END;
+	END IF;
+END//
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS RemovePostTag;
+
+DELIMITER //
+CREATE PROCEDURE RemovePostTag
+(IN
+	$PostID INT,
+    $Tag VARCHAR(255)
+)
+BEGIN
+	IF(EXISTS(SELECT * FROM `PostDetail` WHERE PostID = $PostID)) THEN
+		BEGIN
+			UPDATE `PostDetail`
+			SET
+				Tags = JSON_REMOVE(Tags, CONCAT('$."', $Tag, '"'))
+			WHERE
+				PostID = $PostID;
+		END;
+	END IF;
+END//
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS CreateImage;
+
+DELIMITER //
+CREATE PROCEDURE CreateImage
+(IN
+	$UserID INT,
+    $Type VARCHAR(255),
+    $Filename VARCHAR(255)
+)
+BEGIN
+	IF(NOT EXISTS(SELECT * FROM `Image` WHERE Filename = $Filename)) THEN
+		BEGIN
+			INSERT INTO `Image` (AuthorUserID, Type, Filename)
+            VALUES ($UserID, $Type, $Filename);
+			
+            SELECT UUID FROM `Image` WHERE ImageID = LAST_INSERT_ID();
+		END;
+	END IF;
+END//
+DELIMITER ;
