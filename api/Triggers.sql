@@ -39,3 +39,13 @@ BEGIN
     SET new.UUID = UUID();
   END IF;
 END//
+
+DELIMITER //
+CREATE TRIGGER before_insert_Group
+BEFORE INSERT ON `Group`
+FOR EACH ROW
+BEGIN
+  IF new.UUID IS NULL THEN
+    SET new.UUID = UUID();
+  END IF;
+END//
