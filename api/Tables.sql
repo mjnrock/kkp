@@ -1,0 +1,87 @@
+USE kkp;
+
+DROP TABLE IF EXISTS Collection;
+DROP TABLE IF EXISTS PostDetail;
+DROP TABLE IF EXISTS Post;
+DROP TABLE IF EXISTS UserDetail;
+DROP TABLE IF EXISTS Pet;
+DROP TABLE IF EXISTS Image;
+DROP TABLE IF EXISTS `User`;
+
+CREATE TABLE `User` (
+	UserID INT AUTO_INCREMENT PRIMARY KEY,
+	Email VARCHAR(255),
+	`Password` VARCHAR(255),
+	LastLoginDateTimeUTC DATETIME(3),	
+	CreatedDateTimeUTC DATETIME(3),
+	UUID VARCHAR(255)
+);
+
+CREATE TABLE Image (
+	ImageID INT AUTO_INCREMENT PRIMARY KEY,
+	AuthorUserID INT,
+		FOREIGN KEY (AuthorUserID) REFERENCES `User`(UserID),	
+	Filename VARCHAR(255),
+	`Type` ENUM('JPEG', 'PNG', 'GIF'),	
+	CreatedDateTimeUTC DATETIME(3),
+	UUID VARCHAR(255)
+);
+
+CREATE TABLE UserDetail (
+	UserDetailID INT AUTO_INCREMENT PRIMARY KEY,
+	UserID INT,
+		FOREIGN KEY (UserID) REFERENCES `User`(UserID),
+	PrimaryImageID INT,
+		FOREIGN KEY (PrimaryImageID) REFERENCES Image(ImageID),	
+	Handle VARCHAR(255),
+	`First` VARCHAR(255),
+	`Last` VARCHAR(255),
+	Friends JSON
+);
+
+CREATE TABLE Pet (
+	PetID INT AUTO_INCREMENT PRIMARY KEY,
+	FamilyUserID INT,
+		FOREIGN KEY (FamilyUserID) REFERENCES `User`(UserID),
+	PrimaryImageID INT,
+		FOREIGN KEY (PrimaryImageID) REFERENCES Image(ImageID),	
+	Name VARCHAR(255),
+	`Type` ENUM('Cat', 'Dog'),
+	Detail JSON
+);
+
+CREATE TABLE Post (
+	PostID INT AUTO_INCREMENT PRIMARY KEY,
+	ParentPostID INT NULL,
+		FOREIGN KEY (ParentPostID) REFERENCES Post(PostID),	
+	UserID INT,
+		FOREIGN KEY (UserID) REFERENCES `User`(UserID),
+	ImageID INT,
+		FOREIGN KEY (ImageID) REFERENCES Image(ImageID),	
+	Content TEXT,
+	`Type` ENUM('Image', 'Comment'),	
+	CreatedDateTimeUTC DATETIME(3),
+	UUID VARCHAR(255)
+);
+
+CREATE TABLE PostDetail (
+	PostDetailID INT AUTO_INCREMENT PRIMARY KEY,
+	PostID INT NULL,
+		FOREIGN KEY (PostID) REFERENCES Post(PostID),
+	UserID INT,
+		FOREIGN KEY (UserID) REFERENCES `User`(UserID),	
+	Tags JSON,
+	Reactions JSON,
+	Pets JSON
+);
+
+CREATE TABLE Collection (
+	CollectionID INT AUTO_INCREMENT PRIMARY KEY,
+	AuthorUserID INT,
+		FOREIGN KEY (AuthorUserID) REFERENCES `User`(UserID),	
+	Title VARCHAR(255),
+	Description TEXT,
+	Posts JSON,	
+	CreatedDateTimeUTC DATETIME(3),
+	UUID VARCHAR(255)
+);

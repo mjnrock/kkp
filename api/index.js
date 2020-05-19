@@ -2,7 +2,15 @@ import express from "express";
 import fs from "fs";
 import path from "path";
 import multer from "multer";
+import mysql from "mysql";
 
+const DB = mysql.createPool({
+    connectionLimit: 10,
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "kkp",
+});
 const APP = express();
 const PORT = 3001;
 const SERVERS = {
@@ -30,6 +38,8 @@ APP.use((req, res, next) => {
     //? Whatever middleware work .next() is doing is ESSENTIAL to actually making this work
     next();
 });
+
+APP.disable("x-powered-by");
 
 //* ================= <AUTHENTICATION> =========================
 APP.post("/auth", (req, res) => {
@@ -266,6 +276,16 @@ APP.get("/image/:iid", (req, res) => {
     console.log(`/image/${imageId}`);
 
     return res.sendFile(filepath, { root: __dirname });
+});
+
+
+
+APP.get("/test", (req, res) => {
+    console.log(`/test`);
+
+    DB.query("SELECT * FROM test", function (error, results, fields) {
+        return res.send(results)
+    });
 });
 
 APP.listen(PORT, () =>

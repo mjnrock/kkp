@@ -1,0 +1,41 @@
+USE kkp;
+
+DELIMITER //
+CREATE TRIGGER before_insert_User
+BEFORE INSERT ON `User`
+FOR EACH ROW
+BEGIN
+  IF new.UUID IS NULL THEN
+    SET new.UUID = UUID();
+  END IF;
+END//
+
+DELIMITER //
+CREATE TRIGGER before_insert_Image
+BEFORE INSERT ON `Image`
+FOR EACH ROW
+BEGIN
+  IF new.UUID IS NULL THEN
+    SET new.UUID = UUID();
+  END IF;
+END//
+
+DELIMITER //
+CREATE TRIGGER before_insert_Post
+BEFORE INSERT ON `Post`
+FOR EACH ROW
+BEGIN
+  IF new.UUID IS NULL THEN
+    SET new.UUID = UUID();
+  END IF;
+END//
+
+DELIMITER //
+CREATE TRIGGER before_insert_Collection
+BEFORE INSERT ON `Collection`
+FOR EACH ROW
+BEGIN
+  IF new.UUID IS NULL THEN
+    SET new.UUID = UUID();
+  END IF;
+END//
