@@ -10,6 +10,7 @@ function CaptureImage(props) {
         if(photo) {
             props.onSelect(photo);
         }
+        // eslint-disable-next-line
     }, [ photo ]);
 
     function selectPhoto(e) {

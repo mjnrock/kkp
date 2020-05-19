@@ -29,7 +29,7 @@ function UploadWizard() {
         formData.append("photo", image);
         formData.append("handle", state.auth.handle);
 
-        fetch("http://localhost:3001/media/upload", {
+        fetch("http://192.168.86.100:3001/media/upload", {
             method: "POST",
             body: formData,
         })

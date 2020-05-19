@@ -8,10 +8,11 @@ function Friends() {
 
     useEffect(() => {
         if(handle) {
-            fetch(`http://localhost:3001/friends/${ handle }`)
+            fetch(`http://192.168.86.100:3001/friends/${ handle }`)
             .then(response => response.json())
             .then(setFriends)
         }
+        // eslint-disable-next-line
     }, []);
 
     if(!friends.length) {
@@ -37,7 +38,7 @@ function Friends() {
                 {
                     friends.map(friend => (
                         <List.Item key={ friend } as={ Link } to={ `/profile/${ friend }` }>
-                            <Image avatar src={ `http://localhost:3001/img/${ friend }.jpg` } />
+                            <Image avatar src={ `http://192.168.86.100:3001/img/${ friend }.jpg` } />
                             <List.Content>
                                 <List.Header>{ friend }</List.Header>
                             </List.Content>

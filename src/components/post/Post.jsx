@@ -16,7 +16,7 @@ function Post(props) {
             </Header>
 
             <Segment inverted>
-                <Image src={ `http://localhost:3001/img/${ post.image }` } centered />
+                <Image src={ `http://192.168.86.100:3001/img/${ post.image }` } centered />
             </Segment>
 
             <ReactionBar onReaction={ console.log } reactions={ [] } />

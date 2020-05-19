@@ -8,7 +8,7 @@ const PORT = 3001;
 const SERVERS = {
     ALBUM: {
         protocol: "http",
-        host: "localhost",
+        host: "192.168.86.100",
         port: PORT,
         endpoint: "/",
         uri: function(extra) {
@@ -59,7 +59,7 @@ APP.post("/signup", (req, res) => {
 
 //* ================= <UPLOAD> =========================
     // //? An example <FORM> 
-    // <form action={ `http://localhost:3001/media/upload` } method="post" encType="multipart/form-data">
+    // <form action={ `http://192.168.86.100:3001/media/upload` } method="post" encType="multipart/form-data">
     //     <input type="file" name="avatar" />                
     //     <input type="submit" name="upload-button" value="Upload" />
     // </form>

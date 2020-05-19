@@ -13,7 +13,7 @@ function LoginForm(props) {
     function attemptAuth() {
         //TODO Encrypt password before sending
         if(email.length && password.length > 7) {
-            fetch("http://localhost:3001/auth", {
+            fetch("http://192.168.86.100:3001/auth", {
                 method: "POST",
                 headers: {
                     "Accept": "application/json",

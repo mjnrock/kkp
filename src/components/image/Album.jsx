@@ -5,7 +5,7 @@ function Album(props) {
     const [ fileNames, setFileNames ] = useState([]);
 
     useEffect(() => {
-        fetch(`http://localhost:3001/album/${ props.albumId }`)
+        fetch(`http://192.168.86.100:3001/album/${ props.albumId }`)
         .then(response => response.json())
         .then(setFileNames);
     // eslint-disable-next-line

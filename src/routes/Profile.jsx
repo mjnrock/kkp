@@ -1,8 +1,7 @@
-import React, { Fragment, useContext, useEffect } from "react";
+import React, { Fragment, useEffect } from "react";
 import { Header, Divider, Icon, Card, Segment, Item, Accordion, List, Image } from "semantic-ui-react";
 import { useParams, Link } from "react-router-dom";
 
-import { Context } from "./../App";
 import ImageBanner from "./../components/image/ImageBanner";
 import PetCard from "../components/profile/PetCard";
 import { useState } from "react";
@@ -10,16 +9,15 @@ import { useState } from "react";
 function Profile() {
     const [ user, setUser ] = useState();
     const [ family, setFamily ] = useState([]);
-    const { state, dispatch } = useContext(Context);
     const { handle } = useParams();
 
     useEffect(() => {
         if(handle) {
-            fetch(`http://localhost:3001/user/${ handle }`)
+            fetch(`http://192.168.86.100:3001/user/${ handle }`)
             .then(response => response.json())
             .then(setUser);
 
-            fetch(`http://localhost:3001/family/${ handle }`)
+            fetch(`http://192.168.86.100:3001/family/${ handle }`)
             .then(response => response.json())
             .then(setFamily);
         }
@@ -108,7 +106,7 @@ function Profile() {
                             {
                                 user.friends.map(friend => (
                                     <List.Item key={ friend } as={ Link } to={ `/profile/${ friend }` }>
-                                        <Image avatar src={ `http://localhost:3001/img/${ friend }.jpg` } />
+                                        <Image avatar src={ `http://192.168.86.100:3001/img/${ friend }.jpg` } />
                                         <List.Content>
                                             <List.Header>{ friend }</List.Header>
                                         </List.Content>

@@ -10,7 +10,7 @@ function Feed() {
 
     useEffect(() => {
         if(handle) {
-            fetch(`http://localhost:3001/feed/${ handle }`)
+            fetch(`http://192.168.86.100:3001/feed/${ handle }`)
             .then(response => response.json())
             .then(setPosts);
         }

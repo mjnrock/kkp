@@ -32,7 +32,7 @@ function SignUpForm(props) {
 
     function attemptSignUp() {
         if(email.length && arePasswordsValid()) {
-            fetch("http://localhost:3001/signup", {
+            fetch("http://192.168.86.100:3001/signup", {
                 method: "POST",
                 headers: {
                     "Accept": "application/json",

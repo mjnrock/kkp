@@ -8,7 +8,7 @@ function PetCard(props) {
     return (
         <Card>
             <Segment inverted style={{ marginBottom: 0 }}>
-                <Image className="clipped" src={ `http://localhost:3001/img/${ info.image }` } width={ 300 } height={ 200 } centered />
+                <Image className="clipped" src={ `http://192.168.86.100:3001/img/${ info.image }` } width={ 300 } height={ 200 } centered />
             </Segment>            
             
             <Card.Content style={{ padding: 2, paddingTop: 14 }}>
