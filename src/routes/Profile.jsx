@@ -49,7 +49,7 @@ function Profile() {
                     </Header.Content>
                 </Header>
 
-                <ImageBanner name={ `${ handle }.jpg` } />
+                <ImageBanner name={ user.Image } />
 
                 <Accordion>
                     <Accordion.Title

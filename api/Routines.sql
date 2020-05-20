@@ -457,9 +457,12 @@ BEGIN
 		ud.Handle,
 		ud.First,
 		ud.Last,
-		ud.Bio
+		ud.Bio,
+		CONCAT(i.filename, ".", i.Type) AS Image
 	FROM
 		`UserDetail` ud
+        LEFT JOIN `Image` i
+			ON ud.UserID = i.AuthorUserID
 	WHERE (
 		(
 			$Action = 0
