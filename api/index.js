@@ -67,20 +67,24 @@ APP.post("/auth", (req, res) => {
     const { email, password: pwd } = message;
     console.log("/auth", message);
 
-    if(email && pwd) {
-        const hashPwd = crypto.createHash("sha256").update(pwd).digest("hex");
-        const token = createToken(email, hashPwd, 60 * 60 * 24);    // 24 Hours
-    
-        if(token) {
-            return res.send({
-                token,
-            });
-        }
+    if(!(email && pwd)) {
+        return res.send({
+            result: false
+        });
     }
 
-    return res.send({
-        token: false
-    });
+    const hashPwd = crypto.createHash("sha256").update(pwd).digest("hex");
+    const token = createToken(email, hashPwd, 60 * 60 * 24);    // 24 Hours
+
+    if(token) {
+        return res.send({
+            token,
+        });
+    } else {
+        return res.send({
+            result: false
+        });
+    }
 });
 
 APP.post("/signup", (req, res) => {
@@ -88,25 +92,95 @@ APP.post("/signup", (req, res) => {
     const { email, password: pwd } = message;
     console.log("/signup", message);
 
-    if(email && pwd) {
-        const hashPwd = crypto.createHash("sha256").update(pwd).digest("hex");
-        
-        DB.query(`CALL SignUp(?, ?)`, [ email, hashPwd ], function (error, [ results ], fields) {
-            if(results[ 0 ].Result) {
-                const token = createToken(email, hashPwd, 60 * 60 * 24);    // 24 Hours
-            
-                if(token) {
-                    return res.send({
-                        token,
-                    });
-                }
-            }
-            
-            return res.send({
-                token: false
-            });
+    if(!(email && pwd)) {
+        return res.send({
+            result: false
         });
     }
+
+    const hashPwd = crypto.createHash("sha256").update(pwd).digest("hex");
+    
+    DB.query(`CALL SignUp(?, ?)`, [ email, hashPwd ], function (error, [ results ], fields) {
+        if(results.length && results[ 0 ].Result) {
+            const token = createToken(email, hashPwd, 60 * 60 * 24);    // 24 Hours
+        
+            if(token) {
+                return res.send({
+                    token,
+                });
+            }
+        }
+        
+        return res.send({
+            result: false
+        });
+    });
+});
+
+
+
+
+APP.get("/user/:handle", (req, res) => {
+    const handle = String(req.params.handle).toLowerCase();
+    console.log(`/user/${handle}`);
+
+    if(!handle) {
+        return res.send({
+            result: false
+        });
+    }
+
+    DB.query(`CALL GetUserDetail(?, ?)`, [ handle, 0 ], function (error, [ results ], fields) {
+        if(results.length) {
+            return res.send(results[ 0 ]);
+        }
+        
+        return res.send({
+            result: false
+        });
+    });
+});
+
+APP.get("/followers/:handle", (req, res) => {
+    const handle = String(req.params.handle).toLowerCase();
+    console.log(`/followers/${handle}`);
+
+    if(!handle) {
+        return res.send({
+            result: false
+        });
+    }
+
+    DB.query(`CALL GetFollowers(?)`, [ handle ], function (error, [ results ], fields) {
+        if(results.length) {
+            return res.send(results);
+        }
+        
+        return res.send({
+            result: false
+        });
+    });
+});
+
+APP.get("/followed/:handle", (req, res) => {
+    const handle = String(req.params.handle).toLowerCase();
+    console.log(`/followed/${handle}`);
+
+    if(!handle) {
+        return res.send({
+            result: false
+        });
+    }
+
+    DB.query(`CALL GetFollowed(?)`, [ handle ], function (error, [ results ], fields) {
+        if(results.length) {
+            return res.send(results);
+        }
+        
+        return res.send({
+            result: false
+        });
+    });
 });
 
 

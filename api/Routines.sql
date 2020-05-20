@@ -62,8 +62,8 @@ CREATE PROCEDURE CreateUserDetail
 BEGIN
 	IF(EXISTS(SELECT * FROM `User` WHERE UserID = $UserID)) THEN
 		BEGIN
-			INSERT INTO userdetail (UserID , `First`, `Last`, Handle, Friends)
-			VALUES ($UserID, $FirstName, $LastName, $Handle, JSON_OBJECT());
+			INSERT INTO userdetail (UserID , `First`, `Last`, Handle)
+			VALUES ($UserID, $FirstName, $LastName, $Handle);
 		END;
 	END IF;
 		
@@ -96,48 +96,52 @@ END//
 DELIMITER ;
 
 
-DROP PROCEDURE IF EXISTS AddFriend;
+DROP PROCEDURE IF EXISTS AddFollower;
 
 DELIMITER //
-CREATE PROCEDURE AddFriend
+CREATE PROCEDURE AddFollower
 (IN
+	$FollowerUserID INT,
 	$UserID INT,
-	$FriendUserID INT
+    $IsBinary BIT
 )
 BEGIN
-	IF(EXISTS(SELECT * FROM `UserDetail` WHERE UserID = $UserID)) THEN
+	IF(NOT EXISTS(SELECT * FROM `UserFollower` WHERE UserID = $UserID AND FollowerUserID = $FollowerUserID)) THEN
 		BEGIN
-			UPDATE userdetail u
-			SET
-				Friends = JSON_INSERT(u.Friends, CONCAT('$."', $FriendUserID, '"'), $FriendUserID)
-			WHERE
-				UserID = $UserID;
-		
-			SELECT * FROM `UserDetail` WHERE UserID = $UserID;
+			INSERT INTO `UserFollower` (UserID, FollowerUserID)
+            VALUES ($UserID, $FollowerUserID);
+            
+            IF($IsBinary = 1) THEN
+				BEGIN
+					INSERT INTO `UserFollower` (UserID, FollowerUserID)
+					VALUES ($FollowerUserID, $UserID);
+                END;
+			END IF;
 		END;
 	END IF;
 END//
 DELIMITER ;
 
 
-DROP PROCEDURE IF EXISTS RemoveFriend;
+DROP PROCEDURE IF EXISTS RemoveFollower;
 
 DELIMITER //
-CREATE PROCEDURE RemoveFriend
+CREATE PROCEDURE RemoveFollower
 (IN
+	$FollowerUserID INT,
 	$UserID INT,
-	$FriendUserID INT
+    $IsBinary BIT
 )
 BEGIN
-	IF(EXISTS(SELECT * FROM `UserDetail` WHERE UserID = $UserID)) THEN
+	IF(EXISTS(SELECT * FROM `UserFollower` WHERE UserID = $UserID AND FollowerUserID = $FollowerUserID)) THEN
 		BEGIN
-			UPDATE userdetail u
-			SET
-				Friends = JSON_REMOVE(u.Friends, CONCAT('$."', $FriendUserID, '"'))
-			WHERE
-				UserID = $UserID;
-		
-			SELECT * FROM `UserDetail` WHERE UserID = $UserID;
+			DELETE FROM `UserFollower` WHERE UserID = $UserID AND FollowerUserID = $FollowerUserID;
+            
+            IF($IsBinary = 1) THEN
+				BEGIN
+					DELETE FROM `UserFollower` WHERE UserID = $FollowerUserID AND FollowerUserID = $UserID;
+                END;
+			END IF;
 		END;
 	END IF;
 END//
@@ -435,6 +439,117 @@ BEGIN
 			
             SELECT UUID FROM `Image` WHERE ImageID = LAST_INSERT_ID();
 		END;
+	END IF;
+END//
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS GetUserDetail;
+
+DELIMITER //
+CREATE PROCEDURE GetUserDetail
+(IN
+	$Input VARCHAR(255),
+    $Action INT
+)
+BEGIN
+	SELECT
+		ud.Handle,
+		ud.First,
+		ud.Last,
+		ud.Bio
+	FROM
+		`UserDetail` ud
+	WHERE (
+		(
+			$Action = 0
+            AND ud.Handle = $Input
+		)
+        OR
+		(
+			$Action = 1
+            AND ud.UserID = $Input
+		)
+    );
+END//
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS GetFollowers;
+
+DELIMITER //
+CREATE PROCEDURE GetFollowers
+(IN
+	$Handle VARCHAR(255)
+)
+BEGIN
+	SELECT
+		ud.Handle,
+		ud.First,
+		ud.Last
+	FROM
+		`UserDetail` ud
+	WHERE EXISTS (
+		SELECT
+			*
+		FROM
+			`UserFollower` uf
+            INNER JOIN `UserDetail` ud2
+				ON uf.UserID = ud2.UserID
+		WHERE
+			ud2.Handle = $Handle
+            AND ud.UserID = uf.FollowerUserID
+	);
+END//
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS GetFollowed;
+
+DELIMITER //
+CREATE PROCEDURE GetFollowed
+(IN
+	$Handle VARCHAR(255)
+)
+BEGIN
+	SELECT
+		ud.Handle,
+		ud.First,
+		ud.Last
+	FROM
+		`UserDetail` ud
+	WHERE EXISTS (
+		SELECT
+			*
+		FROM
+			`UserFollower` uf
+			INNER JOIN `UserDetail` ud2
+				ON uf.FollowerUserID = ud2.UserID
+		WHERE
+			ud2.Handle = $Handle
+			AND ud.UserID = uf.UserID
+	);
+END//
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS UpdateBio;
+
+DELIMITER //
+CREATE PROCEDURE UpdateBio
+(IN
+	$Handle VARCHAR(255),
+	$Bio TEXT
+)
+BEGIN
+	IF(EXISTS(SELECT * FROM `UserDetail` WHERE Handle = $Handle)) THEN
+		BEGIN
+			UPDATE `UserDetail`
+            SET
+				Bio = $Bio
+			WHERE
+				Handle = $Handle;
+        END;
 	END IF;
 END//
 DELIMITER ;

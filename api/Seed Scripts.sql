@@ -2,15 +2,20 @@ USE kkp;
 
 CALL SignUp('matt', '123456');
 CALL SignUp('sarah', '654321');
+CALL SignUp('ttam', '123456');
+CALL SignUp('haras', '654321');
 
 CALL CreateUserDetail(1, 'Mart', 'Marty', 'Rocks');
 CALL CreateUserDetail(2, 'Surr', 'Srah', 'Rocks');
+CALL CreateUserDetail(3, 'Tram', 'Ytram', 'Skcor');
+CALL CreateUserDetail(4, 'Rrus', 'Hars', 'Skcor');
 
-CALL AddFriend (1, 2);
-CALL AddFriend (1, 3);
-CALL RemoveFriend (1, 4);
-CALL AddFriend (2, 1);
-CALL AddFriend (2, 5);
+CALL UpdateBio("Mart", "This is a test bio");
+
+CALL AddFollower(2, 1, 1);
+CALL AddFollower (3, 1, NULL);
+CALL RemoveFollower(4, 1, NULL);
+CALL AddFollower (3, 2, NULL);
 
 CALL CreateGroup(1, "Rocks2", "Family", NULL);
 

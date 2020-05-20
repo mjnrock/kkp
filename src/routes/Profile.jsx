@@ -8,6 +8,7 @@ import { useState } from "react";
 
 function Profile() {
     const [ user, setUser ] = useState();
+    const [ followed, setFollowed ] = useState([]);
     const [ family, setFamily ] = useState([]);
     const { handle } = useParams();
 
@@ -16,12 +17,19 @@ function Profile() {
             fetch(`http://192.168.86.100:3001/user/${ handle }`)
             .then(response => response.json())
             .then(setUser);
+            
+            fetch(`http://192.168.86.100:3001/followed/${ handle }`)
+            .then(response => response.json())
+            .then(setFollowed);
 
             fetch(`http://192.168.86.100:3001/family/${ handle }`)
             .then(response => response.json())
             .then(setFamily);
         }
     }, [ handle ]);
+
+    console.log(user);
+    console.log(family);
 
     if(!user) {
         return (
@@ -34,9 +42,9 @@ function Profile() {
             <Segment basic>
                 <Header as="h2" color="orange" textAlign="center">
                     <Header.Content>
-                        { user.name.first } { user.name.last }
+                        { user.First } { user.Last }
                         <Header as="h4" color="grey" textAlign="center">
-                            <Header.Content>@{ user.handle }</Header.Content>
+                            <Header.Content>@{ user.Handle }</Header.Content>
                         </Header>
                     </Header.Content>
                 </Header>
@@ -59,7 +67,7 @@ function Profile() {
                     <Accordion.Content active={ true }>
                         <Item>
                             <Item.Content>
-                                { user.bio }
+                                { user.Bio }
                             </Item.Content>
                         </Item>
                     </Accordion.Content>
@@ -96,7 +104,7 @@ function Profile() {
                         <Divider horizontal>
                             <Header as="h4">
                                 <Icon name="users" />
-                                Friends ({ user.friends.length })
+                                Following ({ followed.length })
                             </Header>
                         </Divider>
                     </Accordion.Title>
@@ -104,11 +112,11 @@ function Profile() {
                     <Accordion.Content active={ true }>
                         <List selection verticalAlign="middle">
                             {
-                                user.friends.map(friend => (
-                                    <List.Item key={ friend } as={ Link } to={ `/profile/${ friend }` }>
-                                        <Image avatar src={ `http://192.168.86.100:3001/img/${ friend }.jpg` } />
+                                followed.map(friend => (
+                                    <List.Item key={ friend.Handle } as={ Link } to={ `/profile/${ friend.Handle }` }>
+                                        <Image avatar src={ `http://192.168.86.100:3001/img/${ friend.Handle }.jpg` } />
                                         <List.Content>
-                                            <List.Header>{ friend }</List.Header>
+                                            <List.Header>{ friend.Handle }</List.Header>
                                         </List.Content>
                                     </List.Item>
                                 ))

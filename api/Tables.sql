@@ -3,6 +3,7 @@ USE kkp;
 DROP TABLE IF EXISTS Collection;
 DROP TABLE IF EXISTS PostDetail;
 DROP TABLE IF EXISTS Post;
+DROP TABLE IF EXISTS UserFollower;
 DROP TABLE IF EXISTS UserDetail;
 DROP TABLE IF EXISTS Pet;
 DROP TABLE IF EXISTS Image;
@@ -38,7 +39,15 @@ CREATE TABLE UserDetail (
 	Handle VARCHAR(255),
 	`First` VARCHAR(255),
 	`Last` VARCHAR(255),
-	Friends JSON
+	Bio TEXT
+);
+
+CREATE TABLE UserFollower (
+	UserFollowerID INT AUTO_INCREMENT PRIMARY KEY,
+	UserID INT,
+		FOREIGN KEY (UserID) REFERENCES `User`(UserID),
+	FollowerUserID INT,
+		FOREIGN KEY (FollowerUserID) REFERENCES `User`(UserID)
 );
 
 CREATE TABLE `Group` (
