@@ -97,6 +97,45 @@ BEGIN
 END//
 DELIMITER ;
 
+
+DROP PROCEDURE IF EXISTS GetFamily;
+DELIMITER //
+CREATE PROCEDURE GetFamily
+(
+	IN $Entity VARCHAR(255)
+)
+BEGIN
+	SELECT
+        g.GroupUUID,
+        g.GroupType,
+		g.GroupDetail,
+        g.EntityUUID,
+        g.EntityType,
+        g.EntityHandle,
+        g.EntityName,
+        g.EntityDetail
+	FROM
+		`vwGroupHelper` g
+	WHERE
+		g.GroupTypeKey = "Family"
+		AND EXISTS (
+			SELECT
+				*
+			FROM
+				`vwGroupHelper` g2
+			WHERE
+				g2.GroupTypeKey = "Family"
+                AND g.GroupID = g2.GroupID
+				AND (
+					g2.EntityID = $Entity
+					OR g2.EntityHandle = $Entity
+					OR g2.EntityUUID = $Entity
+                )
+		);
+END//
+DELIMITER ;
+
 CALL Login("email@aol.com", "P@$sw0rd", @UUID);
 CALL GetEntity("MrSir");
 CALL GetFriends("MrSir");
+CALL GetFamily("MrSir");

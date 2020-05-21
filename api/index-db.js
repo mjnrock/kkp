@@ -127,6 +127,25 @@ APP.get("/friends/:handle", (req, res) => {
     });
 });
 
+APP.get("/family/:handle", (req, res) => {
+    const handle = req.params.handle;
+    console.log("/family", handle);
+
+    if(!(handle)) {
+        return res.sendStatus(204);
+    }
+
+    DB.query(`CALL GetFamily(?)`, [ handle ], function (error, resultSets, fields) {
+        const [ results ] = resultSets || [];
+    
+        if(results.length) {
+            return res.send(results);
+        }
+        
+        return res.sendStatus(204);
+    });
+});
+
 
 APP.listen(PORT, () =>
     console.log(`KiKi Pupus API listening on port ${PORT}!`),

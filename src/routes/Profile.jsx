@@ -5,9 +5,11 @@ import { useParams, Link } from "react-router-dom";
 import ImageBanner from "./../components/image/ImageBanner";
 import PetCard from "../components/profile/PetCard";
 import { useState } from "react";
+import PersonCard from "../components/profile/PersonCard";
 
 function Profile() {
     const [ entity, setEntity ] = useState();
+    const [ family, setFamily ] = useState([]);
     const [ friends, setFriends ] = useState([]);
     const { handle } = useParams();
 
@@ -16,6 +18,10 @@ function Profile() {
             fetch(`http://192.168.86.100:3001/entity/${ handle }`)
             .then(response => response.json())
             .then(setEntity);
+            
+            fetch(`http://192.168.86.100:3001/family/${ handle }`)
+            .then(response => response.json())
+            .then(setFamily);
 
             fetch(`http://192.168.86.100:3001/friends/${ handle }`)
             .then(response => response.json())
@@ -66,7 +72,7 @@ function Profile() {
                         </Item>
                     </Accordion.Content>
 
-                    {/* <Accordion.Title
+                    <Accordion.Title
                         active={ true }
                         index={ 0 }
                     >
@@ -81,15 +87,30 @@ function Profile() {
                     <Accordion.Content active={ true }>
                         <Card.Group itemsPerRow={ 3 } >
                             {
-                                family.map(info => (
-                                    <PetCard
-                                        key={ info.name }
-                                        info={ info }
-                                    />
-                                ))
+                                family.map(member => {
+                                    if(member.EntityUUID === entity.EntityUUID) {
+                                        return null;
+                                    }
+
+                                    if(member.EntityType === "HUMAN") {
+                                        return (
+                                            <PersonCard
+                                                key={ member.EntityUUID }
+                                                entity={ member }
+                                            />
+                                        );
+                                    }
+                                    
+                                    return (
+                                        <PetCard
+                                            key={ member.EntityUUID }
+                                            entity={ member }
+                                        />
+                                    );
+                                })
                             }
                         </Card.Group>
-                    </Accordion.Content> */}
+                    </Accordion.Content>
 
                     <Accordion.Title
                         active={ true }

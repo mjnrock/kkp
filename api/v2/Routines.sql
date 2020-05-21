@@ -392,3 +392,81 @@ BEGIN
 	END IF;
 END//
 DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS CreateGroup;
+DELIMITER //
+CREATE PROCEDURE CreateGroup
+(
+    IN $Type VARCHAR(255),
+	IN $Name TEXT,
+    OUT $UUID VARCHAR(255)
+)
+BEGIN
+	DECLARE $DEGroupTypeID INT;
+    
+	SELECT
+		dh.DictionaryEntryID INTO $DEGroupTypeID
+	FROM
+		`vwDictionaryHelper` dh
+	WHERE
+		dh.Title = "GroupType"
+		AND dh.Key = $Type;
+    
+    
+    IF(LENGTH($DEGroupTypeID) > 0) THEN
+		BEGIN
+			INSERT INTO `Group` (DEGroupTypeID, Detail)
+			VALUES ($DEGroupTypeID, JSON_OBJECT("name", $Name));
+			
+			SELECT
+				UUID INTO $UUID
+			FROM
+				`Group`
+			WHERE
+				GroupID = LAST_INSERT_ID();
+        END;
+	END IF;
+END//
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS MapGroupEntity;
+DELIMITER //
+CREATE PROCEDURE MapGroupEntity
+(
+	IN $Group VARCHAR(255),
+    IN $Entity VARCHAR(255),
+    OUT $UUID VARCHAR(255)
+)
+BEGIN
+	DECLARE $GroupID INT;
+	DECLARE $EntityID INT;
+    
+    SELECT
+		g.GroupID INTO $GroupID
+	FROM
+		`Group` g
+	WHERE (
+		g.GroupID = $Group
+        OR g.UUID = $Group
+    );
+    
+    SELECT
+		e.EntityID INTO $EntityID
+	FROM
+		`Entity` e
+	WHERE (
+        e.Handle = $Entity
+		OR e.EntityID = $Entity
+        OR e.UUID = $Entity
+    );
+    
+    IF(LENGTH($GroupID) > 0 AND LENGTH($EntityID) > 0) THEN
+		BEGIN
+			INSERT INTO `GroupEntity` (GroupID, EntityID)
+			VALUES ($GroupID, $EntityID);
+        END;
+	END IF;
+END//
+DELIMITER ;

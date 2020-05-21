@@ -197,3 +197,30 @@ FROM
 		ON ph.ParentPostID = p.PostID
     INNER JOIN `vwPostHelper` pc
 		ON ph.PostID = pc.PostID;
+        
+
+DROP VIEW IF EXISTS `vwGroupHelper`;
+
+CREATE VIEW `vwGroupHelper` AS
+SELECT
+	g.GroupID,
+    g.Detail AS GroupDetail,
+    g.UUID AS GroupUUID,
+    dh.DictionaryEntryID,
+    dh.Key AS GroupTypeKey,
+    dh.EntryValue AS GroupType,
+    ge.GroupEntityID,
+    e.UUID AS EntityUUID,
+    e.EntityID,
+    e.EntryValue AS EntityType,
+    e.Handle AS EntityHandle,
+    e.Name AS EntityName,
+    e.Detail AS EntityDetail
+FROM
+	`Group` g
+    INNER JOIN `GroupEntity` ge
+		ON g.GroupID = ge.GroupID
+	INNER JOIN `vwEntityHelper` e
+		ON ge.EntityID = e.EntityID
+    INNER JOIN `vwDictionaryHelper` dh
+		ON g.DEGroupTypeID = dh.DictionaryEntryID;
