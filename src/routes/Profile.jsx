@@ -7,49 +7,43 @@ import PetCard from "../components/profile/PetCard";
 import { useState } from "react";
 
 function Profile() {
-    const [ user, setUser ] = useState();
-    const [ followed, setFollowed ] = useState([]);
-    const [ family, setFamily ] = useState([]);
+    const [ entity, setEntity ] = useState();
+    const [ friends, setFriends ] = useState([]);
     const { handle } = useParams();
 
     useEffect(() => {
         if(handle) {
-            fetch(`http://192.168.86.100:3001/user/${ handle }`)
+            fetch(`http://192.168.86.100:3001/entity/${ handle }`)
             .then(response => response.json())
-            .then(setUser);
-            
-            fetch(`http://192.168.86.100:3001/followed/${ handle }`)
-            .then(response => response.json())
-            .then(setFollowed);
+            .then(setEntity);
 
-            fetch(`http://192.168.86.100:3001/family/${ handle }`)
+            fetch(`http://192.168.86.100:3001/friends/${ handle }`)
             .then(response => response.json())
-            .then(setFamily);
+            .then(setFriends);
         }
     }, [ handle ]);
 
-    console.log(user);
-    console.log(family);
-
-    if(!user) {
+    if(!entity) {
         return (
             <div>Loading...</div>
         )
     }
+
+    console.log(friends);
 
     return (
         <Fragment>            
             <Segment basic>
                 <Header as="h2" color="orange" textAlign="center">
                     <Header.Content>
-                        { user.First } { user.Last }
+                        { entity.EntityName }
                         <Header as="h4" color="grey" textAlign="center">
-                            <Header.Content>@{ user.Handle }</Header.Content>
+                            <Header.Content>@{ entity.EntityHandle }</Header.Content>
                         </Header>
                     </Header.Content>
                 </Header>
 
-                <ImageBanner name={ user.Image } />
+                <ImageBanner name={ entity.AssetFilename } />
 
                 <Accordion>
                     <Accordion.Title
@@ -67,12 +61,12 @@ function Profile() {
                     <Accordion.Content active={ true }>
                         <Item>
                             <Item.Content>
-                                { user.Bio }
+                                { entity.EntityDetail }
                             </Item.Content>
                         </Item>
                     </Accordion.Content>
 
-                    <Accordion.Title
+                    {/* <Accordion.Title
                         active={ true }
                         index={ 0 }
                     >
@@ -95,7 +89,7 @@ function Profile() {
                                 ))
                             }
                         </Card.Group>
-                    </Accordion.Content>
+                    </Accordion.Content> */}
 
                     <Accordion.Title
                         active={ true }
@@ -104,7 +98,7 @@ function Profile() {
                         <Divider horizontal>
                             <Header as="h4">
                                 <Icon name="users" />
-                                Following ({ followed.length })
+                                Friends ({ friends.length })
                             </Header>
                         </Divider>
                     </Accordion.Title>
@@ -112,11 +106,11 @@ function Profile() {
                     <Accordion.Content active={ true }>
                         <List selection verticalAlign="middle">
                             {
-                                followed.map(friend => (
-                                    <List.Item key={ friend.Handle } as={ Link } to={ `/profile/${ friend.Handle }` }>
-                                        <Image avatar src={ `http://192.168.86.100:3001/img/${ friend.Handle }.jpg` } />
+                                friends.map(friend => (
+                                    <List.Item key={ friend.FriendHandle } as={ Link } to={ `/profile/${ friend.FriendHandle }` }>
+                                        <Image avatar src={ `http://192.168.86.100:3001/img/${ friend.FriendHandle }.jpg` } />
                                         <List.Content>
-                                            <List.Header>{ friend.Handle }</List.Header>
+                                            <List.Header>{ friend.FriendHandle }</List.Header>
                                         </List.Content>
                                     </List.Item>
                                 ))

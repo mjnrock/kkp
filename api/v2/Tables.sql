@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS `PostAsset`;
 DROP TABLE IF EXISTS `PostDetail`;
 DROP TABLE IF EXISTS `Post`;
 DROP TABLE IF EXISTS `Relation`;
+DROP TABLE IF EXISTS `EntityAsset`;
 DROP TABLE IF EXISTS `Asset`;
 DROP TABLE IF EXISTS `GroupEntity`;
 DROP TABLE IF EXISTS `Group`;
@@ -56,6 +57,16 @@ CREATE TABLE `Asset` (
 	DEAssetExtensionID INT NOT NULL,
 		FOREIGN KEY (DEAssetExtensionID) REFERENCES DictionaryEntry(DictionaryEntryID),
     Detail JSON NULL
+);
+
+CREATE TABLE `EntityAsset` (
+	EntityAssetID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    DEEntityAssetTypeID INT NOT NULL,
+		FOREIGN KEY (DEEntityAssetTypeID) REFERENCES DictionaryEntry(DictionaryEntryID),
+	EntityID INT NOT NULL,
+		FOREIGN KEY (EntityID) REFERENCES `Entity`(EntityID),
+	AssetID INT NOT NULL,
+		FOREIGN KEY (AssetID) REFERENCES `Asset`(AssetID)
 );
 
 CREATE TABLE `Post` (

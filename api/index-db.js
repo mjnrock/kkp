@@ -68,9 +68,7 @@ APP.post("/login", (req, res) => {
     console.log("/login", message);
 
     if(!(email && password)) {
-        return res.send({
-            result: false
-        });
+        return res.sendStatus(204);
     }
 
     DB.query(`CALL Login(?, ?, @UUID)`, [ email, password ], function (error, resultSets, fields) {
@@ -89,24 +87,43 @@ APP.post("/login", (req, res) => {
     });
 });
 
-APP.get("/user/:handle", (req, res) => {
-    const handle = String(req.params.handle).toLowerCase();
-    console.log(`/user/${handle}`);
+APP.get("/entity/:handle", (req, res) => {
+    const handle = req.params.handle;
+    console.log("/user", handle);
 
-    if(!handle) {
-        return res.send({
-            result: false
-        });
+    if(!(handle)) {
+        return res.sendStatus(204);
     }
 
-    DB.query(`CALL GetUserDetail(?, ?)`, [ handle, 0 ], function (error, [ results ], fields) {
-        if(results.length) {
-            return res.send(results[ 0 ]);
+    DB.query(`CALL GetEntity(?)`, [ handle ], function (error, resultSets, fields) {
+        const [ results ] = resultSets || [];
+    
+        if(results[ 0 ]) {
+            return res.send({
+                ...(results[ 0 ] || {})
+            });
         }
         
-        return res.send({
-            result: false
-        });
+        return res.sendStatus(204);
+    });
+});
+
+APP.get("/friends/:handle", (req, res) => {
+    const handle = req.params.handle;
+    console.log("/friends", handle);
+
+    if(!(handle)) {
+        return res.sendStatus(204);
+    }
+
+    DB.query(`CALL GetFriends(?)`, [ handle ], function (error, resultSets, fields) {
+        const [ results ] = resultSets || [];
+    
+        if(results.length) {
+            return res.send(results);
+        }
+        
+        return res.sendStatus(204);
     });
 });
 

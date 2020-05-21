@@ -342,3 +342,53 @@ BEGIN
 	END IF;    
 END//
 DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS MapEntityAsset;
+DELIMITER //
+CREATE PROCEDURE MapEntityAsset
+(
+	IN $Type VARCHAR(255),
+	IN $Entity VARCHAR(255),
+    IN $Asset VARCHAR(255)
+)
+BEGIN
+	DECLARE $DEEntityAssetTypeID INT;
+	DECLARE $EntityID INT;
+	DECLARE $AssetID INT;
+    
+	SELECT
+		dh.DictionaryEntryID INTO $DEEntityAssetTypeID
+	FROM
+		`vwDictionaryHelper` dh
+	WHERE
+		dh.Title = "EntityAssetType"
+		AND dh.Key = $Type;
+    
+	SELECT
+		EntityID INTO $EntityID
+	FROM
+		`Entity` e
+	WHERE (
+		e.EntityID = $Entity
+        OR e.Handle = $Entity
+        OR e.UUID = $Entity
+    );
+    
+	SELECT
+		AssetID INTO $AssetID
+	FROM
+		`Asset` a
+	WHERE (
+		a.AssetID = $Asset
+        OR a.UUID = $Asset
+    );
+    
+    IF(LENGTH($DEEntityAssetTypeID) > 0 AND LENGTH($EntityID) > 0 AND LENGTH($AssetID) > 0) THEN
+		BEGIN
+			INSERT INTO EntityAsset(DEEntityAssetTypeID, EntityID, AssetID)
+            VALUES ($DEEntityAssetTypeID, $EntityID, $AssetID);
+        END;
+	END IF;
+END//
+DELIMITER ;

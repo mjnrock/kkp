@@ -59,7 +59,7 @@ function NavBar(props) {
 
             <Menu.Item
                 as={ Link }
-                to={ `/profile/${ state.auth.handle }` }
+                to={ `/profile/${ state.user.Handle }` }
             >
                 Profile
             </Menu.Item>
@@ -73,14 +73,14 @@ function NavBar(props) {
 
             <Menu.Item
                 as={ Link }
-                to={ `/friends/${ state.auth.handle }` }
+                to={ `/friends/${ state.user.Handle }` }
             >
                 Friends
             </Menu.Item>
 
             <Menu.Item
                 as={ Link }
-                to={ `/feed/${ state.auth.handle }` }
+                to={ `/feed/${ state.user.Handle }` }
             >
                 Feed
             </Menu.Item>

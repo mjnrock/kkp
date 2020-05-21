@@ -14,4 +14,6 @@ CALL CreateImagePost("SarahTheGreat", 2, "PNG", NULL, @UUID);
 CALL CreateReplyPost(1, 1, "Hello there, children");
 CALL CreateReplyPost(2, 1, "Oi thah, cheeldrin");
 
+CALL MapEntityAsset("Profile", 1, 1);
+
 SELECT @UUID;

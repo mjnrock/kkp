@@ -89,3 +89,6 @@ CALL AddDictionary("AssetExtension", NULL, NULL);
 CALL AddDictionaryEntry("AssetExtension", "JPEG", "JPG");
 CALL AddDictionaryEntry("AssetExtension", "PNG", "PNG");
 CALL AddDictionaryEntry("AssetExtension", "GIF", "GIF");
+
+CALL AddDictionary("EntityAssetType", NULL, NULL);
+CALL AddDictionaryEntry("EntityAssetType", "Profile", "PROFILE");
