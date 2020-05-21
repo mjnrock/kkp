@@ -7,13 +7,13 @@ import { Context, EnumMessageType } from "../App";
 function LoginForm(props) {
     const { state, dispatch } = useContext(Context);
 
-    const [ email, setEmail ] = useState("");
-    const [ password, setPassword ] = useState("");
+    const [ email, setEmail ] = useState("email@aol.com");
+    const [ password, setPassword ] = useState("P@$sw0rd");
 
     function attemptAuth() {
         //TODO Encrypt password before sending
         if(email.length && password.length > 7) {
-            fetch("http://192.168.86.100:3001/auth", {
+            fetch("http://192.168.86.100:3001/login", {
                 method: "POST",
                 headers: {
                     "Accept": "application/json",
@@ -27,15 +27,17 @@ function LoginForm(props) {
             })
             .then(response => response.json())
             .then(data => {
-                if(data.token) {
+                if(data.Token) {
                     dispatch({
-                        type: EnumMessageType.ASSIGN_TOKEN,
-                        payload: data.token
+                        type: EnumMessageType.LOGIN,
+                        payload: data
                     });
                 }
             });
         }
     }
+
+    console.log(state);
 
     if(state.auth.token) {
         return (

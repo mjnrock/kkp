@@ -14,44 +14,36 @@ import NavBar from "./NavBar";
 
 const reducer = (state, message) => {
     console.log("Dispatch:", message);
+    const data = message.payload || {};
 
-    if(message.type === EnumMessageType.ASSIGN_TOKEN) {
+    if(message.type === EnumMessageType.LOGOUT) {
+        return {
+            ...state,
+            auth: {},
+            user: {}
+        };
+    } else if(message.type === EnumMessageType.LOGIN) {
+        const { Token: token, ...user } = data;
+
         return {
             ...state,
             auth: {
-                token: message.payload
-            }
-        }
-    } else if(message.type === EnumMessageType.LOGOUT) {
-        return {
-            ...state,
-            auth: {
-                token: null
-            }
+                token: token
+            },
+            user: user
         }
     }
-
     return state;
 };
-// const initialState = {a
-//     auth: {
-//         token: null
-//     },
-// };
 const initialState = {
-    auth: {
-        token: Date.now(),
-        handle: "MrStretch",
-        email: "email@host.com",
-        first: "Matt",
-        last: "Kiszkabuddhaski",
-    },
+    auth: {},
+    user: {},
 };
 export const Context = React.createContext(initialState);
 
 export const EnumMessageType = {
-    ASSIGN_TOKEN: "ASSIGN_TOKEN",
-    LOGOUT: "LOGOUT",
+    LOGIN: "LOGIN",
+    LOGOUT: "LOGOUT"
 };
 
 // eslint-disable-next-line

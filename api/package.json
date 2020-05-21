@@ -4,7 +4,8 @@
     "main": "esm-index.js",
     "license": "MIT",
     "scripts": {
-        "start": "node esm-index.js"
+        "start": "node esm-index.js",
+        "sandbox": "node esm-sandbox.js"
     },
     "dependencies": {
         "esm": "^3.2.25",

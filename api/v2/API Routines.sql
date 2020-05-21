@@ -16,6 +16,19 @@ BEGIN
 	WHERE
 		a.Email = $Email
         AND a.Password = $Password;
+        
+	SELECT
+		AccountUUID,
+        Username,
+        EntityUUID,
+        EntryValue AS EntityType,
+        Handle,
+        Name,
+        Detail
+	FROM
+		`vwAccountHelper`
+	WHERE
+		AccountUUID = $UUID;
 END//
 DELIMITER ;
 
