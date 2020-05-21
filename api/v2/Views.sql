@@ -12,7 +12,7 @@ SELECT
     de.DictionaryEntryID,
     de.`Key`,
     de.`Value`,
-    TRIM(BOTH '"' FROM de.`Value`->"$.value") AS EntryValue,    
+    TRIM(BOTH '"' FROM de.`Value`->"$.value") AS EntryValue,
     TRIM(BOTH '"' FROM de.`Value`->"$.order") AS EntryOrder    
 FROM
 	`Dictionary` d
@@ -35,7 +35,8 @@ SELECT
     de.Key,
     de.Value,
     TRIM(BOTH '"' FROM de.`Value`->"$.value") AS EntryValue,    
-    TRIM(BOTH '"' FROM de.`Value`->"$.order") AS EntryOrder    ,
+    TRIM(BOTH '"' FROM de.`Value`->"$.order") AS EntryOrder,
+    e.Handle,
     e.Name,
     e.Detail,
     e.UUID AS EntityUUID
@@ -54,6 +55,7 @@ DROP VIEW IF EXISTS vwEntityHelper;
 CREATE VIEW vwEntityHelper AS
 SELECT
 	e.EntityID,
+    e.Handle,
     e.Name,
     e.Detail,
     e.UUID,
@@ -76,11 +78,13 @@ SELECT
     dh.EntryValue AS RelationType,
     el.EntityID AS LeftEntityID,
     el.EntryValue AS LeftType,
+    el.Handle AS LeftHandle,
     el.Name AS LeftName,
     el.Detail AS LeftDetail,
     el.UUID AS LeftUUID,
     er.EntityID AS RightEntityID,
     er.EntryValue AS RightType,
+    er.Handle AS RightHandle,
     er.Name AS RightName,
     er.Detail AS RightDetail,
     er.UUID AS RightUUID
@@ -117,3 +121,79 @@ FROM
 		ON a.DEAssetTypeID = dht.DictionaryEntryID
     INNER JOIN `vwDictionaryHelper` dhe
 		ON a.DEAssetExtensionID = dhe.DictionaryEntryID;
+        
+        
+DROP VIEW IF EXISTS `vwPostHelper`;
+
+CREATE VIEW `vwPostHelper` AS
+SELECT
+    p.PostID,
+    p.UUID AS PostUUID,
+    eh.EntityID,
+    eh.Handle AS EntityHandle,
+    eh.Name AS EntityName,
+    eh.UUID AS EntityUUID,
+    dh.DictionaryEntryID,
+    dh.EntryValue AS PostType,
+    pd.PostDetailID,
+    pd.Detail,
+    pa.PostAssetID,
+    pa.AssetID,
+    ah.UUID AS AssetUUID,
+    ah.TypeEntryValue AS AssetType,
+    ah.Filename
+FROM
+	`Post` p
+    INNER JOIN `vwDictionaryHelper` dh
+		ON p.DEPostTypeID = dh.DictionaryEntryID
+	INNER JOIN `vwEntityHelper` eh
+		ON p.EntityID = eh.EntityID
+    LEFT JOIN `PostDetail` pd
+		ON p.PostID = pd.PostID
+	LEFT JOIN `PostAsset` pa
+		ON p.PostID = pa.PostID
+	LEFT JOIN `vwAssetHelper` ah
+		ON pa.AssetID = ah.AssetID;
+        
+        
+DROP VIEW IF EXISTS `vwPostReactionHelper`;
+
+CREATE VIEW `vwPostReactionHelper` AS
+SELECT
+	p.PostID,
+    p.PostUUID,
+    p.PostType,
+    e.EntityID,
+    e.EntryValue AS EntityType,
+    e.Handle AS EntityHandle,
+    e.Name AS EntityName,
+    e.UUID AS EntityUUID,
+    pr.PostReactionID,
+    pr.Reaction
+FROM
+	`vwPostHelper` p
+    INNER JOIN `PostReaction` pr
+		ON p.PostID = pr.PostID
+	INNER JOIN `vwEntityHelper` e
+		ON pr.EntityID = e.EntityID;
+        
+        
+DROP VIEW IF EXISTS `vwPostChildrenHelper`;
+
+CREATE VIEW `vwPostChildrenHelper` AS
+SELECT
+	ph.PostHierarchyID,
+    ph.ParentPostID,
+    p.UUID AS ParentPostUUID,
+    p.EntityID AS ParentPostEntityID,
+    pc.PostID,
+    pc.PostUUID,
+    pc.EntityID AS PostEntityID,
+    pc.PostType,
+    TRIM(BOTH '"' FROM pc.Detail->"$.content") AS PostContent
+FROM
+	`PostHierarchy` ph
+    INNER JOIN `Post` p
+		ON ph.ParentPostID = p.PostID
+    INNER JOIN `vwPostHelper` pc
+		ON ph.PostID = pc.PostID;
