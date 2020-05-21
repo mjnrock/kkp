@@ -1,7 +1,7 @@
 USE kkp;
 
-DROP PROCEDURE IF EXISTS CreateAccount;
 
+DROP PROCEDURE IF EXISTS CreateAccount;
 DELIMITER //
 CREATE PROCEDURE CreateAccount
 (IN
@@ -44,16 +44,18 @@ BEGIN
 END//
 DELIMITER ;
 
-DROP PROCEDURE IF EXISTS CreateFriendship;
 
+DROP PROCEDURE IF EXISTS CreateFriendship;
 DELIMITER //
 CREATE PROCEDURE CreateFriendship
 (IN
-    $LeftEntityUUID VARCHAR(255),
-    $RightEntityUUID VARCHAR(255)
+    $LeftEntity VARCHAR(255),
+    $RightEntity VARCHAR(255)
 )
 BEGIN
 	DECLARE $DERelationTypeID INT;
+	DECLARE $LeftEntityID INT;
+	DECLARE $RightEntityID INT;
     
 	SELECT
 		DictionaryEntryID INTO $DERelationTypeID
@@ -62,17 +64,84 @@ BEGIN
 	WHERE
 		dh.Title = "RelationType"
 		AND dh.Key = "Friend";
+    
+	SELECT
+		e.EntityID INTO $LeftEntityID
+	FROM
+		`Entity` e
+	WHERE (
+		el.UUID = $LeftEntity
+		OR el.EntityID = $LeftEntity
+	);
+    
+	SELECT
+		e.EntityID INTO $RightEntityID
+	FROM
+		`Entity` e
+	WHERE (
+		er.UUID = $RightEntity
+		OR er.EntityID = $RightEntity
+	);
         
 	INSERT INTO `Relation` (DERelationTypeID, LeftEntityID, RightEntityID)
-    SELECT
-		$DERelationTypeID,
-		el.EntityID,
-		er.EntityID
+    VALUES
+		($DERelationTypeID, $LeftEntityID, $RightEntityID),
+		($DERelationTypeID, $RightEntityID, $LeftEntityID);
+END//
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS CreateAsset;
+DELIMITER //
+CREATE PROCEDURE CreateAsset
+(IN
+    $Account VARCHAR(255),
+    $Type VARCHAR(255),
+    $Extension VARCHAR(255),
+    $Detail TEXT
+)
+BEGIN
+	DECLARE $AccountID INT;
+	DECLARE $DEAssetTypeID INT;
+	DECLARE $DEAssetExtensionID INT;
+    
+	SELECT
+		a.AccountID INTO $AccountID
 	FROM
-		`Entity` el,
-		`Entity` er
+		`Account` a
 	WHERE
-		el.UUID = $LeftEntityUUID
-		AND er.UUID = $RightEntityUUID;
+		(
+			a.AccountID = $Account
+			OR a.UUID = $Account
+			OR a.Username = $Account
+			OR a.Email = $Account
+		);
+
+	SELECT
+		dh.DictionaryEntryID INTO $DEAssetTypeID
+	FROM
+		`vwDictionaryHelper` dh
+	WHERE
+		dh.Title = "AssetType"
+		AND dh.Key = $Type;
+
+	SELECT
+		dh.DictionaryEntryID INTO $DEAssetExtensionID
+	FROM
+		`vwDictionaryHelper` dh
+	WHERE
+		dh.Title = "AssetExtension"
+		AND dh.Key = $Extension;
+        
+	INSERT INTO `Asset` (AccountID, DEAssetTypeID, DEAssetExtensionID, Detail)
+    VALUES
+		($AccountID, $DEAssetTypeID, $DEAssetExtensionID, $Detail);
+        
+	SELECT
+		UUID
+	FROM
+		`Asset` a
+	WHERE
+		a.AssetID = LAST_INSERT_ID();
 END//
 DELIMITER ;
