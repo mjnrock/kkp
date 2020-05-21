@@ -43,6 +43,7 @@ CREATE TABLE `Relation` (
 	RightEntityID INT NOT NULL,
 		FOREIGN KEY (RightEntityID) REFERENCES `Entity`(EntityID)
 );
+ALTER TABLE `Relation` ADD UNIQUE `Unique_Entry_Index`(`DERelationTypeID`, `LeftEntityID`, `RightEntityID`);
 
 CREATE TABLE `Asset` (
 	AssetID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
