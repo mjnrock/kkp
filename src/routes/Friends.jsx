@@ -15,6 +15,8 @@ function Friends() {
         // eslint-disable-next-line
     }, []);
 
+    console.log(friends)
+
     if(!friends.length) {
         return (
             <div>Loading...</div>
@@ -37,10 +39,10 @@ function Friends() {
             <List selection verticalAlign="middle">
                 {
                     friends.map(friend => (
-                        <List.Item key={ friend } as={ Link } to={ `/profile/${ friend }` }>
-                            <Image avatar src={ `http://192.168.86.100:3001/img/${ friend }.jpg` } />
+                        <List.Item key={ friend.FriendUUID } as={ Link } to={ `/profile/${ friend.FriendHandle }` }>
+                            <Image avatar src={ `http://192.168.86.100:3001/img/${ friend.FriendUUID }.jpg` } />
                             <List.Content>
-                                <List.Header>{ friend }</List.Header>
+                                <pre>{ JSON.stringify(friend, null, 2) }</pre>
                             </List.Content>
                         </List.Item>
                     ))

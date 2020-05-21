@@ -17,32 +17,7 @@ function PetCard(props) {
                 </Card.Header>
 
                 <Card.Description>
-                    <Table definition style={{ borderRadius: 0 }}>
-                        <Table.Body>
-                            <Table.Row textAlign="center">
-                                <Table.Cell width={2}>Type</Table.Cell>
-                                <Table.Cell>
-                                    <Emoji emoji={ entity.detail.type === "cat" ? ":cat2:" : ":dog2:" } size={ 20 } native={ true } />
-                                    <Icon name={ entity.detail.sex === "male" ? "man" : "woman" } color={ entity.detail.sex === "male" ? "blue" : "red" } size="large" />
-                                </Table.Cell>
-                            </Table.Row>
-
-                            <Table.Row textAlign="center">
-                                <Table.Cell>Breed</Table.Cell>
-                                <Table.Cell>{ entity.detail.breed }</Table.Cell>
-                            </Table.Row>
-
-                            <Table.Row textAlign="center">
-                                <Table.Cell>Weight</Table.Cell>
-                                <Table.Cell>{ entity.detail.weight }</Table.Cell>
-                            </Table.Row>
-
-                            <Table.Row textAlign="center">
-                                <Table.Cell>Color</Table.Cell>
-                                <Table.Cell>{ entity.detail.color }</Table.Cell>
-                            </Table.Row>
-                        </Table.Body>
-                    </Table>
+                    <pre>{ JSON.stringify(entity, null, 2) }</pre>
                 </Card.Description>
             </Card.Content>
         </Card>

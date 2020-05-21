@@ -81,10 +81,12 @@ BEGIN
 -- 		rh.LeftType AS EntityType,
 -- 		rh.LeftHandle AS EntityHandle,
 -- 		rh.LeftName AS EntityName,
+-- 		rh.LeftDetail AS EntityDetail,
 -- 		rh.LeftUUID AS EntityUUID,
 		rh.RightType AS FriendType,
 		rh.RightHandle AS FriendHandle,
 		rh.RightName AS FriendName,
+		rh.RightDetail AS FriendDetail,
 		rh.RightUUID AS FriendUUID    
 	FROM
 		`vwRelationHelper` rh
