@@ -10,7 +10,7 @@ function Response(props) {
 
     const { state } = useContext(Context);
     const [ collapsed, setCollapsed ] = useState(false);
-    const [ reactions, setReactions ] = useState(post.reactions || []);
+    const [ reactions, setReactions ] = useState(post.PostReactions || []);
 
     
     function onReaction(emoji) {
@@ -21,51 +21,27 @@ function Response(props) {
         //         postId: props.postId
         //     }
         // });
-
-        const token = state.auth.token || "Matt";
-        
-        // if(state.auth.token) {
-            fetch(`http://192.168.86.100:3001/post/react/`, {
-                method: "POST",
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    
-                },
-                body: JSON.stringify({
-                    "pid": post.id,
-                    "emoji": emoji,
-                    "token": token
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if(data) {
-                    if(data.id === post.id) {
-                        setReactions(data.reactions);
-                    }                
-                }
-            });
-        // }   
     }
+
+    console.log(post);
 
     return (
         <Comment>
             <Comment.Avatar as="a" src="/assets/pusheen.png" />
             <Comment.Content>
-                <Comment.Author as="a">{ post.author }</Comment.Author>
+                <Comment.Author as="a">{ post.EntityHandle }</Comment.Author>
 
                 <Comment.Metadata>
-                    <span>{ post.timestamp }</span>
+                    <span>{ post.PostCreatedDateTimeUTC }</span>
                 </Comment.Metadata>
                 
                 {
-                    post.children ? (
+                    post.PostChildren ? (
                         <Icon style={{ cursor: "pointer" }} size="large" name={ collapsed ? "angle up orange" : "angle down grey" } onClick={ e => setCollapsed(!collapsed) } />
                     ) : null
                 }
                 
-                <Comment.Text>{ post.message }</Comment.Text>
+                <Comment.Text>{ post.PostContent }</Comment.Text>
 
                 <Comment.Actions>
                     <ReactionBar onReaction={ onReaction } style={{ marginTop: 10 }} reactions={ reactions || [] } />
@@ -73,7 +49,7 @@ function Response(props) {
             </Comment.Content>
 
             {
-                post.children ? <Thread posts={ post.children } collapsed={ collapsed } /> : null
+                post.PostChildren ? <Thread posts={ post.PostChildren } collapsed={ collapsed } /> : null
             }
         </Comment>
     );

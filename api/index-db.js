@@ -71,7 +71,7 @@ APP.post("/login", (req, res) => {
         return res.sendStatus(204);
     }
 
-    DB.query(`CALL Login(?, ?, @UUID)`, [ email, password ], function (error, resultSets, fields) {
+    DB.query(`CALL Login(?, ?, @NULL)`, [ email, password ], function (error, resultSets, fields) {
         const [ results ] = resultSets || [];
     
         if(results[ 0 ]) {
@@ -154,11 +154,37 @@ APP.get("/post/:uuid", (req, res) => {
         return res.sendStatus(204);
     }
 
+    /**
+     * 0: $UUID (UUID)
+     */
     DB.query(`CALL GetPost(?)`, [ uuid ], function (error, resultSets, fields) {
         const [ results ] = resultSets || [];
     
         if((results || []).length) {
             return res.send(results[ 0 ]);
+        }
+        
+        return res.sendStatus(204);
+    });
+});
+
+APP.get("/feed/:handle", (req, res) => {
+    const handle = req.params.handle;
+    console.log("/feed", handle);
+
+    if(!(handle)) {
+        return res.sendStatus(204);
+    }
+
+    /**
+     * 0: $Entity (Handle|UUID)
+     * 1: $BeginDateTime (DATETIME(3)|NULL)
+     */
+    DB.query(`CALL GetFeed(?, NULL)`, [ handle ], function (error, resultSets, fields) {
+        const [ results ] = resultSets || [];
+    
+        if((results || []).length) {
+            return res.send(results);
         }
         
         return res.sendStatus(204);
@@ -179,9 +205,14 @@ APP.get("/post/:uuid", (req, res) => {
                     cb(null, "./data/image");
                 },
         
-                // By default, multer removes file extensions so let"s add them back
-                filename: function (req, file, cb) {        
-                    DB.query(`CALL CreateImagePost(?, ?, ?, @UUID)`, [ token.email, entity, (path.extname(file.originalname) || "").replace(/[^0-9a-z]/gi, "") ], function (error, resultSets, fields) {
+                filename: function (req, file, cb) {
+                    /**
+                     * 0: $Account (Email|Username|UUID)
+                     * 1: $Entity (Handle|UUID)
+                     * 2: $Extension (Key<AssetExtension>)
+                     * 3: OUT $UUID
+                     */
+                    DB.query(`CALL CreateImagePost(?, ?, ?, @NULL)`, [ token.email, entity, (path.extname(file.originalname) || "").replace(/[^0-9a-z]/gi, "") ], function (error, resultSets, fields) {
                         const [ results ] = resultSets || [];
                     
                         if((results || []).length) {

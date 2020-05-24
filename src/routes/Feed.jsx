@@ -12,9 +12,19 @@ function Feed() {
         if(handle) {
             fetch(`http://192.168.86.100:3001/feed/${ handle }`)
             .then(response => response.json())
-            .then(setPosts);
+            .then(data => {
+                for(let i in data) {
+                    if(typeof data[ i ].PostChildren === "string") {
+                        data[ i ].PostChildren = JSON.parse(data[ i ].PostChildren);
+                    }
+                }
+
+                setPosts(data);
+            });
         }
     }, [ handle ]);
+
+    console.log(posts);
 
     if(!posts.length) {
         return (

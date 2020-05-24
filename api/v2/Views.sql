@@ -233,3 +233,57 @@ FROM
 		ON ge.EntityID = e.EntityID
     INNER JOIN `vwDictionaryHelper` dh
 		ON g.DEGroupTypeID = dh.DictionaryEntryID;
+        
+        
+DROP VIEW IF EXISTS `vwFeedHelper`;
+
+CREATE VIEW `vwFeedHelper` AS
+SELECT
+	ph.PostUUID,
+	ph.PostType,
+	ph.PostCreatedDateTimeUTC,
+	ph.Detail AS PostDetail,
+    ph.EntityUUID,
+	ph.EntityHandle,
+	ph.EntityName,
+	ph.AssetUUID,
+	ph.AssetType,
+	ph.Filename,
+	CASE
+		WHEN MAX(pch.ParentPostUUID) IS NULL THEN NULL
+		ELSE JSON_ARRAYAGG(JSON_OBJECT(
+			"ParentPostUUID", pch.ParentPostUUID,
+			"PostUUID", pch.PostUUID,
+			"PostType", pch.PostType,
+            "PostCreatedDateTimeUTC", pch.PostCreatedDateTimeUTC,
+			"PostContent", pch.PostContent,
+            "EntityHandle", eh.Handle,
+            "EntityName", eh.`Name`
+		))
+	END AS PostChildren,
+	CASE
+		WHEN MAX(pch.ParentPostUUID) IS NULL THEN NULL
+		ELSE JSON_ARRAYAGG(JSON_OBJECT(
+			"EntityHandle", prh.EntityHandle,
+			"Reaction", prh.Reaction
+		))
+	END AS PostReactions
+FROM
+	`vwPostHelper` ph
+	LEFT JOIN `vwPostChildrenHelper` pch
+		ON ph.PostID = pch.ParentPostID
+	LEFT JOIN `vwEntityHelper` eh
+		ON pch.ParentPostEntityID = eh.EntityID
+	LEFT JOIN `vwPostReactionHelper` prh
+		ON ph.PostID = prh.PostID
+GROUP BY
+	ph.PostUUID,
+	ph.PostType,
+	ph.PostCreatedDateTimeUTC,
+	ph.Detail,
+    ph.EntityUUID,
+	ph.EntityHandle,
+	ph.EntityName,
+	ph.AssetUUID,
+	ph.AssetType,
+	ph.Filename;
