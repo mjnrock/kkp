@@ -21,7 +21,7 @@ APP.use(express.json());
 APP.use(express.raw());
 APP.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, X-Auth");
     //? Whatever middleware work .next() is doing is ESSENTIAL to actually making this work
     next();
 });
@@ -140,6 +140,27 @@ APP.get("/family/:handle", (req, res) => {
     
         if(results.length) {
             return res.send(results);
+        }
+        
+        return res.sendStatus(204);
+    });
+});
+
+APP.post("/post/react", (req, res) => {
+    const message = req.body;
+    const token = decryptToken(req.header("X-Auth"));
+    const { post, entity, reaction } = message;
+    console.log("/post/react", post, entity, reaction, token);
+
+    if(!(token && post && entity && reaction)) {
+        return res.sendStatus(204);
+    }
+
+    DB.query(`CALL CreatePostReaction(?, ?, ?)`, [ entity, post, reaction ], function (error, resultSets, fields) {
+        const [ results ] = resultSets || [];
+    
+        if((results || []).length) {
+            return res.send(results[ 0 ]);
         }
         
         return res.sendStatus(204);

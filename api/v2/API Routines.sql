@@ -170,7 +170,8 @@ BEGIN
 	FROM
 		`vwFeedHelper` fh
 	WHERE
-		(
+		fh.PostType = "Image"
+		AND (
 			(
 				$BeginDateTime IS NOT NULL
 				AND fh.PostCreatedDateTimeUTC >= $BeginDateTime

@@ -17,14 +17,15 @@ function Feed() {
                     if(typeof data[ i ].PostChildren === "string") {
                         data[ i ].PostChildren = JSON.parse(data[ i ].PostChildren);
                     }
+                    if(typeof data[ i ].PostReactions === "string") {
+                        data[ i ].PostReactions = JSON.parse(data[ i ].PostReactions);
+                    }
                 }
 
                 setPosts(data);
             });
         }
     }, [ handle ]);
-
-    console.log(posts);
 
     if(!posts.length) {
         return (
@@ -36,7 +37,7 @@ function Feed() {
         <Segment secondary>
             {
                 posts.map(post => (
-                    <Post post={ post } />
+                    <Post key={ post.PostUUID } post={ post } />
                 ))
             }
         </Segment>

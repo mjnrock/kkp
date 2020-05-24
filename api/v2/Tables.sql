@@ -104,6 +104,7 @@ CREATE TABLE `PostReaction` (
 		FOREIGN KEY (EntityID) REFERENCES `Entity`(EntityID),
 	Reaction VARCHAR(255) NOT NULL
 );
+ALTER TABLE `PostReaction` ADD UNIQUE `Unique_PostReaction_Index`(`PostID`, `EntityID`, `Reaction`);
 
 CREATE TABLE `PostHierarchy` (
 	PostHierarchyID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,

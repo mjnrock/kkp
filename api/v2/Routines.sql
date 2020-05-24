@@ -470,3 +470,89 @@ BEGIN
 	END IF;
 END//
 DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS CreateEntity;
+DELIMITER //
+CREATE PROCEDURE CreateEntity
+(
+    IN $Type VARCHAR(255),
+	IN $Handle VARCHAR(255),
+    IN $Name VARCHAR(255),
+    OUT $UUID VARCHAR(255)
+)
+BEGIN
+	DECLARE $DEEntityTypeID INT;
+    
+    SELECT
+		DictionaryEntryID INTO $DEEntityTypeID
+	FROM
+		`vwDictionaryHelper` dh
+	WHERE
+		dh.Title = "EntityType"
+		AND dh.Key = $Type;
+                
+    IF(LENGTH($DEEntityTypeID) > 0) THEN
+		BEGIN
+			INSERT INTO `Entity` (DEEntityTypeID, Handle, Name)
+			VALUES ($DEEntityTypeID, $Handle, $Name);
+            
+            SELECT
+				e.UUID INTO $UUID
+			FROM
+				`Entity` e
+			WHERE
+				e.EntityID = LAST_INSERT_ID();
+        END;
+	END IF;
+END//
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS CreatePostReaction;
+DELIMITER //
+CREATE PROCEDURE CreatePostReaction
+(
+    IN $Entity VARCHAR(255),
+    IN $Post VARCHAR(255),
+    IN $Reaction VARCHAR(255)
+)
+BEGIN
+    DECLARE $EntityID INT;
+	DECLARE $PostID INT;
+    
+	SELECT
+		eh.EntityID INTO $EntityID
+	FROM
+		`vwEntityHelper` eh
+	WHERE (
+		eh.EntityID = $Entity
+        OR eh.UUID = $Entity
+        OR eh.Handle = $Entity
+    );
+    
+	SELECT
+		ph.PostID INTO $PostID
+	FROM
+		`vwPostHelper` ph
+	WHERE (
+		ph.PostID = $Post
+        OR ph.PostUUID = $post
+    );
+                
+    IF(LENGTH($EntityID) > 0 AND LENGTH($PostID) > 0 AND LENGTH($Reaction) > 0) THEN
+		BEGIN
+			INSERT INTO `PostReaction` (EntityID, PostID, Reaction)
+			VALUES ($EntityID, $PostID, $Reaction);
+            
+            SELECT
+				prjh.PostUUID,
+                prjh.PostReactions
+			FROM
+				`vwPostReactionJsonHelper` prjh
+			WHERE
+				PostID = $PostID;
+        END;
+	END IF;
+END//
+DELIMITER ;

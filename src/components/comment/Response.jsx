@@ -21,9 +21,22 @@ function Response(props) {
         //         postId: props.postId
         //     }
         // });
-    }
 
-    console.log(post);
+        // const myHeaders = new Headers();
+
+        // const myRequest = new Request('flowers.jpg', {
+        // method: 'GET',
+        // headers: { "X-Auth", "token" },  // Pass custom authentication header here
+        // mode: 'cors',
+        // cache: 'default',
+        // });
+
+        // fetch(myRequest)
+        // .then(response => response.blob())
+        // .then(myBlob => {
+        //     myImage.src = URL.createObjectURL(myBlob);
+        // });
+    }
 
     return (
         <Comment>

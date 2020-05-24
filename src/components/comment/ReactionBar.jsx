@@ -10,8 +10,8 @@ function ReactionBar(props) {
     function aggregateReactions(reactions) {
         let reacts = {};
         reactions.forEach(reaction => {
-            reacts[ reaction.emoji ] = (reacts[ reaction.emoji ] || 0) + 1;
-        });
+            reacts[ reaction.Reaction ] = (reacts[ reaction.Reaction ] || 0) + 1;
+        })
 
         return Object.entries(reacts);
     }

@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect } from "react";
-import { Header, Divider, Icon, Card, Segment, Item, Accordion, List, Image } from "semantic-ui-react";
+import { Header, Divider, Icon, Card, Segment, Item, Accordion, List, Image, Button, Message } from "semantic-ui-react";
 import { useParams, Link } from "react-router-dom";
 
 import ImageBanner from "./../components/image/ImageBanner";
@@ -21,11 +21,21 @@ function Profile() {
             
             fetch(`http://192.168.86.100:3001/family/${ handle }`)
             .then(response => response.json())
-            .then(setFamily);
+            .then(data => {
+                for(let i of data) {
+                    if(typeof data[ i ].EntityDetail === "string") {
+                        data[ i ].EntityDetail = JSON.parse(data[ i ].EntityDetail);
+                    }
+                }
+                
+                setFamily(data);
+            })
+            .catch(e => setFamily([]));
 
             fetch(`http://192.168.86.100:3001/friends/${ handle }`)
             .then(response => response.json())
-            .then(setFriends);
+            .then(setFriends)
+            .catch(e => setFriends([]));
         }
     }, [ handle ]);
 
@@ -35,7 +45,10 @@ function Profile() {
         )
     }
 
-    console.log(friends);
+    console.log("entity", entity);
+    console.log("family", family);
+    console.log("friends", friends);
+    console.log("handle", handle);
 
     return (
         <Fragment>            
@@ -127,14 +140,20 @@ function Profile() {
                     <Accordion.Content active={ true }>
                         <List selection verticalAlign="middle">
                             {
-                                friends.map(friend => (
-                                    <List.Item key={ friend.FriendHandle } as={ Link } to={ `/profile/${ friend.FriendHandle }` }>
-                                        <Image avatar src={ `http://192.168.86.100:3001/img/${ friend.FriendHandle }.jpg` } />
-                                        <List.Content>
-                                            <List.Header>{ friend.FriendHandle }</List.Header>
-                                        </List.Content>
-                                    </List.Item>
-                                ))
+                                friends.length ? (
+                                    friends.map(friend => (
+                                        <List.Item key={ friend.FriendHandle } as={ Link } to={ `/profile/${ friend.FriendHandle }` }>
+                                            <Image avatar src={ `http://192.168.86.100:3001/img/${ friend.FriendHandle }.jpg` } />
+                                            <List.Content>
+                                                <List.Header>{ friend.FriendHandle }</List.Header>
+                                            </List.Content>
+                                        </List.Item>
+                                    ))
+                                ) : (
+                                    <Button color="green" inverted fluid>
+                                        Add Friend
+                                    </Button>
+                                )
                             }
                         </List>
                     </Accordion.Content>
