@@ -58,6 +58,7 @@ SELECT
     e.Handle,
     e.Name,
     e.Detail,
+    e.CreatedDateTimeUTC,
     e.UUID,
     dh.DictionaryEntryID,
     dh.Key,
@@ -107,6 +108,7 @@ SELECT
     a.UUID,
     CONCAT(a.UUID, ".", TRIM(BOTH '"' FROM dhe.EntryValue)) AS Filename,
     a.Detail,
+    a.CreatedDateTimeUTC,
     dht.DictionaryEntryID AS TypeDictionaryEntryID,
     dht.Key AS TypeKey,
     dht.Value AS TypeValue,
@@ -128,6 +130,7 @@ DROP VIEW IF EXISTS `vwPostHelper`;
 CREATE VIEW `vwPostHelper` AS
 SELECT
     p.PostID,
+    p.CreatedDateTimeUTC AS PostCreatedDateTimeUTC,
     p.UUID AS PostUUID,
     eh.EntityID,
     eh.Handle AS EntityHandle,
@@ -137,10 +140,12 @@ SELECT
     dh.EntryValue AS PostType,
     pd.PostDetailID,
     pd.Detail,
+    TRIM(BOTH '"' FROM pd.`Detail`->"$.content") AS Content,    
     pa.PostAssetID,
     pa.AssetID,
     ah.UUID AS AssetUUID,
     ah.TypeEntryValue AS AssetType,
+    ah.ExtEntryValue AS AssetExtType,
     ah.Filename
 FROM
 	`Post` p
@@ -161,6 +166,7 @@ DROP VIEW IF EXISTS `vwPostReactionHelper`;
 CREATE VIEW `vwPostReactionHelper` AS
 SELECT
 	p.PostID,
+    p.PostCreatedDateTimeUTC,
     p.PostUUID,
     p.PostType,
     e.EntityID,
@@ -184,9 +190,11 @@ CREATE VIEW `vwPostChildrenHelper` AS
 SELECT
 	ph.PostHierarchyID,
     ph.ParentPostID,
+    p.CreatedDateTimeUTC AS ParentPostCreatedDateTimeUTC,
     p.UUID AS ParentPostUUID,
     p.EntityID AS ParentPostEntityID,
     pc.PostID,
+    pc.PostCreatedDateTimeUTC,
     pc.PostUUID,
     pc.EntityID AS PostEntityID,
     pc.PostType,
@@ -205,6 +213,7 @@ CREATE VIEW `vwGroupHelper` AS
 SELECT
 	g.GroupID,
     g.Detail AS GroupDetail,
+    g.CreatedDateTimeUTC AS GroupCreatedDateTimeUTC,
     g.UUID AS GroupUUID,
     dh.DictionaryEntryID,
     dh.Key AS GroupTypeKey,

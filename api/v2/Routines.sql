@@ -104,7 +104,6 @@ CREATE PROCEDURE CreateAsset
     IN $Account VARCHAR(255),
     IN $Type VARCHAR(255),
     IN $Extension VARCHAR(255),
-    IN $Detail TEXT,
     OUT $UUID VARCHAR(255)
 )
 BEGIN
@@ -142,9 +141,9 @@ BEGIN
 			AND dh.Key = $Extension;
 	COMMIT;
         
-	INSERT INTO `Asset` (AccountID, DEAssetTypeID, DEAssetExtensionID, Detail)
+	INSERT INTO `Asset` (AccountID, DEAssetTypeID, DEAssetExtensionID)
     VALUES
-		($AccountID, $DEAssetTypeID, $DEAssetExtensionID, $Detail);
+		($AccountID, $DEAssetTypeID, $DEAssetExtensionID);
         
 	SELECT
 		UUID INTO $UUID
@@ -163,7 +162,6 @@ CREATE PROCEDURE CreateImagePost
     IN $Account VARCHAR(255),
     IN $Entity VARCHAR(255),
     IN $Extension VARCHAR(255),
-    IN $Detail TEXT,
     OUT $UUID VARCHAR(255)
 )
 BEGIN
@@ -173,7 +171,7 @@ BEGIN
     DECLARE $EntityID INT;
     DECLARE $PostID INT;
     
-    CALL CreateAsset($Account, "Image", $Extension, $Detail, $AssetUUID);
+    CALL CreateAsset($Account, "Image", $Extension, $AssetUUID);
     
     SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 		SELECT
@@ -226,18 +224,20 @@ BEGIN
 				BEGIN
 					INSERT INTO PostAsset (PostID, AssetID)
 					VALUES ($PostID, $AssetID);
-					
-					IF(LENGTH($Detail) > 0) THEN
-						BEGIN
-							INSERT INTO PostDetail (PostID, Detail)
-							VALUES ($PostID, $Detail);
-						END;
-					END IF;
 				END;
 			END IF;
 		END;
 	END IF;
 	
+    SELECT
+		ph.PostUUID,
+		ph.AssetUUID,
+        ph.Filename
+	FROM
+		`vwPostHelper` ph
+	WHERE
+		ph.AssetUUID = $AssetUUID
+        AND ph.PostID = $PostID;
 END//
 DELIMITER ;
 

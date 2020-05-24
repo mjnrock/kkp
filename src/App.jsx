@@ -99,10 +99,7 @@ function App() {
                         <Route path="/profile/:handle">
                             <Routes.Profile />
                         </Route>
-                        <Route path="/album/:albumId">
-                            <Routes.Album />
-                        </Route>
-                        <Route path="/post/:postId">
+                        <Route path="/post/:uuid">
                             <Routes.Post />
                         </Route>
                         <Route exact path="/">

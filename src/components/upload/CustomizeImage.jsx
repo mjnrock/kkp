@@ -8,11 +8,11 @@ function CustomizeImage(props) {
     return (
         <Segment basic >
             <Segment inverted>
-                <Image src={ URL.createObjectURL(props.image) } centered />
+                <Image src={ `http://localhost:3001/img/${ data.Filename }` } centered />
             </Segment>
 
             <Button.Group fluid style={{ marginTop: 20 }}>
-                <Button icon inverted color="orange" size="large" as={ Link } to={ `/post/${ data.id }` }>
+                <Button icon inverted color="orange" size="large" as={ Link } to={ `/post/${ data.PostUUID }` }>
                     View Post
                 </Button>
             </Button.Group>

@@ -16,7 +16,7 @@ CALL CreateReplyPost(2, 1, "Oi thah, cheeldrin");
 
 CALL MapEntityAsset("Profile", 1, 1);
 
-CALL CreateGroup("Family", NULL, @UUID);
+CALL CreateGroup("Family", "Kiszkabuddhaski", @UUID);
 
 CALL MapGroupEntity(@UUID, 1, @NULL);
 CALL MapGroupEntity(@UUID, 2, @NULL);

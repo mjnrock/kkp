@@ -7,12 +7,12 @@ import ReactionBar from "../components/comment/ReactionBar";
 import InputComment from "../components/comment/InputComment";
 
 function Post() {
-    const { postId } = useParams();
+    const { uuid } = useParams();
     const [ post, setPost ] = useState({});
 
     useEffect(() => {
         if(!Object.keys(post).length) {
-            fetch(`http://192.168.86.100:3001/post/${ postId }`)
+            fetch(`http://192.168.86.100:3001/post/${ uuid }`)
             .then(response => response.json())
             .then(setPost);
         }
@@ -30,11 +30,11 @@ function Post() {
     return (
         <Segment>
             <Header as="h2" color="orange" textAlign="center">
-                <Header.Content>Post #{ post.id }</Header.Content>
+                <Header.Content>Post #{ post.PostUUID }</Header.Content>
             </Header>
 
             <Segment inverted>
-                <Image src={ `http://192.168.86.100:3001/img/${ post.image }` } centered />
+                <Image src={ `http://192.168.86.100:3001/img/${ post.Filename }` } centered />
             </Segment>
             <ReactionBar onReaction={ console.log } reactions={ [] } />
 
@@ -42,7 +42,7 @@ function Post() {
             
             <InputComment onSubmitComment={ console.log } />
 
-            <Thread posts={ post.children }/>
+            <Thread posts={ post.PostChildren }/>
         </Segment>
     );
 }

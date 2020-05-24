@@ -29,13 +29,17 @@ function UploadWizard() {
         formData.append("photo", image);
         formData.append("handle", state.auth.handle);
 
-        fetch("http://192.168.86.100:3001/media/upload", {
+        let url = new URL("http://192.168.86.100:3001/image/upload");
+        let params = { token: state.auth.token, entity: state.user.Handle };
+        url.search = new URLSearchParams(params).toString();
+
+        fetch(url, {
             method: "POST",
             body: formData,
         })
         .then(response => response.json())
         .then(data => {
-            if(data.id) {
+            if(data.PostUUID) {
                 setResponse(data);
                 setStep(2);
             } else {

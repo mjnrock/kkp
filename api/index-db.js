@@ -146,6 +146,87 @@ APP.get("/family/:handle", (req, res) => {
     });
 });
 
+APP.get("/post/:uuid", (req, res) => {
+    const uuid = req.params.uuid;
+    console.log("/post", uuid);
+
+    if(!(uuid)) {
+        return res.sendStatus(204);
+    }
+
+    DB.query(`CALL GetPost(?)`, [ uuid ], function (error, resultSets, fields) {
+        const [ results ] = resultSets || [];
+    
+        if((results || []).length) {
+            return res.send(results[ 0 ]);
+        }
+        
+        return res.sendStatus(204);
+    });
+});
+
+
+//* ================= <UPLOAD> =========================
+    APP.post("/image/upload", (req, res) => {
+        const token = decryptToken(req.query.token);
+        const entity = req.query.entity;
+        let dbdata = {};
+        console.log("/image/upload", token);
+
+        if(token && token.email) {
+            const MULTER_STORAGE = multer.diskStorage({
+                destination: function (req, file, cb) {
+                    cb(null, "./data/image");
+                },
+        
+                // By default, multer removes file extensions so let"s add them back
+                filename: function (req, file, cb) {        
+                    DB.query(`CALL CreateImagePost(?, ?, ?, @UUID)`, [ token.email, entity, (path.extname(file.originalname) || "").replace(/[^0-9a-z]/gi, "") ], function (error, resultSets, fields) {
+                        const [ results ] = resultSets || [];
+                    
+                        if((results || []).length) {
+                            dbdata = results[ 0 ];
+
+                            cb(null, dbdata.Filename);
+                        }
+                    });
+                }
+            });
+
+            let upload = multer({
+                storage: MULTER_STORAGE,
+                fileFilter: (req, file, cb) => {
+                    // Accept images only
+                    if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
+                        req.fileValidationError = "Only image files are allowed!";
+    
+                        return cb(new Error("Only image files are allowed!"), false);
+                    }
+                    cb(null, true);
+                }
+            }).single("photo");
+    
+            upload(req, res, function (err) {
+                console.log(res);
+                // req.file contains information of uploaded file
+                // req.body contains information of text fields, if there were any
+    
+                if (req.fileValidationError) {
+                    return res.send(req.fileValidationError);
+                } else if (!req.file) {
+                    return res.send("Please select an image to upload");
+                } else if (err instanceof multer.MulterError) {
+                    return res.send(err);
+                } else if (err) {
+                    return res.send(err);
+                }
+
+                return res.send(dbdata);
+            });
+        }
+    });
+//* ================= </UPLOAD> =========================
+
 
 APP.listen(PORT, () =>
     console.log(`KiKi Pupus API listening on port ${PORT}!`),

@@ -137,6 +137,101 @@ BEGIN
 END//
 DELIMITER ;
 
+
+DROP PROCEDURE IF EXISTS GetPost;
+DELIMITER //
+CREATE PROCEDURE GetPost
+(
+	IN $Post VARCHAR(255)
+)
+BEGIN
+	SELECT
+		ph.PostUUID,
+		ph.PostType,
+		ph.PostCreatedDateTimeUTC,
+		ph.Detail AS PostDetail,
+		ph.EntityHandle,
+		ph.EntityName,
+		ph.AssetUUID,
+		ph.AssetType,
+		ph.Filename,
+		CASE
+			WHEN MAX(pch.ParentPostUUID) IS NULL THEN NULL
+			ELSE JSON_ARRAYAGG(JSON_OBJECT(
+				"ParentPostUUID", pch.ParentPostUUID,
+				"PostUUID", pch.PostUUID,
+				"PostType", pch.PostType,
+				"PostContent", pch.PostContent
+			))
+		END AS PostChildren,
+		CASE
+			WHEN MAX(pch.ParentPostUUID) IS NULL THEN NULL
+			ELSE JSON_ARRAYAGG(JSON_OBJECT(
+				"EntityHandle", prh.EntityHandle,
+				"Reaction", prh.Reaction
+			))
+		END AS PostReactions
+	FROM
+		`vwPostHelper` ph
+		LEFT JOIN `vwPostChildrenHelper` pch
+			ON ph.PostID = pch.ParentPostID
+		LEFT JOIN `vwPostReactionHelper` prh
+			ON ph.PostID = prh.PostID
+	WHERE (
+		ph.PostID = $Post
+        OR ph.PostUUID = $Post
+    )
+	GROUP BY
+		ph.PostUUID,
+		ph.PostType,
+		ph.PostCreatedDateTimeUTC,
+		ph.Detail,
+		ph.EntityHandle,
+		ph.EntityName,
+		ph.AssetUUID,
+		ph.AssetType,
+		ph.Filename;
+END//
+DELIMITER ;
+
+
+-- DROP PROCEDURE IF EXISTS GetFeed;
+-- DELIMITER //
+-- CREATE PROCEDURE GetFeed
+-- (
+-- 	IN $Entity VARCHAR(255)
+-- )
+-- BEGIN
+-- 	SELECT
+--         g.GroupUUID,
+--         g.GroupType,
+-- 		g.GroupDetail,
+--         g.EntityUUID,
+--         g.EntityType,
+--         g.EntityHandle,
+--         g.EntityName,
+--         g.EntityDetail
+-- 	FROM
+-- 		`vwGroupHelper` g
+-- 	WHERE
+-- 		g.GroupTypeKey = "Family"
+-- 		AND EXISTS (
+-- 			SELECT
+-- 				*
+-- 			FROM
+-- 				`vwGroupHelper` g2
+-- 			WHERE
+-- 				g2.GroupTypeKey = "Family"
+--                 AND g.GroupID = g2.GroupID
+-- 				AND (
+-- 					g2.EntityID = $Entity
+-- 					OR g2.EntityHandle = $Entity
+-- 					OR g2.EntityUUID = $Entity
+--                 )
+-- 		);
+-- END//
+-- DELIMITER ;
+
 CALL Login("email@aol.com", "P@$sw0rd", @UUID);
 CALL GetEntity("MrSir");
 CALL GetFriends("MrSir");
