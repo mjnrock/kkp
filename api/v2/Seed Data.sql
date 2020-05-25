@@ -3,10 +3,10 @@ USE kkp;
 CALL CreateGroup("Family", "Kiszkabuddhaski", @GroupUUID);
 
 CALL CreateAccount("MrStretch", "Matt", "email@aol.com", "P@$sw0rd", "MrStretch", NULL);
-CALL CreateAccount("Sarazona", "Sarah", "shrah@aol.com", "P@$sw0rd", "SarahTheGreat", NULL);
+CALL CreateAccount("Sarahhzona", "Sarah", "shrah@aol.com", "P@$sw0rd", "SarahTheGreat", NULL);
 
 CALL MapGroupEntity(@GroupUUID, "MrStretch", @NULL);
-CALL MapGroupEntity(@GroupUUID, "Sarazona", @NULL);
+CALL MapGroupEntity(@GroupUUID, "Sarahhzona", @NULL);
 CALL CreateEntity("Cat", "Kiszka", "Kiszka", @UUID);
 CALL MapGroupEntity(@GroupUUID, @UUID, @NULL);
 CALL CreateEntity("Cat", "Buddha", "Buddha", @UUID);
