@@ -4,10 +4,16 @@ import { Comment } from "semantic-ui-react";
 import Response from "./Response";
 
 function Thread(props) {
+    if(!props.posts) {
+        return null;
+    }
+
+    const posts = props.posts.sort((a, b) => a.PostCreatedDateTimeUTC < b.PostCreatedDateTimeUTC);
+
     return (
         <Comment.Group threaded collapsed={ props.collapsed }>
             {
-                (props.posts || []).map(post => (
+                (posts || []).map(post => (
                     <Response key={ post.PostUUID } post={ post } />
                 ))
             }

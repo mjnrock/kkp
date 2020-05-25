@@ -11,6 +11,7 @@ function Post(props) {
     const { state } = useContext(Context);
     const { post } = props;
     const [ reactions, setReactions ] = useState(post.PostReactions || []);
+    const [ children, setChildren ] = useState(post.PostChildren || []);
 
     function onReaction(emoji) {        
         fetch("http://192.168.86.100:3001/post/react", {
@@ -37,6 +38,35 @@ function Post(props) {
         .catch(e => null);
     }
 
+    function onSubmitComment(comment, setComment) {
+        if(comment.length > 0) {
+            setComment("");
+
+            fetch("http://192.168.86.100:3001/post/reply", {
+                method: "POST",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "X-Auth": state.auth.token
+                },
+                body: JSON.stringify({
+                    "post": post.PostUUID,
+                    "entity": state.user.EntityUUID,
+                    "reply": comment,
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(typeof data.PostChildren === "string") {
+                    data.PostChildren = JSON.parse(data.PostChildren);
+                }
+    
+                setChildren(data.PostChildren);
+            })
+            .catch(e => null);
+        }
+    }
+
     return (
         <Segment>
             <Header as="h2" color="orange" textAlign="center">
@@ -50,9 +80,9 @@ function Post(props) {
 
             <Divider horizontal>Comments</Divider>
             
-            <InputComment onSubmitComment={ console.log } />
+            <InputComment onSubmitComment={ onSubmitComment } />
 
-            <Thread posts={ post.PostChildren }/>
+            <Thread posts={ children || [] }/>
         </Segment>
     );
 }

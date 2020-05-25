@@ -160,52 +160,6 @@ FROM
 	LEFT JOIN `vwAssetHelper` ah
 		ON pa.AssetID = ah.AssetID;
         
-        
-DROP VIEW IF EXISTS `vwPostReactionHelper`;
-
-CREATE VIEW `vwPostReactionHelper` AS
-SELECT
-	p.PostID,
-    p.PostCreatedDateTimeUTC,
-    p.PostUUID,
-    p.PostType,
-    e.EntityID,
-    e.Key AS EntityType,
-    e.Handle AS EntityHandle,
-    e.Name AS EntityName,
-    e.UUID AS EntityUUID,
-    pr.PostReactionID,
-    pr.Reaction
-FROM
-	`vwPostHelper` p
-    INNER JOIN `PostReaction` pr
-		ON p.PostID = pr.PostID
-	INNER JOIN `vwEntityHelper` e
-		ON pr.EntityID = e.EntityID;
-        
-        
-DROP VIEW IF EXISTS `vwPostChildrenHelper`;
-
-CREATE VIEW `vwPostChildrenHelper` AS
-SELECT
-	ph.PostHierarchyID,
-    ph.ParentPostID,
-    p.CreatedDateTimeUTC AS ParentPostCreatedDateTimeUTC,
-    p.UUID AS ParentPostUUID,
-    p.EntityID AS ParentPostEntityID,
-    pc.PostID,
-    pc.PostCreatedDateTimeUTC,
-    pc.PostUUID,
-    pc.EntityID AS PostEntityID,
-    pc.PostType,
-    TRIM(BOTH '"' FROM pc.Detail->"$.content") AS PostContent
-FROM
-	`PostHierarchy` ph
-    INNER JOIN `Post` p
-		ON ph.ParentPostID = p.PostID
-    INNER JOIN `vwPostHelper` pc
-		ON ph.PostID = pc.PostID;
-        
 
 DROP VIEW IF EXISTS `vwGroupHelper`;
 
@@ -235,31 +189,27 @@ FROM
 		ON g.DEGroupTypeID = dh.DictionaryEntryID;
         
         
-DROP VIEW IF EXISTS `vwPostChildrenJsonHelper`;
+DROP VIEW IF EXISTS `vwPostReactionHelper`;
 
-CREATE VIEW `vwPostChildrenJsonHelper` AS
+CREATE VIEW `vwPostReactionHelper` AS
 SELECT
-	pch.ParentPostID,
-    pch.ParentPostUUID,
-	CASE
-		WHEN MAX(pch.ParentPostUUID) IS NULL THEN NULL
-		ELSE JSON_ARRAYAGG(JSON_OBJECT(
-			"ParentPostUUID", pch.ParentPostUUID,
-			"PostUUID", pch.PostUUID,
-			"PostType", pch.PostType,
-			"PostCreatedDateTimeUTC", pch.PostCreatedDateTimeUTC,
-			"PostContent", pch.PostContent,
-			"EntityHandle", eh.Handle,
-			"EntityName", eh.`Name`
-		))
-	END AS PostChildren
+	p.PostID,
+    p.PostCreatedDateTimeUTC,
+    p.PostUUID,
+    p.PostType,
+    e.EntityID,
+    e.Key AS EntityType,
+    e.Handle AS EntityHandle,
+    e.Name AS EntityName,
+    e.UUID AS EntityUUID,
+    pr.PostReactionID,
+    pr.Reaction
 FROM
-	`vwPostChildrenHelper` pch
-	LEFT JOIN `vwEntityHelper` eh
-		ON pch.ParentPostEntityID = eh.EntityID
-GROUP BY
-	pch.ParentPostID,
-    pch.ParentPostUUID;
+	`vwPostHelper` p
+    INNER JOIN `PostReaction` pr
+		ON p.PostID = pr.PostID
+	INNER JOIN `vwEntityHelper` e
+		ON pr.EntityID = e.EntityID;
     
 
 DROP VIEW IF EXISTS `vwPostReactionJsonHelper`;
@@ -280,6 +230,60 @@ FROM
 GROUP BY
 	prh.PostID,
     prh.PostUUID;
+        
+        
+DROP VIEW IF EXISTS `vwPostChildrenHelper`;
+
+CREATE VIEW `vwPostChildrenHelper` AS
+SELECT
+	ph.PostHierarchyID,
+    ph.ParentPostID,
+    p.CreatedDateTimeUTC AS ParentPostCreatedDateTimeUTC,
+    p.UUID AS ParentPostUUID,
+    p.EntityID AS ParentPostEntityID,
+    pc.PostID,
+    pc.PostCreatedDateTimeUTC,
+    pc.PostUUID,
+    pc.EntityID AS PostEntityID,
+    pc.PostType,
+    TRIM(BOTH '"' FROM pc.Detail->"$.content") AS PostContent,
+    prjh.PostReactions
+FROM
+	`PostHierarchy` ph
+    INNER JOIN `Post` p
+		ON ph.ParentPostID = p.PostID
+    INNER JOIN `vwPostHelper` pc
+		ON ph.PostID = pc.PostID        
+	LEFT JOIN `vwPostReactionJsonHelper` prjh
+		ON prjh.PostID = ph.PostID;
+        
+        
+DROP VIEW IF EXISTS `vwPostChildrenJsonHelper`;
+
+CREATE VIEW `vwPostChildrenJsonHelper` AS
+SELECT
+	pch.ParentPostID,
+    pch.ParentPostUUID,
+	CASE
+		WHEN MAX(pch.ParentPostUUID) IS NULL THEN NULL
+		ELSE JSON_ARRAYAGG(JSON_OBJECT(
+			"ParentPostUUID", pch.ParentPostUUID,
+			"PostUUID", pch.PostUUID,
+			"PostType", pch.PostType,
+			"PostCreatedDateTimeUTC", pch.PostCreatedDateTimeUTC,
+			"PostContent", pch.PostContent,
+            "PostReactions", pch.PostReactions,
+			"EntityHandle", eh.Handle,
+			"EntityName", eh.`Name`
+		))
+	END AS PostChildren
+FROM
+	`vwPostChildrenHelper` pch
+	LEFT JOIN `vwEntityHelper` eh
+		ON pch.ParentPostEntityID = eh.EntityID
+GROUP BY
+	pch.ParentPostID,
+    pch.ParentPostUUID;
         
         
 DROP VIEW IF EXISTS `vwFeedHelper`;

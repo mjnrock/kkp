@@ -4,12 +4,21 @@ import { Input, Button, Icon } from "semantic-ui-react";
 import EmojiPicker from "./EmojiPicker";
 
 function InputComment(props) {
-    const [ comment, setComment ] = useState();
-    let imageRef = React.createRef();
+    const [ comment, setComment ] = useState("");
+    // let imageRef = React.createRef();
 
     function onCommentKey(e) {
-        if(e.which === 13) {
-            props.onSubmitComment(comment);
+        if(e.which === 13 && comment.trim().length) {
+            props.onSubmitComment(comment.trim(), setComment);
+            setComment("");
+        } else {
+            setComment(e.target.value);
+        }
+    }
+    function onSubmitComment(e) {
+        if(comment.trim().length) {
+            props.onSubmitComment(comment.trim(), setComment);
+            setComment("");
         }
     }
 
@@ -27,14 +36,15 @@ function InputComment(props) {
                 icon="comment outline medium-icon orange"
                 iconPosition="left"
                 action={    //! Using "action" here causes a :focus bug, must convert to a flex box or similar
-                    <Button color="orange" basic icon onClick={ e => props.onSubmitComment(comment) }>
+                    <Button color="orange" basic icon onClick={ onSubmitComment }>
                         <Icon name="send outline orange" className="medium-icon" />
                         <span style={{ paddingLeft: 6 }}>Post</span>
                     </Button>
                 }
                 placeholder="Add a comment..."
                 fluid
-                onChange={ e => setComment(e.target.value) }
+                value={ comment }
+                onChange={ onCommentKey }
                 onKeyUp={ onCommentKey }
             />
 
@@ -53,7 +63,7 @@ function InputComment(props) {
                 ) : null } */}
             </Button.Group>
 
-            <input ref={ imageRef } onChange={ e => props.onImageSelect(e.target.files[ 0 ]) } type="file" hidden />
+            {/* <input ref={ imageRef } onChange={ e => props.onImageSelect(e.target.files[ 0 ]) } type="file" hidden /> */}
         </div>
     )
 }

@@ -12,30 +12,29 @@ function Response(props) {
     const [ collapsed, setCollapsed ] = useState(false);
     const [ reactions, setReactions ] = useState(post.PostReactions || []);
 
-    
-    function onReaction(emoji) {
-        // dispatch({
-        //     type: "REACTION",
-        //     data: {
-        //         emoji,
-        //         postId: props.postId
-        //     }
-        // });
+    function onReaction(emoji) {        
+        fetch("http://192.168.86.100:3001/post/react", {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "X-Auth": state.auth.token
+            },
+            body: JSON.stringify({
+                "post": post.PostUUID,
+                "entity": state.user.EntityUUID,
+                "reaction": emoji,
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(typeof data.PostReactions === "string") {
+                data.PostReactions = JSON.parse(data.PostReactions);
+            }
 
-        // const myHeaders = new Headers();
-
-        // const myRequest = new Request('flowers.jpg', {
-        // method: 'GET',
-        // headers: { "X-Auth", "token" },  // Pass custom authentication header here
-        // mode: 'cors',
-        // cache: 'default',
-        // });
-
-        // fetch(myRequest)
-        // .then(response => response.blob())
-        // .then(myBlob => {
-        //     myImage.src = URL.createObjectURL(myBlob);
-        // });
+            setReactions(data.PostReactions);
+        })
+        .catch(e => null);
     }
 
     return (

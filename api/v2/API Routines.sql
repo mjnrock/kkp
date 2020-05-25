@@ -146,7 +146,19 @@ CREATE PROCEDURE GetPost
 )
 BEGIN
 	SELECT
-		*
+		fh.PostUUID,
+		fh.PostType,
+		fh.PostCreatedDateTimeUTC,
+		fh.PostDetail,
+		fh.PostContent,
+		fh.EntityUUID,
+		fh.EntityHandle,
+		fh.EntityName,
+		fh.AssetUUID,
+		fh.AssetType,
+		fh.Filename,
+		fh.PostChildren,
+		fh.PostReactions
 	FROM
 		`vwFeedHelper` fh
 	WHERE (
@@ -166,7 +178,19 @@ CREATE PROCEDURE GetFeed
 )
 BEGIN
 	SELECT
-		*
+		fh.PostUUID,
+		fh.PostType,
+		fh.PostCreatedDateTimeUTC,
+		fh.PostDetail,
+		fh.PostContent,
+		fh.EntityUUID,
+		fh.EntityHandle,
+		fh.EntityName,
+		fh.AssetUUID,
+		fh.AssetType,
+		fh.Filename,
+		fh.PostChildren,
+		fh.PostReactions
 	FROM
 		`vwFeedHelper` fh
 	WHERE

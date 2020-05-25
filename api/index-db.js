@@ -146,6 +146,27 @@ APP.get("/family/:handle", (req, res) => {
     });
 });
 
+APP.post("/post/reply", (req, res) => {
+    const message = req.body;
+    const token = decryptToken(req.header("X-Auth"));
+    const { post, entity, reply } = message;
+    console.log("/post/react", post, entity, reply, token);
+
+    if(!(token && post && entity && reply)) {
+        return res.sendStatus(204);
+    }
+
+    DB.query(`CALL CreateReplyPost(?, ?, ?)`, [ entity, post, reply ], function (error, resultSets, fields) {
+        const [ results ] = resultSets || [];
+    
+        if((results || []).length) {
+            return res.send(results[ 0 ]);
+        }
+        
+        return res.sendStatus(204);
+    });
+});
+
 APP.post("/post/react", (req, res) => {
     const message = req.body;
     const token = decryptToken(req.header("X-Auth"));

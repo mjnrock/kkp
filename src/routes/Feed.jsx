@@ -22,7 +22,9 @@ function Feed() {
                     }
                 }
 
-                setPosts(data);
+                let postsData = data.sort((a, b) => a.PostCreatedDateTimeUTC < b.PostCreatedDateTimeUTC);
+
+                setPosts(postsData);
             });
         }
     }, [ handle ]);
