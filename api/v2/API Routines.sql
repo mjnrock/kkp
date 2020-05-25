@@ -111,6 +111,7 @@ BEGIN
         g.GroupUUID,
         g.GroupType,
 		g.GroupDetail,
+		TRIM(BOTH '"' FROM g.GroupDetail->"$.name") AS GroupName,
         g.EntityUUID,
         g.EntityType,
         g.EntityHandle,

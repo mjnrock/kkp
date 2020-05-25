@@ -85,13 +85,6 @@ function NavBar(props) {
                 Feed
             </Menu.Item>
 
-            <Menu.Item
-                as={ Link }
-                to={ `/post/a7034c6e-9de4-11ea-a657-3497f6b7b023` }
-            >
-                Post
-            </Menu.Item>
-
             {/* <Menu.Item
                 as={ Link }
                 to="/album/1"

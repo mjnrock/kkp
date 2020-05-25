@@ -17,12 +17,13 @@ function Profile() {
         if(handle) {
             fetch(`http://192.168.86.100:3001/entity/${ handle }`)
             .then(response => response.json())
-            .then(setEntity);
+            .then(setEntity)
+            .catch(e => setEntity());
             
             fetch(`http://192.168.86.100:3001/family/${ handle }`)
             .then(response => response.json())
             .then(data => {
-                for(let i of data) {
+                for(let i in data) {
                     if(typeof data[ i ].EntityDetail === "string") {
                         data[ i ].EntityDetail = JSON.parse(data[ i ].EntityDetail);
                     }
@@ -45,11 +46,6 @@ function Profile() {
         )
     }
 
-    console.log("entity", entity);
-    console.log("family", family);
-    console.log("friends", friends);
-    console.log("handle", handle);
-
     return (
         <Fragment>            
             <Segment basic>
@@ -62,7 +58,8 @@ function Profile() {
                     </Header.Content>
                 </Header>
 
-                <ImageBanner name={ entity.AssetFilename } />
+                {/* <ImageBanner name={ entity.AssetFilename } /> */}
+                <ImageBanner name={ `${ entity.EntityHandle }.jpg` } />
 
                 <Accordion>
                     <Accordion.Title
@@ -92,7 +89,7 @@ function Profile() {
                         <Divider horizontal>
                             <Header as="h4">
                                 <Icon name="paw" />
-                                Family
+                                { family && family[ 0 ] ? family[ 0 ].GroupName : null } Family
                             </Header>
                         </Divider>
                     </Accordion.Title>

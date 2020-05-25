@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { Segment } from "semantic-ui-react";
 
 import Post from "./../components/post/Post";
 
-function Feed() {
+function Feed(props) {
     const [ posts, setPosts ] = useState([]);
-    const { handle } = useParams();
+    const { handle: paramHandle } = useParams();
+    const handle = props.handle || paramHandle;
 
     useEffect(() => {
         if(handle) {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { List, Image, Segment, Header, Divider, Icon } from "semantic-ui-react";
+import { Card, Image, Segment, Header, Divider, Icon } from "semantic-ui-react";
 import { useParams, Link } from "react-router-dom";
 
 function Friends() {
@@ -36,18 +36,26 @@ function Friends() {
                 </Header>
             </Divider>
 
-            <List selection verticalAlign="middle">
+            <Card.Group>
                 {
                     friends.map(friend => (
-                        <List.Item key={ friend.FriendUUID } as={ Link } to={ `/profile/${ friend.FriendHandle }` }>
-                            <Image avatar src={ `http://192.168.86.100:3001/img/${ friend.FriendUUID }.jpg` } />
-                            <List.Content>
-                                <pre>{ JSON.stringify(friend, null, 2) }</pre>
-                            </List.Content>
-                        </List.Item>
+                        <Card key={ friend.FriendUUID } as={ Link } to={ `/profile/${ friend.FriendHandle }` }>
+                            <Card.Content>
+                                <Image
+                                    floated="right"
+                                    size="mini"
+                                    src={ `http://192.168.86.100:3001/img/${ friend.FriendUUID }.jpg` }
+                                />
+                                <Card.Header>{ friend.FriendName }</Card.Header>
+                                <Card.Meta>{ friend.FriendHandle }</Card.Meta>
+                                <Card.Description>
+                                    { friend.FriendDetail }
+                                </Card.Description>
+                            </Card.Content>
+                        </Card>
                     ))
                 }
-            </List>
+            </Card.Group>
         </Segment>
     );
 }

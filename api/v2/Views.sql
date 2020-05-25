@@ -290,6 +290,7 @@ DROP VIEW IF EXISTS `vwFeedHelper`;
 
 CREATE VIEW `vwFeedHelper` AS
 SELECT
+	ph.PostID,
 	ph.PostUUID,
 	ph.PostType,
 	ph.PostCreatedDateTimeUTC,

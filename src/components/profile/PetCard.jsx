@@ -8,7 +8,7 @@ function PetCard(props) {
     return (
         <Card as={ Link } to={ `/profile/${ entity.EntityHandle }` }>
             <Segment inverted style={{ marginBottom: 0 }}>
-                <Image className="clipped" src={ `http://192.168.86.100:3001/img/${ entity.image }` } width={ 300 } height={ 200 } centered />
+                <Image className="clipped" src={ `http://192.168.86.100:3001/img/${ entity.EntityHandle }.jpg` } width={ 300 } height={ 200 } centered />
             </Segment>            
             
             <Card.Content style={{ padding: 2, paddingTop: 14 }}>
@@ -25,7 +25,7 @@ function PetCard(props) {
 
                 <Card.Description>
                     { entity.EntityDetail }
-                    <pre>{ JSON.stringify(entity, null, 2) }</pre>
+                    {/* <pre>{ JSON.stringify(entity, null, 2) }</pre> */}
                 </Card.Description>
             </Card.Content>
         </Card>

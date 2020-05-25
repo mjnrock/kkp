@@ -39,7 +39,7 @@ function Response(props) {
 
     return (
         <Comment>
-            <Comment.Avatar as="a" src="/assets/pusheen.png" />
+            <Comment.Avatar as="a" src={ `http://192.168.86.100:3001/img/${ post.EntityHandle }.jpg` } />
             <Comment.Content>
                 <Comment.Author as="a">{ post.EntityHandle }</Comment.Author>
 

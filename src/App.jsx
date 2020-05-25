@@ -103,7 +103,7 @@ function App() {
                             <Routes.Post />
                         </Route>
                         <Route exact path="/">
-                            <Routes.Home />
+                            <Routes.Feed handle={ state.user.Handle } />
                         </Route>
                     </AuthRoutes>
                 </Switch>
