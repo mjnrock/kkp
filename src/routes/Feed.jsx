@@ -26,7 +26,8 @@ function Feed(props) {
                 let postsData = data.sort((a, b) => a.PostCreatedDateTimeUTC < b.PostCreatedDateTimeUTC);
 
                 setPosts(postsData);
-            });
+            })
+            .catch(e => null);
         }
     }, [ handle ]);
 

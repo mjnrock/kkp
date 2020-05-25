@@ -104,7 +104,10 @@ DROP VIEW IF EXISTS vwAssetHelper;
 CREATE VIEW vwAssetHelper AS
 SELECT
 	a.AssetID,
-    a.AccountID,
+    a.EntityID,
+    e.UUID AS EntityUUID,
+    e.Handle AS EntityHandle,
+    e.Name AS EntityName,
     a.UUID,
     CONCAT(a.UUID, ".", TRIM(BOTH '"' FROM dhe.EntryValue)) AS Filename,
     a.Detail,
@@ -119,6 +122,8 @@ SELECT
     dhe.EntryValue AS ExtEntryValue
 FROM
 	`Asset` a
+    INNER JOIN `Entity` e
+		ON a.EntityID = e.EntityID
     INNER JOIN `vwDictionaryHelper` dht
 		ON a.DEAssetTypeID = dht.DictionaryEntryID
     INNER JOIN `vwDictionaryHelper` dhe
@@ -170,12 +175,11 @@ SELECT
     g.CreatedDateTimeUTC AS GroupCreatedDateTimeUTC,
     g.UUID AS GroupUUID,
     dh.DictionaryEntryID,
-    dh.Key AS GroupTypeKey,
-    dh.EntryValue AS GroupType,
+    dh.Key AS GroupType,
     ge.GroupEntityID,
     e.UUID AS EntityUUID,
     e.EntityID,
-    e.EntryValue AS EntityType,
+    e.Key AS EntityType,
     e.Handle AS EntityHandle,
     e.Name AS EntityName,
     e.Detail AS EntityDetail

@@ -1,12 +1,11 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
+// eslint-disable-next-line
+import { Menu, Icon, Button, Dropdown } from "semantic-ui-react";
 import {
     Link,
     withRouter,
 } from "react-router-dom";
 
-// eslint-disable-next-line
-import { Menu, Icon, Button, Radio } from "semantic-ui-react";
-import { useContext } from "react";
 import { Context, EnumMessageType } from "./App";
 
 const AuthButton = withRouter(({ history }) => {
@@ -117,6 +116,20 @@ function NavBar(props) {
             </Menu.Item> */}
 
             <Menu.Menu position="right">
+                <Menu.Item>
+                    <Dropdown text={ <span>Posting as: <span style={{ fontWeight: "bold" }}>{ state.user.Handle }</span></span> }>
+                        <Dropdown.Menu>
+                            <Dropdown.Item icon="star outline" text={ state.user.Handle } />
+                            <Dropdown.Divider />
+                            {
+                                state.pets.map(pet => (
+                                    <Dropdown.Item text={ pet.EntityHandle } />
+                                ))
+                            }
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </Menu.Item>
+                
                 <Menu.Item>
                     <AuthButton />
                 </Menu.Item>

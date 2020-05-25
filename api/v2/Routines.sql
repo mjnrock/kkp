@@ -101,27 +101,26 @@ DROP PROCEDURE IF EXISTS CreateAsset;
 DELIMITER //
 CREATE PROCEDURE CreateAsset
 (
-    IN $Account VARCHAR(255),
+    IN $Entity VARCHAR(255),
     IN $Type VARCHAR(255),
     IN $Extension VARCHAR(255),
     OUT $UUID VARCHAR(255)
 )
 BEGIN
-	DECLARE $AccountID INT;
+	DECLARE $EntityID INT;
 	DECLARE $DEAssetTypeID INT;
 	DECLARE $DEAssetExtensionID INT;
     
     SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 		SELECT
-			a.AccountID INTO $AccountID
+			e.EntityID INTO $EntityID
 		FROM
-			`Account` a
+			`Entity` e
 		WHERE
 			(
-				a.AccountID = $Account
-				OR a.UUID = $Account
-				OR a.Username = $Account
-				OR a.Email = $Account
+				e.EntityID = $Entity
+				OR e.UUID = $Entity
+				OR e.Handle = $Entity
 			);
 
 		SELECT
@@ -141,9 +140,9 @@ BEGIN
 			AND dh.Key = $Extension;
 	COMMIT;
         
-	INSERT INTO `Asset` (AccountID, DEAssetTypeID, DEAssetExtensionID)
+	INSERT INTO `Asset` (EntityID, DEAssetTypeID, DEAssetExtensionID)
     VALUES
-		($AccountID, $DEAssetTypeID, $DEAssetExtensionID);
+		($EntityID, $DEAssetTypeID, $DEAssetExtensionID);
         
 	SELECT
 		UUID INTO $UUID
@@ -159,7 +158,6 @@ DROP PROCEDURE IF EXISTS CreateImagePost;
 DELIMITER //
 CREATE PROCEDURE CreateImagePost
 (
-    IN $Account VARCHAR(255),
     IN $Entity VARCHAR(255),
     IN $Extension VARCHAR(255),
     OUT $UUID VARCHAR(255)
@@ -171,7 +169,7 @@ BEGIN
     DECLARE $EntityID INT;
     DECLARE $PostID INT;
     
-    CALL CreateAsset($Account, "Image", $Extension, $AssetUUID);
+    CALL CreateAsset($Entity, "Image", $Extension, $AssetUUID);
     
     SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 		SELECT
@@ -346,54 +344,54 @@ END//
 DELIMITER ;
 
 
-DROP PROCEDURE IF EXISTS MapEntityAsset;
-DELIMITER //
-CREATE PROCEDURE MapEntityAsset
-(
-	IN $Type VARCHAR(255),
-	IN $Entity VARCHAR(255),
-    IN $Asset VARCHAR(255)
-)
-BEGIN
-	DECLARE $DEEntityAssetTypeID INT;
-	DECLARE $EntityID INT;
-	DECLARE $AssetID INT;
-    
-	SELECT
-		dh.DictionaryEntryID INTO $DEEntityAssetTypeID
-	FROM
-		`vwDictionaryHelper` dh
-	WHERE
-		dh.Title = "EntityAssetType"
-		AND dh.Key = $Type;
-    
-	SELECT
-		EntityID INTO $EntityID
-	FROM
-		`Entity` e
-	WHERE (
-		e.EntityID = $Entity
-        OR e.Handle = $Entity
-        OR e.UUID = $Entity
-    );
-    
-	SELECT
-		AssetID INTO $AssetID
-	FROM
-		`Asset` a
-	WHERE (
-		a.AssetID = $Asset
-        OR a.UUID = $Asset
-    );
-    
-    IF(LENGTH($DEEntityAssetTypeID) > 0 AND LENGTH($EntityID) > 0 AND LENGTH($AssetID) > 0) THEN
-		BEGIN
-			INSERT INTO EntityAsset(DEEntityAssetTypeID, EntityID, AssetID)
-            VALUES ($DEEntityAssetTypeID, $EntityID, $AssetID);
-        END;
-	END IF;
-END//
-DELIMITER ;
+-- DROP PROCEDURE IF EXISTS MapEntityAsset;
+-- DELIMITER //
+-- CREATE PROCEDURE MapEntityAsset
+-- (
+-- 	IN $Type VARCHAR(255),
+-- 	IN $Entity VARCHAR(255),
+--     IN $Asset VARCHAR(255)
+-- )
+-- BEGIN
+-- 	DECLARE $DEEntityAssetTypeID INT;
+-- 	DECLARE $EntityID INT;
+-- 	DECLARE $AssetID INT;
+--     
+-- 	SELECT
+-- 		dh.DictionaryEntryID INTO $DEEntityAssetTypeID
+-- 	FROM
+-- 		`vwDictionaryHelper` dh
+-- 	WHERE
+-- 		dh.Title = "EntityAssetType"
+-- 		AND dh.Key = $Type;
+--     
+-- 	SELECT
+-- 		EntityID INTO $EntityID
+-- 	FROM
+-- 		`Entity` e
+-- 	WHERE (
+-- 		e.EntityID = $Entity
+--         OR e.Handle = $Entity
+--         OR e.UUID = $Entity
+--     );
+--     
+-- 	SELECT
+-- 		AssetID INTO $AssetID
+-- 	FROM
+-- 		`Asset` a
+-- 	WHERE (
+-- 		a.AssetID = $Asset
+--         OR a.UUID = $Asset
+--     );
+--     
+--     IF(LENGTH($DEEntityAssetTypeID) > 0 AND LENGTH($EntityID) > 0 AND LENGTH($AssetID) > 0) THEN
+-- 		BEGIN
+-- 			INSERT INTO EntityAsset(DEEntityAssetTypeID, EntityID, AssetID)
+--             VALUES ($DEEntityAssetTypeID, $EntityID, $AssetID);
+--         END;
+-- 	END IF;
+-- END//
+-- DELIMITER ;
 
 
 DROP PROCEDURE IF EXISTS CreateGroup;

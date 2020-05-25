@@ -75,7 +75,7 @@ APP.post("/login", (req, res) => {
         const [ results ] = resultSets || [];
     
         if(results[ 0 ]) {
-            const token = createToken(email, password, 60 * 60 * 24);    // 24 Hours
+            const token = createToken(email, password, 60 * 60 * 24 * 1000);    // 24 Hours
 
             return res.send({
                 Token: token,
@@ -240,8 +240,8 @@ APP.get("/feed/:handle", (req, res) => {
         const entity = req.query.entity;
         let dbdata = {};
         console.log("/image/upload", token);
-
-        if(token && token.email) {
+        
+        if(token && (Date.now() < token.timestamp + token.expiration)) {
             const MULTER_STORAGE = multer.diskStorage({
                 destination: function (req, file, cb) {
                     cb(null, "./data/image");
@@ -254,7 +254,7 @@ APP.get("/feed/:handle", (req, res) => {
                      * 2: $Extension (Key<AssetExtension>)
                      * 3: OUT $UUID
                      */
-                    DB.query(`CALL CreateImagePost(?, ?, ?, @NULL)`, [ token.email, entity, (path.extname(file.originalname) || "").replace(/[^0-9a-z]/gi, "") ], function (error, resultSets, fields) {
+                    DB.query(`CALL CreateImagePost(?, ?, @NULL)`, [ entity, (path.extname(file.originalname) || "").replace(/[^0-9a-z]/gi, "") ], function (error, resultSets, fields) {
                         const [ results ] = resultSets || [];
                     
                         if((results || []).length) {
@@ -280,7 +280,6 @@ APP.get("/feed/:handle", (req, res) => {
             }).single("photo");
     
             upload(req, res, function (err) {
-                console.log(res);
                 // req.file contains information of uploaded file
                 // req.body contains information of text fields, if there were any
     

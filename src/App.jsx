@@ -38,6 +38,7 @@ const reducer = (state, message) => {
 const initialState = {
     auth: {},
     user: {},
+    pets: [],
 };
 export const Context = React.createContext(initialState);
 

@@ -8,7 +8,6 @@ DROP TABLE IF EXISTS `PostAsset`;
 DROP TABLE IF EXISTS `PostDetail`;
 DROP TABLE IF EXISTS `Post`;
 DROP TABLE IF EXISTS `Relation`;
-DROP TABLE IF EXISTS `EntityAsset`;
 DROP TABLE IF EXISTS `Asset`;
 DROP TABLE IF EXISTS `GroupEntity`;
 DROP TABLE IF EXISTS `Group`;
@@ -50,8 +49,8 @@ ALTER TABLE `Relation` ADD UNIQUE `Unique_Entry_Index`(`DERelationTypeID`, `Left
 
 CREATE TABLE `Asset` (
 	AssetID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	AccountID INT NOT NULL,
-		FOREIGN KEY (AccountID) REFERENCES `Account`(AccountID),
+	EntityID INT NOT NULL,
+		FOREIGN KEY (EntityID) REFERENCES `Entity`(EntityID),
     UUID VARCHAR(255) UNIQUE NOT NULL DEFAULT (UUID()),
 	DEAssetTypeID INT NOT NULL,
 		FOREIGN KEY (DEAssetTypeID) REFERENCES DictionaryEntry(DictionaryEntryID),
@@ -59,16 +58,6 @@ CREATE TABLE `Asset` (
 		FOREIGN KEY (DEAssetExtensionID) REFERENCES DictionaryEntry(DictionaryEntryID),
     Detail JSON NULL,
 	CreatedDateTimeUTC DATETIME(3) NOT NULL DEFAULT (UTC_TIMESTAMP())
-);
-
-CREATE TABLE `EntityAsset` (
-	EntityAssetID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    DEEntityAssetTypeID INT NOT NULL,
-		FOREIGN KEY (DEEntityAssetTypeID) REFERENCES DictionaryEntry(DictionaryEntryID),
-	EntityID INT NOT NULL,
-		FOREIGN KEY (EntityID) REFERENCES `Entity`(EntityID),
-	AssetID INT NOT NULL,
-		FOREIGN KEY (AssetID) REFERENCES `Asset`(AssetID)
 );
 
 CREATE TABLE `Post` (

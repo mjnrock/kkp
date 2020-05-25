@@ -52,14 +52,8 @@ BEGIN
 		ah.ExtEntryValue AS AssetExtType
 	FROM
 		`vwEntityHelper` eh
-		LEFT JOIN `EntityAsset` ea
-			ON eh.EntityID = ea.EntityID
 		LEFT JOIN `vwAssetHelper` ah
-			ON ea.AssetID = ah.AssetID
-		LEFT JOIN `vwDictionaryHelper` dh
-			ON ea.DEEntityAssetTypeID = dh.DictionaryEntryID
-			AND dh.Title = "EntityAssetType"
-			AND dh.Key = "Profile"
+			ON eh.EntityID = ah.EntityID
 	WHERE (
 		eh.EntityID = $Entity
 		OR eh.Handle = $Entity
@@ -213,6 +207,43 @@ BEGIN
 	ORDER BY
 		fh.PostCreatedDateTimeUTC DESC
 	LIMIT 25;
+END//
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS GetPets;
+DELIMITER //
+CREATE PROCEDURE GetPets
+(
+	IN $Entity VARCHAR(255)
+)
+BEGIN
+	SELECT
+		g.GroupUUID,
+		g.EntityUUID,
+		g.EntityType,
+		g.EntityHandle,
+		g.EntityName,
+		g.EntityDetail
+	FROM
+		`vwGroupHelper` g
+	WHERE
+		g.GroupTypeKey = "Family"
+		AND g.EntityType <> "Human"
+		AND EXISTS (
+			SELECT
+				*
+			FROM
+				`vwGroupHelper` g2
+			WHERE
+				g2.GroupTypeKey = "Family"
+                AND g.GroupID = g2.GroupID
+				AND (
+					g2.EntityID = $Entity
+					OR g2.EntityHandle = $Entity
+					OR g2.EntityUUID = $Entity
+                )
+		);
 END//
 DELIMITER ;
 
