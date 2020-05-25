@@ -90,6 +90,9 @@ function App() {
                         <Route path="/upload">
                             <Routes.Upload />
                         </Route>
+                        <Route path="/studio/:uuid">
+                            <Routes.ImageStudio />
+                        </Route>
                         <Route path="/feed/:handle">
                             <Routes.Feed />
                         </Route>

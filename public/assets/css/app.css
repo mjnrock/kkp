@@ -52,3 +52,7 @@
     object-fit: cover;
     overflow: hidden !important;
 }
+
+.studio-canvas {
+    border: 1px solid #000;;
+}

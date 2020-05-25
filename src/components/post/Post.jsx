@@ -6,6 +6,7 @@ import ReactionBar from "./../comment/ReactionBar";
 import InputComment from "./../comment/InputComment";
 import Thread from "./../comment/Thread";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 function Post(props) {
     const { state } = useContext(Context);
@@ -70,7 +71,7 @@ function Post(props) {
     return (
         <Segment>
             <Header as="h2" color="orange" textAlign="center">
-                <Header.Content>Post #{ post.PostUUID }</Header.Content>
+                <Header.Content as={ Link } to={ `/studio/${ post.PostUUID }` } >Post #{ post.PostUUID }</Header.Content>
             </Header>
 
             <Segment inverted>
