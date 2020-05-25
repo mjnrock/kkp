@@ -314,3 +314,20 @@ FROM
 		ON ph.PostID = pch.ParentPostID
 	LEFT JOIN `vwPostReactionJsonHelper` prh
 		ON ph.PostID = prh.PostID;
+        
+        
+DROP VIEW IF EXISTS `vwPetHelper`;
+
+CREATE VIEW `vwPetHelper` AS
+SELECT
+	g.GroupUUID,
+	g.EntityUUID,
+	g.EntityType,
+	g.EntityHandle,
+	g.EntityName,
+	g.EntityDetail
+FROM
+	`vwGroupHelper` g
+WHERE
+	g.GroupType = "Family"
+    AND g.EntityType <> "Human";

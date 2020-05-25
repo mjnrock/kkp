@@ -47,6 +47,10 @@ const AuthButton = withRouter(({ history }) => {
 function NavBar(props) {
     const { state } = useContext(Context);
 
+    if(!state.user.Handle) {
+        return null;
+    }
+
     return (
         <Menu stackable>
             <Menu.Item

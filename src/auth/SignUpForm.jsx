@@ -1,13 +1,20 @@
 /* eslint-disable */
 import React, { useContext, useState } from "react";
 import { Link, Redirect } from "react-router-dom";
-import { Icon, Button, Form, Grid, Header, Message, Segment } from "semantic-ui-react";
+import { Icon, Button, Form, Grid, Header, Message, Segment, Select, Input, Divider } from "semantic-ui-react";
 import { Context, EnumMessageType } from "../App";
+
+const genderOptions = [
+    { key: "f", text: "Female", value: "female", icon: "woman" },
+    { key: "m", text: "Male", value: "male", icon: "man" },
+    { key: "o", text: "Non Binary", value: "other", icon: "transgender alternate" },
+];
 
 function SignUpForm(props) {
     const { state, dispatch } = useContext(Context);
 
     const [ email, setEmail ] = useState("");
+    const [ username, setUsername ] = useState("");
     const [ password, setPassword ] = useState("");
     const [ confirmPassword, setConfirmPassword ] = useState("");
 
@@ -24,47 +31,47 @@ function SignUpForm(props) {
         return isPasswordValid()
             && isConfirmPasswordValid()
             && password === confirmPassword;
-    }    
+    }
     function isValidSignUp() {
         return isEmailValid()
             && arePasswordsValid();
     }
 
     function attemptSignUp() {
-        if(email.length && arePasswordsValid()) {
+        if (email.length && arePasswordsValid()) {
             fetch("http://192.168.86.100:3001/signup", {
                 method: "POST",
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
-                    
+
                 },
                 body: JSON.stringify({
                     "email": email,
                     "password": password
                 })
             })
-            .then(response => response.json())
-            .then(data => {
-                if(data.token) {
-                    dispatch({
-                        type: EnumMessageType.ASSIGN_TOKEN,
-                        payload: data.token
-                    });
-                }
-            });
+                .then(response => response.json())
+                .then(data => {
+                    if (data.token) {
+                        dispatch({
+                            type: EnumMessageType.ASSIGN_TOKEN,
+                            payload: data.token
+                        });
+                    }
+                });
         }
     }
 
-    if(state.auth.token) {
+    if (state.auth.token) {
         return (
             <Redirect to="/" />
         );
     }
 
     return (
-        <Grid textAlign="center" style={{ height: "100vh" }} verticalAlign="middle">
-            <Grid.Column style={{ maxWidth: 450 }}>
+        <Grid textAlign="center" style={ { height: "100vh" } } verticalAlign="middle">
+            <Grid.Column style={ { width: 550 } }>
                 <Header as="h2" color="green" textAlign="center">
                     <Icon name="paw" /> Create New Account
                 </Header>
@@ -78,6 +85,15 @@ function SignUpForm(props) {
                             iconPosition="left"
                             placeholder="Email"
                         />
+                        <Form.Input
+                            value={ username }
+                            onChange={ e => setUsername(e.target.value) }
+                            fluid
+                            icon="user"
+                            iconPosition="left"
+                            placeholder="Username"
+                        />
+                        
                         <Form.Input
                             value={ password }
                             onChange={ e => setPassword(e.target.value) }
@@ -98,6 +114,27 @@ function SignUpForm(props) {
                             type="password"
                             error={ arePasswordsValid() ? false : true }
                         />
+
+                        <br />
+                        <Divider horizontal>Bio</Divider>
+                        
+                        <Form.Group widths="equal">
+                            <Form.Input
+                                placeholder="First Name"
+                            />
+                            <Form.Input
+                                placeholder="Last Name"
+                            />
+                        </Form.Group>
+                        
+                        <Form.Select
+                            options={ genderOptions }
+                            placeholder="Gender"
+                        />
+
+                        <br />
+                        <Form.Checkbox label='I agree to the Terms and Conditions' />
+                        <br />
 
                         <Button
                             color="green"

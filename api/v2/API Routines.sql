@@ -33,6 +33,44 @@ END//
 DELIMITER ;
 
 
+-- DROP PROCEDURE IF EXISTS SignUp;
+-- DELIMITER //
+-- CREATE PROCEDURE SignUp
+-- (
+-- 	IN $Email VARCHAR(255),
+--     IN $Password VARCHAR(255),
+--     OUT $UUID VARCHAR(255)
+-- )
+-- BEGIN
+-- 	IF(LENGTH($Email) > 0 AND LENGTH($Password) > 0) THEN
+-- 		BEGIN
+-- 			INSERT INTO 
+--         END;
+-- 	END IF;
+-- 	SELECT
+-- 		a.UUID INTO $UUID
+-- 	FROM
+-- 		`Account` a
+-- 	WHERE
+-- 		a.Email = $Email
+--         AND a.Password = $Password;
+--         
+-- 	SELECT
+-- 		AccountUUID,
+--         Username,
+--         EntityUUID,
+--         EntryValue AS EntityType,
+--         Handle,
+--         Name,
+--         Detail
+-- 	FROM
+-- 		`vwAccountHelper`
+-- 	WHERE
+-- 		AccountUUID = $UUID;
+-- END//
+-- DELIMITER ;
+
+
 DROP PROCEDURE IF EXISTS GetEntity;
 DELIMITER //
 CREATE PROCEDURE GetEntity
@@ -228,7 +266,7 @@ BEGIN
 	FROM
 		`vwGroupHelper` g
 	WHERE
-		g.GroupTypeKey = "Family"
+		g.GroupType = "Family"
 		AND g.EntityType <> "Human"
 		AND EXISTS (
 			SELECT
@@ -236,7 +274,7 @@ BEGIN
 			FROM
 				`vwGroupHelper` g2
 			WHERE
-				g2.GroupTypeKey = "Family"
+				g2.GroupType = "Family"
                 AND g.GroupID = g2.GroupID
 				AND (
 					g2.EntityID = $Entity

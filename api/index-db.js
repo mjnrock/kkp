@@ -87,6 +87,32 @@ APP.post("/login", (req, res) => {
     });
 });
 
+//TODO WIP
+// APP.post("/signup", (req, res) => {
+//     const message = req.body;
+//     const { email, password } = message;
+//     console.log("/signup", message);
+
+//     if(!(email && password)) {
+//         return res.sendStatus(204);
+//     }
+
+//     DB.query(`CALL SignUp(?, ?, @NULL)`, [ email, password ], function (error, resultSets, fields) {
+//         const [ results ] = resultSets || [];
+    
+//         if(results[ 0 ]) {
+//             const token = createToken(email, password, 60 * 60 * 24 * 1000);    // 24 Hours
+
+//             return res.send({
+//                 Token: token,
+//                 ...(results[ 0 ] || {})
+//             });
+//         }
+        
+//         return res.sendStatus(204);
+//     });
+// });
+
 APP.get("/entity/:handle", (req, res) => {
     const handle = req.params.handle;
     console.log("/user", handle);
