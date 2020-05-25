@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect } from "react";
-import { Header, Divider, Icon, Card, Segment, Item, Accordion, List, Image, Button, Message } from "semantic-ui-react";
+import { Header, Divider, Icon, Card, Segment, Item, Accordion, List, Image, Button } from "semantic-ui-react";
 import { useParams, Link } from "react-router-dom";
 
 import ImageBanner from "./../components/image/ImageBanner";
