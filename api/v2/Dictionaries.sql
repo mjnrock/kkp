@@ -87,5 +87,6 @@ CALL AddDictionaryEntry("AssetType", "Image", "IMAGE");
 
 CALL AddDictionary("AssetExtension", NULL, NULL);
 CALL AddDictionaryEntry("AssetExtension", "JPEG", "JPG");
+CALL AddDictionaryEntry("AssetExtension", "JPG", "JPG");
 CALL AddDictionaryEntry("AssetExtension", "PNG", "PNG");
 CALL AddDictionaryEntry("AssetExtension", "GIF", "GIF");

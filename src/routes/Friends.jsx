@@ -42,9 +42,9 @@ function Friends() {
                         <Card key={ friend.FriendUUID } as={ Link } to={ `/profile/${ friend.FriendHandle }` }>
                             <Card.Content>
                                 <Image
-                                    floated="right"
+                                    floated="left"
                                     size="mini"
-                                    src={ `http://192.168.86.100:3001/img/${ friend.FriendUUID }.jpg` }
+                                    src={ `http://192.168.86.100:3001/img/${ friend.FriendHandle }.jpg` }
                                 />
                                 <Card.Header>{ friend.FriendName }</Card.Header>
                                 <Card.Meta>{ friend.FriendHandle }</Card.Meta>

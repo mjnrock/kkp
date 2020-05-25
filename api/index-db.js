@@ -72,7 +72,7 @@ APP.post("/login", (req, res) => {
     }
 
     DB.query(`CALL Login(?, ?, @NULL)`, [ email, password ], function (error, resultSets, fields) {
-        const [ results ] = resultSets || [];
+        const [ results ] = resultSets || [[]];
     
         if(results[ 0 ]) {
             const token = createToken(email, password, 60 * 60 * 24 * 1000);    // 24 Hours
@@ -98,7 +98,7 @@ APP.post("/login", (req, res) => {
 //     }
 
 //     DB.query(`CALL SignUp(?, ?, @NULL)`, [ email, password ], function (error, resultSets, fields) {
-//         const [ results ] = resultSets || [];
+//         const [ results ] = resultSets || [[]];
     
 //         if(results[ 0 ]) {
 //             const token = createToken(email, password, 60 * 60 * 24 * 1000);    // 24 Hours
@@ -115,14 +115,14 @@ APP.post("/login", (req, res) => {
 
 APP.get("/entity/:handle", (req, res) => {
     const handle = req.params.handle;
-    console.log("/user", handle);
+    console.log("/entity", handle);
 
     if(!(handle)) {
         return res.sendStatus(204);
     }
 
     DB.query(`CALL GetEntity(?)`, [ handle ], function (error, resultSets, fields) {
-        const [ results ] = resultSets || [];
+        const [ results ] = resultSets || [[]];
     
         if(results[ 0 ]) {
             return res.send({
@@ -143,7 +143,7 @@ APP.get("/friends/:handle", (req, res) => {
     }
 
     DB.query(`CALL GetFriends(?)`, [ handle ], function (error, resultSets, fields) {
-        const [ results ] = resultSets || [];
+        const [ results ] = resultSets || [[]];
     
         if(results.length) {
             return res.send(results);
@@ -162,7 +162,7 @@ APP.get("/family/:handle", (req, res) => {
     }
 
     DB.query(`CALL GetFamily(?)`, [ handle ], function (error, resultSets, fields) {
-        const [ results ] = resultSets || [];
+        const [ results ] = resultSets || [[]];
     
         if(results.length) {
             return res.send(results);
@@ -183,7 +183,7 @@ APP.post("/post/reply", (req, res) => {
     }
 
     DB.query(`CALL CreateReplyPost(?, ?, ?)`, [ entity, post, reply ], function (error, resultSets, fields) {
-        const [ results ] = resultSets || [];
+        const [ results ] = resultSets || [[]];
     
         if((results || []).length) {
             return res.send(results[ 0 ]);
@@ -204,7 +204,7 @@ APP.post("/post/react", (req, res) => {
     }
 
     DB.query(`CALL CreatePostReaction(?, ?, ?)`, [ entity, post, reaction ], function (error, resultSets, fields) {
-        const [ results ] = resultSets || [];
+        const [ results ] = resultSets || [[]];
     
         if((results || []).length) {
             return res.send(results[ 0 ]);
@@ -226,7 +226,7 @@ APP.get("/post/:uuid", (req, res) => {
      * 0: $UUID (UUID)
      */
     DB.query(`CALL GetPost(?)`, [ uuid ], function (error, resultSets, fields) {
-        const [ results ] = resultSets || [];
+        const [ results ] = resultSets || [[]];
     
         if((results || []).length) {
             return res.send(results[ 0 ]);
@@ -249,7 +249,7 @@ APP.get("/feed/:handle", (req, res) => {
      * 1: $BeginDateTime (DATETIME(3)|NULL)
      */
     DB.query(`CALL GetFeed(?, NULL)`, [ handle ], function (error, resultSets, fields) {
-        const [ results ] = resultSets || [];
+        const [ results ] = resultSets || [[]];
     
         if((results || []).length) {
             return res.send(results);
@@ -265,9 +265,10 @@ APP.get("/feed/:handle", (req, res) => {
         const token = decryptToken(req.query.token);
         const entity = req.query.entity;
         let dbdata = {};
-        console.log("/image/upload", token);
+        console.log("/image/upload", entity, token);
         
-        if(token && (Date.now() < token.timestamp + token.expiration)) {
+        // if(token && (Date.now() < token.timestamp + token.expiration)) {
+        if(token) {
             const MULTER_STORAGE = multer.diskStorage({
                 destination: function (req, file, cb) {
                     cb(null, "./data/image");
@@ -281,7 +282,7 @@ APP.get("/feed/:handle", (req, res) => {
                      * 3: OUT $UUID
                      */
                     DB.query(`CALL CreateImagePost(?, ?, @NULL)`, [ entity, (path.extname(file.originalname) || "").replace(/[^0-9a-z]/gi, "") ], function (error, resultSets, fields) {
-                        const [ results ] = resultSets || [];
+                        const [ results ] = resultSets || [[]];
                     
                         if((results || []).length) {
                             dbdata = results[ 0 ];

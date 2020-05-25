@@ -5,7 +5,7 @@ import Reaction from "./Reaction";
 import EmojiPicker from "./EmojiPicker";
 
 function ReactionBar(props) {
-    const reactions = aggregateReactions(props.reactions);
+    const reactions = aggregateReactions(props.reactions || []);
 
     function aggregateReactions(reactions) {
         let reacts = {};

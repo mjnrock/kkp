@@ -152,14 +152,14 @@ BEGIN
 	FROM
 		`vwGroupHelper` g
 	WHERE
-		g.GroupTypeKey = "Family"
+		g.GroupType = "Family"
 		AND EXISTS (
 			SELECT
 				*
 			FROM
 				`vwGroupHelper` g2
 			WHERE
-				g2.GroupTypeKey = "Family"
+				g2.GroupType = "Family"
                 AND g.GroupID = g2.GroupID
 				AND (
 					g2.EntityID = $Entity
