@@ -1,12 +1,12 @@
+☐ Build "Posting As: { entity }"
+☐ Create schematized Detail information for each available `DEEntityType`
+    ☐ Human    -   [ Gender, ShortBio ]
+    ☐ Cat      -   [ Breed, Color, Weight, Sex ]
+    ☐ Dog      -   [ Breed, Color, Weight, Sex ]
 ☐ Pets
-    ☐ DB Routines
-        ☐ Create schematized Detail information for each available `DEEntityType`
-            ☐ Human    -   [ Gender, ShortBio ]
-            ☐ Cat      -   [ Breed, Color, Weight, Sex ]
-            ☐ Dog      -   [ Breed, Color, Weight, Sex ]
-        ☐ `CreatePetCat`
-            ☐ Create DB Routine
-            ☐ PetCard.jsx modification
-        ☐ `CreatePetDog`
-            ☐ Create DB Routine
-            ☐ PetCard.jsx modification
+    ☐ `CreatePetCat`
+        ☐ Create DB Routine
+        ☐ PetCard.jsx modification
+    ☐ `CreatePetDog`
+        ☐ Create DB Routine
+        ☐ PetCard.jsx modification
