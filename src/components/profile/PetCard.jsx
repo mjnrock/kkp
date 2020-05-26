@@ -6,7 +6,7 @@ function PetCard(props) {
     const { entity } = props;
 
     return (
-        <Card as={ Link } to={ `/profile/${ entity.EntityHandle }` }>
+        <Card as={ Link } to={ `/profile/${ entity.EntityHandle }` } color="orange">
             <Segment inverted style={{ marginBottom: 0 }}>
                 <Image className="clipped" src={ `http://192.168.86.100:3001/img/${ entity.EntityHandle }.jpg` } width={ 300 } height={ 200 } centered />
             </Segment>            

@@ -49,7 +49,7 @@ function Profile() {
     return (
         <Fragment>            
             <Segment basic>
-                <Header as="h2" color="orange" textAlign="center">
+                <Header as="h2" color={ entity.EntityType === "Human" ? "green" : "orange" } textAlign="center">
                     <Header.Content>
                         { entity.EntityName }
                         <Header as="h4" color="grey" textAlign="center">
@@ -67,7 +67,7 @@ function Profile() {
                         index={ 0 }
                     >
                         <Divider horizontal>
-                            <Header as="h4">
+                            <Header as="h4" color="grey">
                                 <Icon name="lab" />
                                 Bio
                             </Header>
@@ -87,7 +87,7 @@ function Profile() {
                         index={ 0 }
                     >
                         <Divider horizontal>
-                            <Header as="h4">
+                            <Header as="h4" color="grey">
                                 <Icon name="paw" />
                                 { family && family[ 0 ] ? family[ 0 ].GroupName : null } Family
                             </Header>
@@ -102,7 +102,7 @@ function Profile() {
                                         return null;
                                     }
 
-                                    if(member.EntityType === "HUMAN") {
+                                    if(member.EntityType === "Human") {
                                         return (
                                             <PersonCard
                                                 key={ member.EntityUUID }
@@ -127,7 +127,7 @@ function Profile() {
                         index={ 0 }
                     >
                         <Divider horizontal>
-                            <Header as="h4">
+                            <Header as="h4" color="grey">
                                 <Icon name="users" />
                                 Friends ({ friends.length })
                             </Header>
@@ -147,7 +147,7 @@ function Profile() {
                                         </List.Item>
                                     ))
                                 ) : (
-                                    <Button color="green" inverted fluid>
+                                    <Button color={ entity.EntityType === "Human" ? "green" : "orange" } inverted fluid>
                                         Add Friend
                                     </Button>
                                 )

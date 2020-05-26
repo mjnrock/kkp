@@ -121,13 +121,13 @@ function NavBar(props) {
 
             <Menu.Menu position="right">
                 <Menu.Item>
-                    <Dropdown text={ <span>Posting as: <span style={{ fontWeight: "bold" }}>{ state.user.Handle }</span></span> }>
+                    <Dropdown text={ <span>Posting as: <span style={{ fontWeight: "bold", color: "#F2711C", color: "#21BA45" }}>{ state.user.Handle }</span></span> }>
                         <Dropdown.Menu>
                             <Dropdown.Item icon="star outline" text={ state.user.Handle } />
                             <Dropdown.Divider />
                             {
                                 state.pets.map(pet => (
-                                    <Dropdown.Item text={ pet.EntityHandle } />
+                                    <Dropdown.Item icon="paw" text={ pet.EntityHandle } />
                                 ))
                             }
                         </Dropdown.Menu>

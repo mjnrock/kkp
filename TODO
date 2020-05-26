@@ -1,4 +1,6 @@
 ☐ Build "Posting As: { entity }"
+    ☐ Separate Authentication and "Active" Entity, default to attached Entity
+    ☐ Change by selecting "Posting As" dropdown options
 ☐ Create schematized Detail information for each available `DEEntityType`
     ☐ Human    -   [ Gender, ShortBio ]
     ☐ Cat      -   [ Breed, Color, Weight, Sex ]
@@ -10,3 +12,7 @@
     ☐ `CreatePetDog`
         ☐ Create DB Routine
         ☐ PetCard.jsx modification
+☐ Add Friend
+    ☐ DB Routine
+    ☐ API Endpoint
+    ☐ UI Connection

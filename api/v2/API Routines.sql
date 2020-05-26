@@ -83,9 +83,9 @@ BEGIN
 		eh.Handle AS EntityHandle,
 		eh.Name AS EntityName,
 		eh.Detail AS EntityDetail,
-		eh.EntryValue AS EntityType,
+		eh.Key AS EntityType,
 		ah.UUID AS AssetUUID,
-		ah.TypeEntryValue AS AssetType,
+		ah.TypeKey AS AssetType,
 		ah.Filename AS AssetFilename,
 		ah.ExtEntryValue AS AssetExtType
 	FROM

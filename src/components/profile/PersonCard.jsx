@@ -6,14 +6,14 @@ function PersonCard(props) {
     const { entity } = props;
 
     return (
-        <Card as={ Link } to={ `/profile/${ entity.EntityHandle }` }>
+        <Card as={ Link } to={ `/profile/${ entity.EntityHandle }` } color="green">
             <Segment inverted style={{ marginBottom: 0 }}>
                 <Image className="clipped" src={ `http://192.168.86.100:3001/img/${ entity.EntityHandle }.jpg` } width={ 300 } height={ 200 } centered />
             </Segment>            
             
             <Card.Content style={{ padding: 2, paddingTop: 14 }}>
                 <Card.Header textAlign="center">
-                    <Header as="h2" color="orange" textAlign="center">
+                    <Header as="h2" color="green" textAlign="center">
                         <Header.Content>
                             { entity.EntityName }
                             <Header as="h4" color="grey" textAlign="center">
