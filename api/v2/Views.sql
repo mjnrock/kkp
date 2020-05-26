@@ -12,8 +12,8 @@ SELECT
     de.DictionaryEntryID,
     de.`Key`,
     de.`Value`,
-    TRIM(BOTH '"' FROM de.`Value`->"$.value") AS EntryValue,
-    TRIM(BOTH '"' FROM de.`Value`->"$.order") AS EntryOrder    
+    de.`Value`->>"$.value" AS EntryValue,
+    de.`Value`->>"$.order" AS EntryOrder    
 FROM
 	`Dictionary` d
     INNER JOIN `DictionaryEntry` de
@@ -34,8 +34,8 @@ SELECT
     de.DictionaryEntryID,
     de.Key,
     de.Value,
-    TRIM(BOTH '"' FROM de.`Value`->"$.value") AS EntryValue,    
-    TRIM(BOTH '"' FROM de.`Value`->"$.order") AS EntryOrder,
+    de.`Value`->>"$.value" AS EntryValue,    
+    de.`Value`->>"$.order" AS EntryOrder,
     e.Handle,
     e.Name,
     e.Detail,
@@ -109,7 +109,7 @@ SELECT
     e.Handle AS EntityHandle,
     e.Name AS EntityName,
     a.UUID,
-    CONCAT(a.UUID, ".", TRIM(BOTH '"' FROM dhe.EntryValue)) AS Filename,
+    CONCAT(a.UUID, ".", dhe.EntryValue) AS Filename,
     a.Detail,
     a.CreatedDateTimeUTC,
     dht.DictionaryEntryID AS TypeDictionaryEntryID,
@@ -145,7 +145,7 @@ SELECT
     dh.Key AS PostType,
     pd.PostDetailID,
     pd.Detail,
-    TRIM(BOTH '"' FROM pd.`Detail`->"$.content") AS Content,    
+    pd.`Detail`->>"$.content" AS Content,    
     pa.PostAssetID,
     pa.AssetID,
     ah.UUID AS AssetUUID,
@@ -250,7 +250,7 @@ SELECT
     pc.PostUUID,
     pc.EntityID AS PostEntityID,
     pc.PostType,
-    TRIM(BOTH '"' FROM pc.Detail->"$.content") AS PostContent,
+    pc.Detail->>"$.content" AS PostContent,
     prjh.PostReactions
 FROM
 	`PostHierarchy` ph
@@ -299,7 +299,7 @@ SELECT
 	ph.PostType,
 	ph.PostCreatedDateTimeUTC,
 	ph.Detail AS PostDetail,
-    TRIM(BOTH '"' FROM ph.Detail->"$.content") AS PostContent,
+    ph.Detail->>"$.content" AS PostContent,
     ph.EntityUUID,
 	ph.EntityHandle,
 	ph.EntityName,

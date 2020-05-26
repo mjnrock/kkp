@@ -496,3 +496,34 @@ BEGIN
 	END IF;
 END//
 DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS ModifyEntityDetail;
+DELIMITER //
+CREATE PROCEDURE ModifyEntityDetail
+(IN
+    $Entity VARCHAR(255),
+    $Detail TEXT
+)
+BEGIN
+	DECLARE $EntityID INT;
+    
+    SELECT
+		e.EntityID INTO $EntityID
+	FROM
+		`Entity` e
+	WHERE
+		e.UUID = $Entity
+        OR e.Handle = $Entity;
+        
+	IF(LENGTH($EntityID) > 0) THEN
+		BEGIN
+			UPDATE `Entity`
+            SET
+				Detail = JSON_MERGE_PATCH(COALESCE(Detail, JSON_OBJECT()), $Detail)
+			WHERE
+				EntityID = $EntityID;
+        END;
+	END IF;
+END//
+DELIMITER ;

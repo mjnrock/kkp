@@ -58,19 +58,6 @@ function AuthRoutes({ children, auth }) {
         <Redirect to="/login" />
     );
 }
-// function PrivateRoute({ children, auth, ...rest }) {
-//     if(auth.token) {
-//         return (
-//             <Route { ...rest }>
-//                 { children }
-//             </Route>
-//         );
-//     }
-
-//     return (        
-//         <Redirect to="/login" />
-//     );
-// }
 
 function App() {
     const [ state, dispatch ] = React.useReducer(reducer, initialState);
