@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 
 import Routes from "./routes/package";
+import APIHelper from "./lib/APIHelper";
 
 import LoginForm from "./auth/LoginForm";
 import SignUpForm from "./auth/SignUpForm";
@@ -73,10 +74,16 @@ function AuthRoutes({ children, auth }) {
 
 function App() {
     const [ state, dispatch ] = React.useReducer(reducer, initialState);
+    
+    const config = {
+        api: null,
+        server: "http://192.168.86.100:3001",
+    };
+    config.api = new APIHelper(config.server, state.auth.token);
 
     return (
         <Router>
-            <Context.Provider value={{ state, dispatch }}>
+            <Context.Provider value={{ state, dispatch, config }}>
                 <NavBar auth={ state.auth } dispatch={ dispatch } />
 
                 <Switch>

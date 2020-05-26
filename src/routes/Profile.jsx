@@ -1,13 +1,14 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState, useContext } from "react";
 import { Header, Divider, Icon, Card, Segment, Item, Accordion, List, Image, Button } from "semantic-ui-react";
 import { useParams, Link } from "react-router-dom";
 
+import { Context } from "./../App";
 import ImageBanner from "./../components/image/ImageBanner";
 import PetCard from "../components/profile/PetCard";
-import { useState } from "react";
 import PersonCard from "../components/profile/PersonCard";
 
 function Profile() {
+    const { config } = useContext(Context);
     const [ entity, setEntity ] = useState();
     const [ family, setFamily ] = useState([]);
     const [ friends, setFriends ] = useState([]);
@@ -15,12 +16,12 @@ function Profile() {
 
     useEffect(() => {
         if(handle) {
-            fetch(`http://192.168.86.100:3001/entity/${ handle }`)
+            config.api.GET(`entity/${ handle }`)
             .then(response => response.json())
             .then(setEntity)
             .catch(e => setEntity());
             
-            fetch(`http://192.168.86.100:3001/family/${ handle }`)
+            config.api.GET(`family/${ handle }`)
             .then(response => response.json())
             .then(data => {
                 for(let i in data) {
@@ -33,7 +34,7 @@ function Profile() {
             })
             .catch(e => setFamily([]));
 
-            fetch(`http://192.168.86.100:3001/friends/${ handle }`)
+            config.api.GET(`friends/${ handle }`)
             .then(response => response.json())
             .then(setFriends)
             .catch(e => setFriends([]));

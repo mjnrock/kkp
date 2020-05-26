@@ -8,23 +8,15 @@ import ReactionBar from "./ReactionBar";
 function Response(props) {
     const { post } = props;
 
-    const { state } = useContext(Context);
+    const { state, config } = useContext(Context);
     const [ collapsed, setCollapsed ] = useState(false);
     const [ reactions, setReactions ] = useState(post.PostReactions || []);
 
     function onReaction(emoji) {        
-        fetch("http://192.168.86.100:3001/post/react", {
-            method: "POST",
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json",
-                "X-Auth": state.auth.token
-            },
-            body: JSON.stringify({
-                "post": post.PostUUID,
-                "entity": state.user.EntityUUID,
-                "reaction": emoji,
-            })
+        config.api.POST("react", {
+            "post": post.PostUUID,
+            "entity": state.user.EntityUUID,
+            "reaction": emoji,
         })
         .then(response => response.json())
         .then(data => {

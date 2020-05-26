@@ -74,7 +74,6 @@ BEGIN
 			`Entity` el
 		WHERE (
 			el.UUID = $LeftEntity
-			OR el.EntityID = $LeftEntity
             OR el.Handle = $LeftEntity
 		);
 		
@@ -84,7 +83,6 @@ BEGIN
 			`Entity` er
 		WHERE (
 			er.UUID = $RightEntity
-			OR er.EntityID = $RightEntity
             OR er.Handle = $RightEntity
 		);
 	COMMIT;
@@ -118,8 +116,7 @@ BEGIN
 			`Entity` e
 		WHERE
 			(
-				e.EntityID = $Entity
-				OR e.UUID = $Entity
+				e.UUID = $Entity
 				OR e.Handle = $Entity
 			);
 
@@ -186,7 +183,6 @@ BEGIN
 			`vwEntityHelper` eh
 		WHERE (
 			eh.UUID = $Entity
-            OR eh.EntityID = $Entity
             OR eh.Handle = $Entity
         );
             
@@ -259,7 +255,6 @@ BEGIN
 		`vwEntityHelper` eh
 	WHERE (
 		eh.UUID = $Entity
-		OR eh.EntityID = $Entity
         OR eh.Handle = $Entity
 	);
     
@@ -316,7 +311,6 @@ BEGIN
 		`Post` p
 	WHERE (
 		p.UUID = $ParentPost
-        OR p.PostID = $ParentPost
     );
     
 	IF(LENGTH($ParentPostID) > 0) THEN
@@ -398,8 +392,7 @@ BEGIN
 	FROM
 		`Group` g
 	WHERE (
-		g.GroupID = $Group
-        OR g.UUID = $Group
+		g.UUID = $Group
     );
     
     SELECT
@@ -408,7 +401,6 @@ BEGIN
 		`Entity` e
 	WHERE (
         e.Handle = $Entity
-		OR e.EntityID = $Entity
         OR e.UUID = $Entity
     );
     
@@ -476,8 +468,7 @@ BEGIN
 	FROM
 		`vwEntityHelper` eh
 	WHERE (
-		eh.EntityID = $Entity
-        OR eh.UUID = $Entity
+		eh.UUID = $Entity
         OR eh.Handle = $Entity
     );
     
@@ -486,8 +477,7 @@ BEGIN
 	FROM
 		`vwPostHelper` ph
 	WHERE (
-		ph.PostID = $Post
-        OR ph.PostUUID = $post
+		ph.PostUUID = $post
     );
                 
     IF(LENGTH($EntityID) > 0 AND LENGTH($PostID) > 0 AND LENGTH($Reaction) > 0) THEN

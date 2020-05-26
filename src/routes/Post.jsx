@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Message, Icon, Segment } from "semantic-ui-react";
 
+import { Context } from "./../App";
 import PostComponent from "./../components/post/Post";
 
 function Post() {
+    const { config } = useContext(Context);
     const { uuid } = useParams();
     const [ post, setPost ] = useState({});
 
     useEffect(() => {
         if(!Object.keys(post).length) {
-            fetch(`http://192.168.86.100:3001/post/${ uuid }`)
+            config.api.GET(`post/${ uuid }`)
             .then(response => response.json())
             .then(setPost)
             .catch(e => setPost());

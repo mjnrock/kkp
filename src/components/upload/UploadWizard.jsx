@@ -8,7 +8,7 @@ import CustomizeImage from "./CustomizeImage";
 import { useContext } from "react";
 
 function UploadWizard() {
-    const { state } = useContext(Context);
+    const { state, config } = useContext(Context);
     const [ response, setResponse ] = useState({});
     const [ image, setImage ] = useState();
     const [ step, setStep ] = useState(0);
@@ -27,14 +27,16 @@ function UploadWizard() {
         let formData = new FormData();
 
         formData.append("photo", image);
-        formData.append("handle", state.auth.handle);
 
-        let url = new URL("http://192.168.86.100:3001/image/upload");
-        let params = { token: state.auth.token, entity: state.user.Handle };
+        let url = new URL(`${ config.server }/image/upload`);
+        let params = { entity: state.user.Handle };
         url.search = new URLSearchParams(params).toString();
 
         fetch(url, {
             method: "POST",
+            headers: {
+                "X-Auth": state.auth.token
+            },
             body: formData,
         })
         .then(response => response.json())

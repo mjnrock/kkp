@@ -93,8 +93,7 @@ BEGIN
 		LEFT JOIN `vwAssetHelper` ah
 			ON eh.EntityID = ah.EntityID
 	WHERE (
-		eh.EntityID = $Entity
-		OR eh.Handle = $Entity
+		eh.Handle = $Entity
 		OR eh.UUID = $Entity
 	);
 END//
@@ -124,8 +123,7 @@ BEGIN
 		`vwRelationHelper` rh
 	WHERE
 		(
-			rh.LeftEntityID = $Entity
-			OR rh.LeftUUID = $Entity
+			rh.LeftUUID = $Entity
 			OR rh.LeftHandle = $Entity
 		);
 END//
@@ -162,8 +160,7 @@ BEGIN
 				g2.GroupType = "Family"
                 AND g.GroupID = g2.GroupID
 				AND (
-					g2.EntityID = $Entity
-					OR g2.EntityHandle = $Entity
+					g2.EntityHandle = $Entity
 					OR g2.EntityUUID = $Entity
                 )
 		);
@@ -195,8 +192,7 @@ BEGIN
 	FROM
 		`vwFeedHelper` fh
 	WHERE (
-		fh.PostID = $Post
-        OR fh.PostUUID = $Post
+		fh.PostUUID = $Post
     );
 END//
 DELIMITER ;
@@ -277,8 +273,7 @@ BEGIN
 				g2.GroupType = "Family"
                 AND g.GroupID = g2.GroupID
 				AND (
-					g2.EntityID = $Entity
-					OR g2.EntityHandle = $Entity
+					g2.EntityHandle = $Entity
 					OR g2.EntityUUID = $Entity
                 )
 		);

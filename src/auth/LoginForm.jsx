@@ -5,7 +5,7 @@ import { Icon, Button, Form, Grid, Header, Message, Segment } from "semantic-ui-
 import { Context, EnumMessageType } from "../App";
 
 function LoginForm(props) {
-    const { state, dispatch } = useContext(Context);
+    const { state, dispatch, config } = useContext(Context);
 
     const [ email, setEmail ] = useState("email@aol.com");
     const [ password, setPassword ] = useState("P@$sw0rd");
@@ -13,17 +13,9 @@ function LoginForm(props) {
     function attemptAuth() {
         //TODO Encrypt password before sending
         if(email.length && password.length > 7) {
-            fetch("http://192.168.86.100:3001/login", {
-                method: "POST",
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    
-                },
-                body: JSON.stringify({
-                    "email": email,
-                    "password": password,
-                })
+            config.api.POST("login", {
+                "email": email,
+                "password": password,
             })
             .then(response => response.json())
             .then(data => {

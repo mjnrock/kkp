@@ -11,7 +11,7 @@ const genderOptions = [
 ];
 
 function SignUpForm(props) {
-    const { state, dispatch } = useContext(Context);
+    const { state, dispatch, config } = useContext(Context);
 
     const [ email, setEmail ] = useState("");
     const [ username, setUsername ] = useState("");
@@ -39,27 +39,19 @@ function SignUpForm(props) {
 
     function attemptSignUp() {
         if (email.length && arePasswordsValid()) {
-            fetch("http://192.168.86.100:3001/signup", {
-                method: "POST",
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-
-                },
-                body: JSON.stringify({
-                    "email": email,
-                    "password": password
-                })
+            config.api.POST("signup", {
+                "email": email,
+                "password": password
             })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.token) {
-                        dispatch({
-                            type: EnumMessageType.ASSIGN_TOKEN,
-                            payload: data.token
-                        });
-                    }
-                });
+            .then(response => response.json())
+            .then(data => {
+                if (data.token) {
+                    dispatch({
+                        type: EnumMessageType.ASSIGN_TOKEN,
+                        payload: data.token
+                    });
+                }
+            });
         }
     }
 

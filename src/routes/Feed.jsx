@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { Segment } from "semantic-ui-react";
 
+import { Context } from "./../App";
 import Post from "./../components/post/Post";
 
 function Feed(props) {
+    const { config } = useContext(Context);
     const [ posts, setPosts ] = useState([]);
     const { handle: paramHandle } = useParams();
     const handle = props.handle || paramHandle;
 
     useEffect(() => {
         if(handle) {
-            fetch(`http://192.168.86.100:3001/feed/${ handle }`)
+            config.api.GET(`feed/${ handle }`)
             .then(response => response.json())
             .then(data => {
                 for(let i in data) {

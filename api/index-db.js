@@ -189,7 +189,7 @@ APP.get("/feed/:handle", (req, res) => {
 
 //* ================= <UPLOAD> =========================
     APP.post("/image/upload", (req, res) => {
-        const token = TOKENIZER.DecryptToken(req.query.token);
+        const token = TOKENIZER.DecryptToken(req.header("X-Auth"));
         const entity = req.query.entity;
         let dbdata = {};
         console.log("/image/upload", entity, token);

@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Card, Image, Segment, Header, Divider, Icon } from "semantic-ui-react";
 import { useParams, Link } from "react-router-dom";
 
+import { Context } from "./../App";
+
 function Friends() {
+    const { config } = useContext(Context);
     const [ friends, setFriends ] = useState([]);
     const { handle } = useParams();
 
     useEffect(() => {
         if(handle) {
-            fetch(`http://192.168.86.100:3001/friends/${ handle }`)
+            config.api.GET(`friends/${ handle }`)
             .then(response => response.json())
             .then(setFriends)
         }

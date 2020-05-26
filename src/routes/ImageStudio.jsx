@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { Segment, Header, Sidebar, Menu, Icon } from "semantic-ui-react";
 
+import { Context } from "./../App";
+
 function ImageStudio(props) {
+    const { config } = useContext(Context);
     const canvasRef = React.createRef();
     const { uuid } = useParams();
     const [ post, setPost ] = useState({});
@@ -10,25 +13,25 @@ function ImageStudio(props) {
 
     useEffect(() => {
         if (!Object.keys(post).length) {
-            fetch(`http://192.168.86.100:3001/post/${uuid}`)
-                .then(response => response.json())
-                .then(data => {
-                    const canvas = canvasRef.current;
-                    const ctx = canvas.getContext("2d");
+            config.api.GET(`post/${ uuid }`)
+            .then(response => response.json())
+            .then(data => {
+                const canvas = canvasRef.current;
+                const ctx = canvas.getContext("2d");
 
-                    let img = new Image();
-                    img.onload = () => {
-                        canvas.width = img.width;
-                        canvas.height = img.height;
+                let img = new Image();
+                img.onload = () => {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
 
-                        ctx.drawImage(img, 0, 0);
-                        setImage(img);
-                    }
-                    img.src = `http://192.168.86.100:3001/img/${data.Filename}`;
+                    ctx.drawImage(img, 0, 0);
+                    setImage(img);
+                }
+                img.src = `http://192.168.86.100:3001/img/${data.Filename}`;
 
-                    setPost(data);
-                })
-                .catch(e => setPost());
+                setPost(data);
+            })
+            .catch(e => setPost());
         }
         // eslint-disable-next-line
     }, [ uuid ]);
