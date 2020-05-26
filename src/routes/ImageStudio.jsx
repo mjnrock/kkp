@@ -13,7 +13,7 @@ function ImageStudio(props) {
 
     useEffect(() => {
         if (!Object.keys(post).length) {
-            config.api.GET(`post/${ uuid }`)
+            config.api.Get(`post/${ uuid }`)
             .then(response => response.json())
             .then(data => {
                 const canvas = canvasRef.current;

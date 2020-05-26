@@ -39,7 +39,7 @@ function SignUpForm(props) {
 
     function attemptSignUp() {
         if (email.length && arePasswordsValid()) {
-            config.api.POST("signup", {
+            config.api.Post("signup", {
                 "email": email,
                 "password": password
             })

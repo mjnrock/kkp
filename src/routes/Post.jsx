@@ -12,7 +12,7 @@ function Post() {
 
     useEffect(() => {
         if(!Object.keys(post).length) {
-            config.api.GET(`post/${ uuid }`)
+            config.api.Get(`post/${ uuid }`)
             .then(response => response.json())
             .then(setPost)
             .catch(e => setPost());

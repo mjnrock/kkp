@@ -13,7 +13,7 @@ function LoginForm(props) {
     function attemptAuth() {
         //TODO Encrypt password before sending
         if(email.length && password.length > 7) {
-            config.api.POST("login", {
+            config.api.Post("login", {
                 "email": email,
                 "password": password,
             })

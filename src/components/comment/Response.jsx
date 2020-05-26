@@ -13,7 +13,7 @@ function Response(props) {
     const [ reactions, setReactions ] = useState(post.PostReactions || []);
 
     function onReaction(emoji) {        
-        config.api.POST("react", {
+        config.api.Post("react", {
             "post": post.PostUUID,
             "entity": state.user.EntityUUID,
             "reaction": emoji,

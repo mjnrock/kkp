@@ -24,20 +24,10 @@ function UploadWizard() {
     }
 
     function onUpload() {
-        let formData = new FormData();
-
-        formData.append("photo", image);
-
-        let url = new URL(`${ config.server }/image/upload`);
-        let params = { entity: state.user.Handle };
-        url.search = new URLSearchParams(params).toString();
-
-        fetch(url, {
-            method: "POST",
-            headers: {
-                "X-Auth": state.auth.token
-            },
-            body: formData,
+        config.api.Form("image/upload", {
+            photo: image
+        }, {
+            entity: state.user.Handle
         })
         .then(response => response.json())
         .then(data => {

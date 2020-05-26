@@ -13,7 +13,7 @@ function Feed(props) {
 
     useEffect(() => {
         if(handle) {
-            config.api.GET(`feed/${ handle }`)
+            config.api.Get(`feed/${ handle }`)
             .then(response => response.json())
             .then(data => {
                 for(let i in data) {

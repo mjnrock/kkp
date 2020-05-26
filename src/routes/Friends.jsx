@@ -11,7 +11,7 @@ function Friends() {
 
     useEffect(() => {
         if(handle) {
-            config.api.GET(`friends/${ handle }`)
+            config.api.Get(`friends/${ handle }`)
             .then(response => response.json())
             .then(setFriends)
         }

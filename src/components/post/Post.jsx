@@ -15,7 +15,7 @@ function Post(props) {
     const [ children, setChildren ] = useState(post.PostChildren || []);
 
     function onReaction(emoji) {
-        config.api.POST("post/react", {
+        config.api.Post("post/react", {
             "post": post.PostUUID,
             "entity": state.user.EntityUUID,
             "reaction": emoji,
@@ -35,7 +35,7 @@ function Post(props) {
         if(comment.length > 0) {
             setComment("");
             
-            config.api.POST("post/reply", {
+            config.api.Post("post/reply", {
                 "post": post.PostUUID,
                 "entity": state.user.EntityUUID,
                 "reply": comment,

@@ -11,7 +11,7 @@ export default class APIHelper {
         return this._token;
     }
 
-    GET(endpoint) {
+    Get(endpoint) {
         if(endpoint[ 0 ] === "/") {
             endpoint = endpoint.substring(1);
         }
@@ -24,7 +24,7 @@ export default class APIHelper {
         });
     }
 
-    POST(endpoint, payload, { isJson = false } = {}) {
+    Post(endpoint, payload, { isJson = false } = {}) {
         if(typeof payload !== "object") {
             return new Promise();
         }
@@ -41,6 +41,33 @@ export default class APIHelper {
                 "X-Auth": this.token
             },
             body: isJson ? payload : JSON.stringify(payload)
+        });
+    }
+
+    Form(endpoint, payload, params = {}) {
+        if(typeof payload !== "object") {
+            return new Promise();
+        }
+
+        if(endpoint[ 0 ] === "/") {
+            endpoint = endpoint.substring(1);
+        }
+        
+        let formData = new FormData();
+
+        Object.entries(payload).forEach(([ key, value ]) => {
+            formData.append(key, value);
+        });
+
+        let url = new URL(`${ this.server }/${ endpoint }`);
+        url.search = new URLSearchParams(params).toString();
+
+        return fetch(url, {
+            method: "POST",
+            headers: {
+                "X-Auth": this.token
+            },
+            body: formData,
         });
     }
 }

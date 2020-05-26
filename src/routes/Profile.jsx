@@ -16,12 +16,12 @@ function Profile() {
 
     useEffect(() => {
         if(handle) {
-            config.api.GET(`entity/${ handle }`)
+            config.api.Get(`entity/${ handle }`)
             .then(response => response.json())
             .then(setEntity)
             .catch(e => setEntity());
             
-            config.api.GET(`family/${ handle }`)
+            config.api.Get(`family/${ handle }`)
             .then(response => response.json())
             .then(data => {
                 for(let i in data) {
@@ -34,7 +34,7 @@ function Profile() {
             })
             .catch(e => setFamily([]));
 
-            config.api.GET(`friends/${ handle }`)
+            config.api.Get(`friends/${ handle }`)
             .then(response => response.json())
             .then(setFriends)
             .catch(e => setFriends([]));
