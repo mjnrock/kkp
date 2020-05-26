@@ -1,3 +1,7 @@
+☐ Rewrite ALL uses of LAST_INSERT_ID()
+    ☐ `CreateImagePost` used `Account.UUID` instead of `Asset.UUID` because of a FileSystem failure
+    ☐ `https://stackoverflow.com/questions/20704983/clearing-last-insert-id-before-inserting-to-tell-if-whats-returned-is-from-my` has solutions
+
 ☐ Build "Posting As: { entity }"
     ☐ Separate Authentication and "Active" Entity, default to attached Entity
     ☐ Change by selecting "Posting As" dropdown options

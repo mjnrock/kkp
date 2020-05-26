@@ -21,9 +21,9 @@ BEGIN
 		AccountUUID,
         Username,
         EntityUUID,
-        EntryValue AS EntityType,
+        `Key` AS EntityType,
         Handle,
-        Name,
+        `Name`,
         Detail
 	FROM
 		`vwAccountHelper`

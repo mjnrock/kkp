@@ -2,18 +2,22 @@ import express from "express";
 import fs from "fs";
 import path from "path";
 import multer from "multer";
-import mysql from "mysql";
-import crypto from "crypto";
 
-const DB = mysql.createPool({
+import Lib from "./lib/package";
+
+const APP = express();
+const PORT = 3001;
+
+const DB = new Lib.DatabaseHelper({
     connectionLimit: 10,
     host: "localhost",
     user: "root",
     password: "",
     database: "kkp",
 });
-const APP = express();
-const PORT = 3001;
+const TOKENIZER = new Lib.TokenHelper({
+    password: Date.now(),
+});
 
 APP.use("/img", express.static(__dirname + "/data/image"));
 APP.use(express.urlencoded({ extended: true }));
@@ -28,39 +32,6 @@ APP.use((req, res, next) => {
 
 APP.disable("x-powered-by");
 
-const TOKEN_KEY = crypto.createHash("sha256").update(String(Date.now())).digest("base64").substr(0, 32);
-const IV = crypto.randomBytes(16).toString("hex").slice(0, 16);
-
-function createToken(email, password, expiration) {
-    try {
-        let text = JSON.stringify({
-            email,
-            password,
-            timestamp: Date.now(),
-            expiration
-        });
-        
-        let cipher = crypto.createCipheriv("aes-256-ctr", TOKEN_KEY, IV);
-        let encrypted = cipher.update(String(text), "utf8", "hex") + cipher.final("hex");
-
-        return encrypted;
-    } catch(e) {
-        return false;
-    }
-}
-function decryptToken(token) {
-    try {
-        let decipher = crypto.createDecipheriv("aes-256-ctr", TOKEN_KEY, IV);
-        let decrypted = decipher.update(String(token), "hex", "utf8");
-        
-        decrypted += decipher.final("utf8");
-
-        return JSON.parse(decrypted);
-    } catch(e) {
-        return false;
-    }
-}
-
 
 APP.post("/login", (req, res) => {
     const message = req.body;
@@ -71,20 +42,20 @@ APP.post("/login", (req, res) => {
         return res.sendStatus(204);
     }
 
-    DB.query(`CALL Login(?, ?, @NULL)`, [ email, password ], function (error, resultSets, fields) {
-        const [ results ] = resultSets || [[]];
-    
-        if(results[ 0 ]) {
-            const token = createToken(email, password, 60 * 60 * 24 * 1000);    // 24 Hours
+    DB.Call("Login", [ email, password, [ "@UUID" ]])
+    .then(results => {
+        const token = TOKENIZER.CreateToken({
+            email,
+            password,
+            expiration: 60 * 60 * 24 * 1000,
+        });    // 24 Hours
 
-            return res.send({
-                Token: token,
-                ...(results[ 0 ] || {})
-            });
-        }
-        
-        return res.sendStatus(204);
-    });
+        return res.send({
+            Token: token,
+            ...(results.first || {})
+        });
+    })
+    .catch(e => res.sendStatus(204));
 });
 
 //TODO WIP
@@ -121,17 +92,9 @@ APP.get("/entity/:handle", (req, res) => {
         return res.sendStatus(204);
     }
 
-    DB.query(`CALL GetEntity(?)`, [ handle ], function (error, resultSets, fields) {
-        const [ results ] = resultSets || [[]];
-    
-        if(results[ 0 ]) {
-            return res.send({
-                ...(results[ 0 ] || {})
-            });
-        }
-        
-        return res.sendStatus(204);
-    });
+    DB.Call("GetEntity", [ handle ])
+    .then(results => res.send(results.first))
+    .catch(e => res.sendStatus(204));
 });
 
 APP.get("/friends/:handle", (req, res) => {
@@ -142,15 +105,9 @@ APP.get("/friends/:handle", (req, res) => {
         return res.sendStatus(204);
     }
 
-    DB.query(`CALL GetFriends(?)`, [ handle ], function (error, resultSets, fields) {
-        const [ results ] = resultSets || [[]];
-    
-        if(results.length) {
-            return res.send(results);
-        }
-        
-        return res.sendStatus(204);
-    });
+    DB.Call("GetFriends", [ handle ])
+    .then(results => res.send(results.all))
+    .catch(e => res.sendStatus(204));
 });
 
 APP.get("/family/:handle", (req, res) => {
@@ -161,20 +118,14 @@ APP.get("/family/:handle", (req, res) => {
         return res.sendStatus(204);
     }
 
-    DB.query(`CALL GetFamily(?)`, [ handle ], function (error, resultSets, fields) {
-        const [ results ] = resultSets || [[]];
-    
-        if(results.length) {
-            return res.send(results);
-        }
-        
-        return res.sendStatus(204);
-    });
+    DB.Call("GetFamily", [ handle ])
+    .then(results => res.send(results.all))
+    .catch(e => res.sendStatus(204));
 });
 
 APP.post("/post/reply", (req, res) => {
     const message = req.body;
-    const token = decryptToken(req.header("X-Auth"));
+    const token = TOKENIZER.DecryptToken(req.header("X-Auth"));
     const { post, entity, reply } = message;
     console.log("/post/react", post, entity, reply, token);
 
@@ -182,20 +133,14 @@ APP.post("/post/reply", (req, res) => {
         return res.sendStatus(204);
     }
 
-    DB.query(`CALL CreateReplyPost(?, ?, ?)`, [ entity, post, reply ], function (error, resultSets, fields) {
-        const [ results ] = resultSets || [[]];
-    
-        if((results || []).length) {
-            return res.send(results[ 0 ]);
-        }
-        
-        return res.sendStatus(204);
-    });
+    DB.Call("CreateReplyPost", [ entity, post, reply ])
+    .then(results => res.send(results.first))
+    .catch(e => res.sendStatus(204));
 });
 
 APP.post("/post/react", (req, res) => {
     const message = req.body;
-    const token = decryptToken(req.header("X-Auth"));
+    const token = TOKENIZER.DecryptToken(req.header("X-Auth"));
     const { post, entity, reaction } = message;
     console.log("/post/react", post, entity, reaction, token);
 
@@ -203,15 +148,9 @@ APP.post("/post/react", (req, res) => {
         return res.sendStatus(204);
     }
 
-    DB.query(`CALL CreatePostReaction(?, ?, ?)`, [ entity, post, reaction ], function (error, resultSets, fields) {
-        const [ results ] = resultSets || [[]];
-    
-        if((results || []).length) {
-            return res.send(results[ 0 ]);
-        }
-        
-        return res.sendStatus(204);
-    });
+    DB.Call("CreatePostReaction", [ entity, post, reaction ])
+    .then(results => res.send(results.first))
+    .catch(e => res.sendStatus(204));
 });
 
 APP.get("/post/:uuid", (req, res) => {
@@ -225,15 +164,9 @@ APP.get("/post/:uuid", (req, res) => {
     /**
      * 0: $UUID (UUID)
      */
-    DB.query(`CALL GetPost(?)`, [ uuid ], function (error, resultSets, fields) {
-        const [ results ] = resultSets || [[]];
-    
-        if((results || []).length) {
-            return res.send(results[ 0 ]);
-        }
-        
-        return res.sendStatus(204);
-    });
+    DB.Call("GetPost", [ uuid ])
+    .then(results => res.send(results.first))
+    .catch(e => res.sendStatus(204));
 });
 
 APP.get("/feed/:handle", (req, res) => {
@@ -248,21 +181,15 @@ APP.get("/feed/:handle", (req, res) => {
      * 0: $Entity (Handle|UUID)
      * 1: $BeginDateTime (DATETIME(3)|NULL)
      */
-    DB.query(`CALL GetFeed(?, NULL)`, [ handle ], function (error, resultSets, fields) {
-        const [ results ] = resultSets || [[]];
-    
-        if((results || []).length) {
-            return res.send(results);
-        }
-        
-        return res.sendStatus(204);
-    });
+    DB.Call("GetFeed", [ handle, [ "NULL" ] ])
+    .then(results => res.send(results.all))
+    .catch(e => res.sendStatus(204));
 });
 
 
 //* ================= <UPLOAD> =========================
     APP.post("/image/upload", (req, res) => {
-        const token = decryptToken(req.query.token);
+        const token = TOKENIZER.DecryptToken(req.query.token);
         const entity = req.query.entity;
         let dbdata = {};
         console.log("/image/upload", entity, token);
@@ -281,15 +208,13 @@ APP.get("/feed/:handle", (req, res) => {
                      * 2: $Extension (Key<AssetExtension>)
                      * 3: OUT $UUID
                      */
-                    DB.query(`CALL CreateImagePost(?, ?, @NULL)`, [ entity, (path.extname(file.originalname) || "").replace(/[^0-9a-z]/gi, "") ], function (error, resultSets, fields) {
-                        const [ results ] = resultSets || [[]];
-                    
-                        if((results || []).length) {
-                            dbdata = results[ 0 ];
-
-                            cb(null, dbdata.Filename);
-                        }
-                    });
+                    DB.Call("CreateImagePost", [ entity, (path.extname(file.originalname) || "").replace(/[^0-9a-z]/gi, ""), [ "@NULL" ] ])
+                    .then(results => {     
+                        dbdata = (results.first || {});
+                        
+                        cb(null, dbdata.Filename);
+                    })
+                    .catch(e => res.sendStatus(204));
                 }
             });
 

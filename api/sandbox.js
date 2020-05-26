@@ -1,7 +1,6 @@
-import mysql from "mysql";
-import crypto from "crypto";
+import DatabaseHelper from "./lib/DatabaseHelper";
 
-const DB = mysql.createPool({
+const DB = new DatabaseHelper({
     connectionLimit: 10,
     host: "localhost",
     user: "root",
@@ -11,14 +10,7 @@ const DB = mysql.createPool({
 
 const email = "email@aol.com";
 const password = "P@$sw0rd";
-let out;
 
-DB.query(`CALL Login(?, ?, @UUID)`, [ email, password, out ], function (error, res, fields) {
-    const [ results ] = res || [];
-
-    if(results[ 0 ] && results[ 0 ].UUID) {
-        const uuid = results[ 0 ].UUID;
-
-        
-    }
-});
+DB.Call("Login", [ email, password, [ "@UUID" ] ])
+.then(console.log)
+.catch(console.log);
