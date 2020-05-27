@@ -11,6 +11,10 @@ export default class APIHelper {
         return this._token;
     }
 
+    Image(filename) {
+        return `${ this.server }/img/${ filename }`;
+    }
+
     Get(endpoint) {
         if(endpoint[ 0 ] === "/") {
             endpoint = endpoint.substring(1);

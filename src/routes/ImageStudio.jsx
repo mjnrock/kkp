@@ -27,7 +27,7 @@ function ImageStudio(props) {
                     ctx.drawImage(img, 0, 0);
                     setImage(img);
                 }
-                img.src = `http://192.168.86.100:3001/img/${data.Filename}`;
+                img.src = config.api.Image(data.Filename);
 
                 setPost(data);
             })

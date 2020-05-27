@@ -1,14 +1,18 @@
-import React from "react";
-import { Card, Header, Image, Segment } from "semantic-ui-react";
+import React, { useContext } from "react";
+import { Card, Header, Image, Segment, Table } from "semantic-ui-react";
 import { Link } from "react-router-dom";
+import { Context } from "./../../App";
 
 function PersonCard(props) {
+    const { config } = useContext(Context);
     const { entity } = props;
+
+    const detail = Object.entries(entity.EntityDetail || {});
 
     return (
         <Card as={ Link } to={ `/profile/${ entity.EntityHandle }` } color="green">
             <Segment inverted style={{ marginBottom: 0 }}>
-                <Image className="clipped" src={ `http://192.168.86.100:3001/img/${ entity.EntityHandle }.jpg` } width={ 300 } height={ 200 } centered />
+                <Image className="clipped" src={ config.api.Image(`${ entity.EntityHandle }.jpg`) } width={ 300 } height={ 200 } centered />
             </Segment>            
             
             <Card.Content style={{ padding: 2, paddingTop: 14 }}>
@@ -24,8 +28,22 @@ function PersonCard(props) {
                 </Card.Header>
 
                 <Card.Description>
-                    { entity.EntityDetail }
-                    {/* <pre>{ JSON.stringify(entity, null, 2) }</pre> */}
+                    {/* {
+                        detail.length ? (
+                                <Table definition>
+                                    <Table.Body>
+                                        {
+                                            detail.map(([ key, value ]) => (
+                                                <Table.Row key={ key } textAlign="center">
+                                                    <Table.Cell>{ key }</Table.Cell>
+                                                    <Table.Cell>{ value }</Table.Cell>
+                                                </Table.Row>
+                                            ))
+                                        }
+                                    </Table.Body>
+                                </Table>
+                        ) : null
+                    } */}
                 </Card.Description>
             </Card.Content>
         </Card>

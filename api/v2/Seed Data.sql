@@ -14,6 +14,10 @@ CALL MapGroupEntity(@GroupUUID, @UUID, @NULL);
 CALL CreateEntity("Dog", "Midge", "Margery Stuart Baxter", @UUID);
 CALL MapGroupEntity(@GroupUUID, @UUID, @NULL);
 
+CALL ModifyEntityDetail("Kiszka", '{"breed": "Domestic Medium Hair", "color": "Calico", "sex": "Female", "weight": "12 lbs."}');
+CALL ModifyEntityDetail("Buddha", '{"breed": "Domestic Short Hair", "color": "Black", "sex": "Male", "weight": "9 lbs."}');
+CALL ModifyEntityDetail("Midge", '{"breed": "Cavalier King Charles Spaniel", "color": "Brown", "sex": "Female", "weight": "14 lbs."}');
+
 CALL CreateFriendship(1, 2);
 
 -- CALL CreateImagePost("MrStretch", 1, "GIF", @UUID);

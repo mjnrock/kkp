@@ -47,7 +47,7 @@ function Friends() {
                                 <Image
                                     floated="left"
                                     size="mini"
-                                    src={ `http://192.168.86.100:3001/img/${ friend.FriendHandle }.jpg` }
+                                    src={ config.api.Image(`${ friend.FriendHandle }.jpg`) }
                                 />
                                 <Card.Header>{ friend.FriendName }</Card.Header>
                                 <Card.Meta>{ friend.FriendHandle }</Card.Meta>

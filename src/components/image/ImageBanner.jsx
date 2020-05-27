@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Segment, Image } from "semantic-ui-react";
 
+import { Context } from "./../../App";
+
 function ImageBanner(props) {
+    const { config } = useContext(Context);
     return (
         <Segment inverted>
-            <Image src={ `http://192.168.86.100:3001/img/${ props.name }` } width={ 900 } centered />
+            <Image src={ config.api.Image(props.name) } width={ 900 } centered />
         </Segment>
     )
 }

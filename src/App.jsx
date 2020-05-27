@@ -64,7 +64,8 @@ function App() {
     
     const config = {
         api: null,
-        server: "http://192.168.86.100:3001",
+        // server: "http://192.168.86.100:3001",
+        server: "http://localhost:3001",
     };
     config.api = new APIHelper(config.server, state.auth.token);
 

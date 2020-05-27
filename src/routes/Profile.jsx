@@ -47,6 +47,8 @@ function Profile() {
         )
     }
 
+    const detail = JSON.parse(entity.EntityDetail || JSON.stringify({}));
+
     return (
         <Fragment>            
             <Segment basic>
@@ -78,7 +80,7 @@ function Profile() {
                     <Accordion.Content active={ true }>
                         <Item>
                             <Item.Content>
-                                { entity.EntityDetail }
+                                { detail.Bio }
                             </Item.Content>
                         </Item>
                     </Accordion.Content>
@@ -112,6 +114,21 @@ function Profile() {
                                         );
                                     }
                                     
+                                    return null;
+                                })
+                            }
+                        </Card.Group>
+                        <Card.Group itemsPerRow={ 3 } >
+                            {
+                                family.map(member => {
+                                    if(member.EntityUUID === entity.EntityUUID) {
+                                        return null;
+                                    }
+
+                                    if(member.EntityType === "Human") {
+                                        return null;
+                                    }
+                                    
                                     return (
                                         <PetCard
                                             key={ member.EntityUUID }
@@ -141,7 +158,7 @@ function Profile() {
                                 friends.length ? (
                                     friends.map(friend => (
                                         <List.Item key={ friend.FriendHandle } as={ Link } to={ `/profile/${ friend.FriendHandle }` }>
-                                            <Image avatar src={ `http://192.168.86.100:3001/img/${ friend.FriendHandle }.jpg` } />
+                                            <Image avatar src={ config.api.Image(`${ friend.FriendHandle }.jpg`) } />
                                             <List.Content>
                                                 <List.Header>{ friend.FriendHandle }</List.Header>
                                             </List.Content>

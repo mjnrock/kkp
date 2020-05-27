@@ -59,7 +59,7 @@ function Post(props) {
             </Header>
 
             <Segment inverted>
-                <Image src={ `http://192.168.86.100:3001/img/${ post.Filename }` } centered style={{ maxHeight: 400 }} />
+                <Image src={ config.api.Image(post.Filename) } centered style={{ maxHeight: 400 }} />
             </Segment>
             <ReactionBar onReaction={ onReaction } reactions={ reactions || [] } />
 
