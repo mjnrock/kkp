@@ -56,3 +56,10 @@
 .studio-canvas {
     border: 1px solid #000;;
 }
+
+.orange-border-top {
+    border-top: .2em solid #f2711c !important;
+}
+.green-border-top {
+    border-top: .2em solid #21BA45 !important;
+}

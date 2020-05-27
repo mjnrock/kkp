@@ -6,21 +6,6 @@ import DrawToolbar from "./DrawToolbar";
 import TextToolbar from "./TextToolbar";
 import EmojiToolbar from "./EmojiToolbar";
 
-function Toolbar(props) {
-    const { tab, ...rest } = props || {};
-
-    switch(tab) {
-        case 0:
-            return <DrawToolbar { ...rest } />;
-        case 1:
-            return <TextToolbar { ...rest } />;
-        case 2:
-            return <EmojiToolbar { ...rest } />;
-        default:
-            return <DrawToolbar { ...rest } />;
-    }
-}
-
 function MediaStudio(props) {
     const canvasRef = React.createRef();
     const { uuid } = props;
@@ -59,6 +44,34 @@ function MediaStudio(props) {
         // eslint-disable-next-line
     }, [ uuid ]);
 
+    function Toolbar({ tab, ...rest } = {}) {    
+        switch(tab) {
+            case 0:
+                return <DrawToolbar { ...rest } />;
+            case 1:
+                return <TextToolbar { ...rest } />;
+            case 2:
+                return <EmojiToolbar { ...rest } />;
+            default:
+                return <DrawToolbar { ...rest } />;
+        }
+    }
+    
+
+    function MenuItem({ index, icon, label } = {}) {
+        return (
+            <Menu.Item
+                name={ icon }
+                active={ tab === index }
+                onClick={ e => setTab(index) }
+                className={ tab === index ? "orange-border-top" : null }
+            >
+                <Icon name={ icon } size="large" />
+                <span style={{ marginLeft: 8 }}>{ label }</span>
+            </Menu.Item>
+        );
+    }
+
     return (
         <>
             <Header as="h2" color="orange" textAlign="center">
@@ -72,32 +85,9 @@ function MediaStudio(props) {
 
                 <div>
                     <Menu pointing color="orange" widths={ 3 }>
-                        <Menu.Item
-                            name="pencil"
-                            active={ tab === 0 }
-                            onClick={ e => setTab(0) }
-                        >
-                            <Icon name="pencil" size="large" />
-                            <span style={{ marginLeft: 8 }}>Draw</span>
-                        </Menu.Item>
-
-                        <Menu.Item
-                            name="font"
-                            active={ tab === 1 }
-                            onClick={ e => setTab(1) }
-                        >
-                            <Icon name="font" size="large" />
-                            <span style={{ marginLeft: 8 }}>Text</span>
-                        </Menu.Item>
-
-                        <Menu.Item
-                            name="smile outline"
-                            active={ tab === 2 }
-                            onClick={ e => setTab(2) }
-                        >
-                            <Icon name="smile outline" size="large" />
-                            <span style={{ marginLeft: 8 }}>Emoji</span>
-                        </Menu.Item>
+                        <MenuItem index={ 0 } icon="pencil" label="Draw" />
+                        <MenuItem index={ 1 } icon="font" label="Text" />
+                        <MenuItem index={ 2 } icon="smile outline" label="Emoji" />
                     </Menu>
 
                     <Segment basic>
