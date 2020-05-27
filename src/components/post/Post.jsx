@@ -67,16 +67,22 @@ function Post(props) {
 
             <InputComment onSubmitComment={ onSubmitComment } />
 
-            <Divider horizontal style={{ cursor: "pointer" }} onClick={ e => setIsCommentsVisible(!isCommentsVisible) }>
-                <Icon name={ isCommentsVisible ? "angle down" : "angle up" } className={ isCommentsVisible ? "grey" : "orange" } />
-                &nbsp;Comments
-                &nbsp;<Icon name={ isCommentsVisible ? "angle down" : "angle up" } color={ isCommentsVisible ? "grey" : "orange" } />
-            </Divider>
-            
-
             {
-                isCommentsVisible ? (
-                    <Thread posts={ children || [] }/>
+                children.length ? (
+                    <>
+                        <Divider horizontal style={{ cursor: "pointer" }} onClick={ e => setIsCommentsVisible(!isCommentsVisible) }>
+                            <Icon name={ isCommentsVisible ? "angle down" : "angle up" } className={ isCommentsVisible ? "grey" : "orange" } />
+                            &nbsp;{ isCommentsVisible ? "Hide" : "Show" }&nbsp;Comments
+                            &nbsp;<Icon name={ isCommentsVisible ? "angle down" : "angle up" } color={ isCommentsVisible ? "grey" : "orange" } />
+                        </Divider>
+                        
+            
+                        {
+                            isCommentsVisible ? (
+                                <Thread posts={ children || [] }/>
+                            ) : null
+                        }
+                    </>
                 ) : null
             }
         </Segment>
