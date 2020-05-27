@@ -329,7 +329,7 @@ BEGIN
 					INSERT INTO `PostHierarchy` (ParentPostID, PostID)
 					VALUES ($ParentPostID, $PostID);
                     
-                    CALL GetPost($ParentPostID);
+                    CALL GetPost($ParentPost);
                 END;
 			END IF;
 		END;

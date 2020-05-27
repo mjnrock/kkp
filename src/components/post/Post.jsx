@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Segment, Image, Header, Divider } from "semantic-ui-react";
+import { Segment, Image, Header, Divider, Icon } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 
 import { Context } from "./../../App";
@@ -13,6 +13,7 @@ function Post(props) {
     const { post } = props;
     const [ reactions, setReactions ] = useState(post.PostReactions || []);
     const [ children, setChildren ] = useState(post.PostChildren || []);
+    const [ isCommentsVisible, setIsCommentsVisible ] = useState(false);
 
     function onReaction(emoji) {
         config.api.Post("post/react", {
@@ -47,6 +48,7 @@ function Post(props) {
                 }
     
                 setChildren(data.PostChildren);
+                setIsCommentsVisible(true);
             })
             .catch(e => null);
         }
@@ -63,11 +65,20 @@ function Post(props) {
             </Segment>
             <ReactionBar onReaction={ onReaction } reactions={ reactions || [] } />
 
-            <Divider horizontal>Comments</Divider>
-            
             <InputComment onSubmitComment={ onSubmitComment } />
 
-            <Thread posts={ children || [] }/>
+            <Divider horizontal style={{ cursor: "pointer" }} onClick={ e => setIsCommentsVisible(!isCommentsVisible) }>
+                <Icon name={ isCommentsVisible ? "angle down" : "angle up" } className={ isCommentsVisible ? "grey" : "orange" } />
+                &nbsp;Comments
+                &nbsp;<Icon name={ isCommentsVisible ? "angle down" : "angle up" } color={ isCommentsVisible ? "grey" : "orange" } />
+            </Divider>
+            
+
+            {
+                isCommentsVisible ? (
+                    <Thread posts={ children || [] }/>
+                ) : null
+            }
         </Segment>
     );
 }

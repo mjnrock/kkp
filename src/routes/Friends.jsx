@@ -18,47 +18,49 @@ function Friends() {
         // eslint-disable-next-line
     }, []);
 
-    console.log(friends)
-
     if(!friends.length) {
         return (
             <div>Loading...</div>
         );
     }
 
+    console.log(friends)
+
     return (
         <Segment>
-            <Header as="h2" color="orange" textAlign="center">
+            <Header as="h2" color="green" textAlign="center">
                 { handle }
             </Header>
 
             <Divider horizontal>
-                <Header as="h4">
+                <Header as="h4" color="grey">
                     <Icon name="users" />
                     Friends ({ friends.length })
                 </Header>
             </Divider>
 
-            <Card.Group>
-                {
-                    friends.map(friend => (
-                        <Card key={ friend.FriendUUID } as={ Link } to={ `/profile/${ friend.FriendHandle }` }>
-                            <Card.Content>
-                                <Image
-                                    floated="left"
-                                    size="mini"
-                                    src={ config.api.Image(`${ friend.FriendHandle }.jpg`) }
-                                />
-                                <Card.Header>{ friend.FriendName }</Card.Header>
-                                <Card.Meta>{ friend.FriendHandle }</Card.Meta>
-                                <Card.Description>
-                                    { friend.FriendDetail }
-                                </Card.Description>
-                            </Card.Content>
-                        </Card>
-                    ))
-                }
-            </Card.Group>
+            <Segment secondary>
+                <Card.Group>
+                    {
+                        friends.map(friend => (
+                            <Card key={ friend.FriendUUID } as={ Link } to={ `/profile/${ friend.FriendHandle }` }>
+                                <Card.Content>
+                                    <Image
+                                        floated="left"
+                                        size="mini"
+                                        src={ config.api.Image(`${ friend.FriendHandle }.jpg`) }
+                                    />
+                                    <Card.Header style={{ color: friend.FriendType === "Human" ? "green" : "orange" }}>{ friend.FriendName }</Card.Header>
+                                    <Card.Meta>@{ friend.FriendHandle }</Card.Meta>
+                                    {/* <Card.Description>
+                                        { friend.FriendDetail }
+                                    </Card.Description> */}
+                                </Card.Content>
+                            </Card>
+                        ))
+                    }
+                </Card.Group>
+            </Segment>
         </Segment>
     );
 }
