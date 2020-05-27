@@ -5,7 +5,7 @@ import Feed from "./Feed";
 import Album from "./Album";
 import Upload from "./Upload";
 import Friends from "./Friends";
-import ImageStudio from "./ImageStudio";
+import Studio from "./Studio";
 
 export default {
     Home,
@@ -15,5 +15,5 @@ export default {
     Album,
     Upload,
     Friends,
-    ImageStudio,
+    Studio,
 };

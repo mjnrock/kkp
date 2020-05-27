@@ -88,7 +88,7 @@ function App() {
                             <Routes.Upload />
                         </Route>
                         <Route path="/studio/:uuid">
-                            <Routes.ImageStudio />
+                            <Routes.Studio />
                         </Route>
                         <Route path="/feed/:handle">
                             <Routes.Feed />
