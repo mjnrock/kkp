@@ -5,6 +5,7 @@ import {
     Route,
     Redirect,
 } from "react-router-dom";
+import { fabric } from "fabric";
 
 import Routes from "./routes/package";
 import APIHelper from "./lib/APIHelper";
@@ -33,6 +34,13 @@ const reducer = (state, message) => {
             },
             user: user
         }
+    } else if(message.type === EnumMessageType.FABRIC_DATA) {
+        console.log(data);
+        
+        return {
+            ...state,
+            fabric: data
+        };
     }
     return state;
 };
@@ -40,12 +48,15 @@ const initialState = {
     auth: {},
     user: {},
     pets: [],
+    fabric: null
 };
 export const Context = React.createContext(initialState);
 
 export const EnumMessageType = {
+    FABRIC_DATA: "FABRIC_DATA",
+
     LOGIN: "LOGIN",
-    LOGOUT: "LOGOUT"
+    LOGOUT: "LOGOUT",
 };
 
 // eslint-disable-next-line
@@ -59,20 +70,21 @@ function AuthRoutes({ children, auth }) {
     );
 }
 
+const fabricCanvas = new fabric.Canvas();
+
 function App() {
     const [ state, dispatch ] = React.useReducer(reducer, initialState);
     
     const config = {
         api: null,
-        // server: "http://192.168.86.100:3001",
-        server: "http://192.168.86.43:3001",
+        server: "http://192.168.86.100:3001",
         // server: "http://localhost:3001",
     };
     config.api = new APIHelper(config.server, state.auth.token);
 
     return (
         <Router>
-            <Context.Provider value={{ state, dispatch, config }}>
+            <Context.Provider value={{ state, dispatch, config, fabric: fabricCanvas }}>
                 <NavBar auth={ state.auth } dispatch={ dispatch } />
 
                 <Switch>

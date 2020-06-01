@@ -1,44 +1,27 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Segment, Header, Sidebar, Menu, Icon } from "semantic-ui-react";
+import { Segment, Header, Menu, Icon } from "semantic-ui-react";
+import { fabric as Fabric } from "fabric";
 
 import { Context } from "./../../App";
+// import Canvas from "./Canvas";
 import DrawToolbar from "./DrawToolbar";
 import TextToolbar from "./TextToolbar";
 import EmojiToolbar from "./EmojiToolbar";
+import Canvas from "./Canvas";
+import FabricThumbnail from "./FabricThumbnail";
 
 function MediaStudio(props) {
-    const canvasRef = React.createRef();
     const { uuid } = props;
 
-    const { config } = useContext(Context);
+    const { config, fabric } = useContext(Context);
     const [ post, setPost ] = useState({});
-    const [ image, setImage ] = useState({});
     const [ tab, setTab ] = useState(0);
 
     useEffect(() => {
-        if (uuid && !Object.keys(post).length) {
+        if(uuid && !Object.keys(post).length) {
             config.api.Get(`post/${ uuid }`)
             .then(response => response.json())
-            .then(data => {
-                const canvas = canvasRef.current;
-                const ctx = canvas.getContext("2d");
-
-                let img = new Image();
-                img.onload = () => {
-                    const ar = img.width / img.height;
-                    let height = Math.min(img.height, 500);
-                    let width = height * ar;
-
-                    canvas.width = width;
-                    canvas.height = height;
-
-                    ctx.drawImage(img, 0, 0, width, height);
-                    setImage(img);
-                }
-                img.src = config.api.Image(data.Filename);
-
-                setPost(data);
-            })
+            .then(setPost)
             .catch(e => setPost());
         }
         // eslint-disable-next-line
@@ -72,6 +55,24 @@ function MediaStudio(props) {
         );
     }
 
+    function onAction(module, action, value) {
+        console.log(module, action, value);
+
+        if(module === "text") {
+            if(action === "insert") {
+                var text = new Fabric.Text('hello world', { left: 100, top: 100 });
+                fabric.add(text);
+            }
+        }
+    }
+
+    console.log(fabric._objects);
+    console.log(fabric.toObject());
+
+    fabric.getObjects().forEach(obj => {
+        console.log(obj.toJSON())
+    })
+
     return (
         <>
             <Header as="h2" color="orange" textAlign="center">
@@ -80,7 +81,17 @@ function MediaStudio(props) {
 
             <Segment tertiary>                
                 <Segment inverted textAlign="center">
-                    <canvas ref={ canvasRef } className="studio-canvas"></canvas>
+                    <Canvas filename={ post.Filename } />
+                </Segment>
+
+                <Segment tertiary>
+                    {
+                        fabric.getObjects().map(obj => (
+                            <div style={{ width: 300, maxWidth: 300, minWidth: 300, height: 150 }}>
+                                <FabricThumbnail obj={ obj } />
+                            </div>
+                        ))
+                    }
                 </Segment>
 
                 <div>
@@ -91,7 +102,7 @@ function MediaStudio(props) {
                     </Menu>
 
                     <Segment basic>
-                        <Toolbar tab={ tab } />
+                        <Toolbar tab={ tab } onAction={ onAction } />
                     </Segment>
                 </div>
             </Segment>
