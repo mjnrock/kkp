@@ -1,9 +1,9 @@
 import React from "react";
-import { Popup, Button, Icon } from "semantic-ui-react";
+import { Popup as SUIPopup } from "semantic-ui-react";
 
-function ButtonPopup(props) {
+function Popup(props) {
     return (
-        <Popup
+        <SUIPopup
             style={{
                 padding: 2,
                 borderRadius: 5,
@@ -14,13 +14,9 @@ function ButtonPopup(props) {
             content={ props.children }
             on="click"
             pinned
-            trigger={(
-                <Button icon>
-                    <Icon name={ props.icon } />
-                </Button>
-            )}
+            trigger={ props.trigger }
         />
     );
 }
 
-export default ButtonPopup;
+export default Popup;

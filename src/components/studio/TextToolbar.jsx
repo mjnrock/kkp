@@ -31,9 +31,9 @@ function TextToolbar(props) {
                                 <Button icon basic color="orange" onClick={ e => props.onAction(Module, "align", "right") }>
                                     <Icon name="align right" />
                                 </Button>
-                                <Button icon basic color="orange" onClick={ e => props.onAction(Module, "align", "justify") }>
+                                {/* <Button icon basic color="orange" onClick={ e => props.onAction(Module, "align", "justify") }>
                                     <Icon name="align justify" />
-                                </Button>
+                                </Button> */}
                             </Button.Group>
                         </Table.Cell>
                     </Table.Row>

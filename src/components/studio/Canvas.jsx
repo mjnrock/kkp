@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext }  from "react";
 import ReactDOM from "react-dom";
 import { fabric as Fabric } from "fabric";
+import { Segment } from "semantic-ui-react";
 
 import { Context } from "../../App";
 
@@ -21,7 +22,12 @@ function Canvas(props) {
 
                 fabric.initialize(canvas, {
                     width,
-                    height
+                    height,
+                    fireRightClick: true,
+                    fireMiddleClick: true,
+                    stopContextMenu: true,
+                    preserveObjectStacking: true,
+                    fill: "transparent"
                 });
 
                 var imgInstance = new Fabric.Image(img);

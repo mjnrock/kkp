@@ -13,6 +13,7 @@ import APIHelper from "./lib/APIHelper";
 import LoginForm from "./auth/LoginForm";
 import SignUpForm from "./auth/SignUpForm";
 import NavBar from "./NavBar";
+import ScrollToTop from "./ScrollToTop";
 
 const reducer = (state, message) => {
     console.log("Dispatch:", message);
@@ -71,6 +72,19 @@ function AuthRoutes({ children, auth }) {
 }
 
 const fabricCanvas = new fabric.Canvas();
+fabricCanvas.on("mouse:down", (event) => {
+    const target = event.target;    // This will be the Object or null
+
+    if(event.button === 1) {
+        console.log("canvas left click");
+    }
+    if(event.button === 2) {
+        console.log("canvas middle click");
+    }
+    if(event.button === 3) {
+        console.log("canvas right click");
+    }
+});
 
 function App() {
     const [ state, dispatch ] = React.useReducer(reducer, initialState);
@@ -84,42 +98,44 @@ function App() {
 
     return (
         <Router>
-            <Context.Provider value={{ state, dispatch, config, fabric: fabricCanvas }}>
-                <NavBar auth={ state.auth } dispatch={ dispatch } />
+            <ScrollToTop>
+                <Context.Provider value={{ state, dispatch, config, fabric: fabricCanvas }}>
+                    <NavBar auth={ state.auth } dispatch={ dispatch } />
 
-                <Switch>
-                    <Route path="/login">
-                        <LoginForm />
-                    </Route>
-                    <Route path="/signup">
-                        <SignUpForm />
-                    </Route>
-                    
-                    <AuthRoutes auth={ state.auth }>
-                        <Route path="/upload">
-                            <Routes.Upload />
+                    <Switch>
+                        <Route path="/login">
+                            <LoginForm />
                         </Route>
-                        <Route path="/studio/:uuid">
-                            <Routes.Studio />
+                        <Route path="/signup">
+                            <SignUpForm />
                         </Route>
-                        <Route path="/feed/:handle">
-                            <Routes.Feed />
-                        </Route>
-                        <Route path="/friends/:handle">
-                            <Routes.Friends />
-                        </Route>
-                        <Route path="/profile/:handle">
-                            <Routes.Profile />
-                        </Route>
-                        <Route path="/post/:uuid">
-                            <Routes.Post />
-                        </Route>
-                        <Route exact path="/">
-                            <Routes.Feed handle={ state.user.Handle } />
-                        </Route>
-                    </AuthRoutes>
-                </Switch>
-            </Context.Provider>
+                        
+                        <AuthRoutes auth={ state.auth }>
+                            <Route path="/upload">
+                                <Routes.Upload />
+                            </Route>
+                            <Route path="/studio/:uuid">
+                                <Routes.Studio />
+                            </Route>
+                            <Route path="/feed/:handle">
+                                <Routes.Feed />
+                            </Route>
+                            <Route path="/friends/:handle">
+                                <Routes.Friends />
+                            </Route>
+                            <Route path="/profile/:handle">
+                                <Routes.Profile />
+                            </Route>
+                            <Route path="/post/:uuid">
+                                <Routes.Post />
+                            </Route>
+                            <Route exact path="/">
+                                <Routes.Feed handle={ state.user.Handle } />
+                            </Route>
+                        </AuthRoutes>
+                    </Switch>
+                </Context.Provider>
+            </ScrollToTop>
         </Router>
     );
 }

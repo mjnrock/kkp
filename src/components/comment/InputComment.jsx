@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Input, Button, Icon } from "semantic-ui-react";
 
-import EmojiPicker from "./EmojiPicker";
+import EmojiPicker from "../EmojiPicker";
 
 function InputComment(props) {
     const [ comment, setComment ] = useState("");

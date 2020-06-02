@@ -2,7 +2,7 @@
 import React from "react";
 
 import Reaction from "./Reaction";
-import EmojiPicker from "./EmojiPicker";
+import EmojiPicker from "../EmojiPicker";
 
 function ReactionBar(props) {
     const reactions = aggregateReactions(props.reactions || []);

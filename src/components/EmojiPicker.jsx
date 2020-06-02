@@ -18,7 +18,14 @@ function EmojiPicker(props) {
                     title="Skin Tone:"
                     emoji={ "raised_hand_with_fingers_splayed" }
                     native={ true }
-                    onSelect={ emoji => props.onSelect(emoji.colons) }
+                    onSelect={ emoji => {
+                        if(props.onSelect) {
+                            props.onSelect(emoji.colons);
+                        }
+                        if(props.onSelectExtended) {
+                            props.onSelectExtended(emoji);
+                        }
+                    }}
                 />
             )}
             on="click"
