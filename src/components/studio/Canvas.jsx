@@ -15,6 +15,7 @@ function Canvas(props) {
 
         if(canvas && props.filename) {
             let img = new Image();
+            img.crossOrigin = "Anonymous";
             img.onload = () => {
                 const ar = img.width / img.height;
                 let height = Math.min(img.height, 500);
