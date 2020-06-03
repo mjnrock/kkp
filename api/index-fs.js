@@ -48,7 +48,7 @@ APP.post("/auth", (req, res) => {
 
     console.log("/auth", message);
 
-    //TODO Make a real auth token
+    //Make a real auth token
     return res.send({
         token: Date.now()
     });
@@ -59,7 +59,7 @@ APP.post("/signup", (req, res) => {
 
     console.log("/signup", message);
 
-    //TODO Make a real signup
+    //Make a real signup
     return res.send({
         token: Date.now()
     });
@@ -184,7 +184,7 @@ APP.post("/signup", (req, res) => {
 
         console.log("/post/response/", message);
 
-        //TODO Save comments to a post
+        //Save comments to a post
     });
 //* ================= </POSTS> =========================
 

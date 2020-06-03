@@ -191,7 +191,6 @@ function ColorPicker(props) {
             <Form.Group inline>
                 {
                     // This currently does not wrap when the quantity is high enough
-                    //TODO Add an onClick "recovery" feature that sets the color to this favorite
                     favorites.map(fav => (
                         <div
                             key={ fav }
