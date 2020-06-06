@@ -189,6 +189,7 @@ APP.get("/feed/:handle", (req, res) => {
 
 
 //* ================= <UPLOAD> =========================
+    //TODO Consider rewriting this with Base64 conversions, similiarly to the modify image, instead of form data processing with multer
     APP.post("/image/upload", (req, res) => {
         const token = TOKENIZER.DecryptToken(req.header("X-Auth"));
         const entity = req.query.entity;
