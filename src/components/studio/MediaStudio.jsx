@@ -161,8 +161,6 @@ function MediaStudio(props) {
     //* Deselect current object
     // fabric.discardActiveObject()
 
-    console.log(post)
-
     return (
         <>
             <Header as="h2" color="orange" textAlign="center">
