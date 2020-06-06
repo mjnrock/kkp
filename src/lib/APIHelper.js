@@ -36,6 +36,8 @@ export default class APIHelper {
         if(endpoint[ 0 ] === "/") {
             endpoint = endpoint.substring(1);
         }
+
+        console.log(endpoint, payload)
     
         return fetch(`${ this.server }/${ endpoint }`, {
             method: "POST",

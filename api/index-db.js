@@ -2,6 +2,7 @@ import express from "express";
 import fs from "fs";
 import path from "path";
 import multer from "multer";
+import isBase64 from "is-base64";
 
 import Lib from "./lib/package";
 
@@ -20,7 +21,7 @@ const TOKENIZER = new Lib.TokenHelper({
 });
 
 APP.use(express.urlencoded({ extended: true }));
-APP.use(express.json());
+APP.use(express.json({ limit: "10MB" }));
 APP.use(express.raw());
 APP.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
@@ -252,52 +253,15 @@ APP.get("/feed/:handle", (req, res) => {
     
     APP.post("/image/modify", (req, res) => {
         const token = TOKENIZER.DecryptToken(req.header("X-Auth"));
-        const entity = req.query.entity;
-        //TODO Get and verify Post UUID from Request
-        let dbdata = {};
-        console.log("/image/modify", entity, token);
-        
-        // if(token && (Date.now() < token.timestamp + token.expiration)) {
-        if(token) {
-            const MULTER_STORAGE = multer.diskStorage({
-                destination: function (req, file, cb) {
-                    cb(null, "./data/image");
-                },
-        
-                filename: function (req, file, cb) {
-                    //TODO Get Post UUID and file extension
-                }
-            });
+        const message = req.body;
+        const { base64, filename } = message;
+        console.log("/image/modify", filename, token);
 
-            let upload = multer({
-                storage: MULTER_STORAGE,
-                fileFilter: (req, file, cb) => {
-                    // Accept images only
-                    if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
-                        req.fileValidationError = "Only image files are allowed!";
-    
-                        return cb(new Error("Only image files are allowed!"), false);
-                    }
-                    cb(null, true);
-                }
-            }).single("photo");
-    
-            upload(req, res, function (err) {
-                // req.file contains information of uploaded file
-                // req.body contains information of text fields, if there were any
-    
-                if (req.fileValidationError) {
-                    return res.send(req.fileValidationError);
-                } else if (!req.file) {
-                    return res.send("Please select an image to upload");
-                } else if (err instanceof multer.MulterError) {
-                    return res.send(err);
-                } else if (err) {
-                    return res.send(err);
-                }
+        if(token && isBase64(base64, { mimeRequired: true, allowEmpty: false })) {
+            const data = base64.replace(/^data:image\/\w+;base64,/, '');
+            fs.writeFile(path.join(__dirname + "/data/image/" + filename), data, { encoding: "base64" }, console.log);
 
-                return res.send(dbdata);
-            });
+            return res.sendStatus(200);
         }
     });
 //* ================= </UPLOAD> =========================

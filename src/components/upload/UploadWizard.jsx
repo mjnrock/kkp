@@ -24,6 +24,7 @@ function UploadWizard() {
     }
 
     function onUpload() {
+        //TODO Convert image into base64 PNG or GIF only
         config.api.Form("image/upload", {
             photo: image
         }, {

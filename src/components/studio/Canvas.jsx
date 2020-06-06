@@ -31,7 +31,9 @@ function Canvas(props) {
                     fill: "transparent"
                 });
 
-                var imgInstance = new Fabric.Image(img);
+                var imgInstance = new Fabric.Image(img, {
+                    selectable: false
+                });
                 imgInstance.scale(width / img.width);
                 fabric.add(imgInstance);
                 

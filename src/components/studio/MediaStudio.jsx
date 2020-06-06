@@ -161,6 +161,8 @@ function MediaStudio(props) {
     //* Deselect current object
     // fabric.discardActiveObject()
 
+    console.log(post)
+
     return (
         <>
             <Header as="h2" color="orange" textAlign="center">
@@ -168,10 +170,17 @@ function MediaStudio(props) {
             </Header>
             
             <Button onClick={ e => {
-                const data = fabric.toDataURL({ format: "png" });
-                alert("The image currently does not save, but will instead only show it client-side.  'Save' can be clicked multiple times.");
-
-                setFinalImage(data);
+                if(post.Filename) {
+                    const data = fabric.toDataURL({ format: "png" });
+                    alert("The image currently does not save, but will instead only show it client-side.  'Save' can be clicked multiple times.");
+    
+                    setFinalImage(data);
+                    config.api.Post("image/modify", {
+                        "base64": data,
+                        "filename": post.Filename
+                    })
+                    .then(console.log);
+                }
                 //TODO Send data file to the server for persistence (cf. UploadWizard, UploadImage for config.api.Form approach)
             }} fluid inverted color="blue">
                 Save
