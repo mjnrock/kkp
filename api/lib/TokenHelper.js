@@ -15,7 +15,7 @@ export default class TokenHelper {
         try {
             let text = JSON.stringify({
                 ...obj,
-                timestamp: Date.now(),
+                timestamp: Date.now() + (new Date().getTimezoneOffset() * 60 * 1000),  // UTC
                 expiration
             });
             

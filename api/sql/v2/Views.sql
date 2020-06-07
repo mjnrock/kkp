@@ -331,3 +331,28 @@ FROM
 WHERE
 	g.GroupType = "Family"
     AND g.EntityType <> "Human";
+    
+    
+DROP VIEW IF EXISTS `vwSessionHelper`;
+
+CREATE VIEW `vwSessionHelper` AS
+SELECT
+	s.SessionID,
+    s.UUID AS SessionUUID,
+    a.AccountID,
+	a.UUID AS AccountUUID,
+    a.Username AS AccountUsername,
+    e.EntityID,
+    e.UUID AS EntityUUID,
+    e.Handle as EntityHandle,
+    s.Detail->>"$.IP" AS IPAddress,
+    s.Detail->>"$.UserAgent" AS UserAgent,
+    s.CreatedDateTimeUTC,
+    s.ExpirationDateTimeUTC,
+    TIMESTAMPDIFF(SECOND, UTC_TIMESTAMP(), s.ExpirationDateTimeUTC) AS RemainingTime
+FROM
+	`Session` s
+    INNER JOIN `Account` a
+		ON s.AccountID = a.AccountID
+    INNER JOIN `Entity` e
+		ON a.EntityID = e.EntityID;

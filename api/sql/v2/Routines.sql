@@ -527,3 +527,162 @@ BEGIN
 	END IF;
 END//
 DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS CreateSession;
+
+DELIMITER //
+CREATE PROCEDURE CreateSession
+(IN
+	$Account VARCHAR(255),
+    $Detail TEXT
+)
+this_proc:BEGIN
+	DECLARE $AccountID INT;
+    
+    SELECT
+		AccountID INTO $AccountID
+	FROM
+		`Account` a
+	WHERE
+		a.UUID = $Account
+        OR a.Email = $Account
+        OR a.Username = $Account;
+        
+	IF(LENGTH($AccountID) > 0) THEN
+		BEGIN
+			IF(EXISTS(SELECT * FROM `Session` WHERE AccountID = $AccountID)) THEN
+				BEGIN
+					-- This is not complete and has many holes, but is a WIP and works at a basic level                    
+					IF(EXISTS(SELECT * FROM `vwSessionHelper` WHERE AccountID = $AccountID AND TimeRemaining < 0)) THEN
+						BEGIN
+							CALL DestroySession();
+						END;
+					ELSE
+						BEGIN                    
+							SELECT
+								sh.SessionUUID,
+								sh.AccountUUID,
+								sh.AccountUsername,
+								sh.EntityUUID,
+								sh.EntityHandle,
+								sh.IPAddress,
+								sh.UserAgent,
+								sh.CreatedDateTimeUTC,
+								sh.ExpirationDateTimeUTC,
+								sh.RemainingTime
+							FROM
+								`vwSessionHelper` sh
+							WHERE
+								sh.AccountID = $AccountID;
+								
+							LEAVE this_proc;
+                        END;
+                    END IF;
+                END;
+			END IF;
+            
+			INSERT INTO `Session` (AccountID, Detail, ExpirationDateTimeUTC)
+            VALUES
+				($AccountID, $Detail, UTC_TIMESTAMP() + INTERVAL 24 HOUR);
+                
+			SELECT
+				sh.SessionUUID,
+				sh.AccountUUID,
+				sh.AccountUsername,
+				sh.EntityUUID,
+				sh.EntityHandle,
+				sh.IPAddress,
+				sh.UserAgent,
+				sh.CreatedDateTimeUTC,
+				sh.ExpirationDateTimeUTC,
+				sh.RemainingTime
+			FROM
+				`vwSessionHelper` sh
+			WHERE
+				sh.SessionID = LAST_INSERT_ID();
+        END;
+	END IF;
+END//
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS DestroySession;
+
+DELIMITER //
+CREATE PROCEDURE DestroySession
+(IN
+	$Account VARCHAR(255)
+)
+BEGIN
+	DECLARE $AccountID INT;
+    
+    SELECT
+		AccountID INTO $AccountID
+	FROM
+		`Account` a
+	WHERE
+		a.UUID = $Account
+        OR a.Email = $Account
+        OR a.Username = $Account;
+        
+	IF(LENGTH($AccountID) > 0) THEN
+		BEGIN                
+			DELETE FROM `Session` WHERE AccountID = $AccountID;
+        END;
+	END IF;
+END//
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS HasSession;
+
+DELIMITER //
+CREATE PROCEDURE HasSession
+(IN
+	$Account VARCHAR(255)
+)
+BEGIN
+	DECLARE $AccountID INT;
+    
+    SELECT
+		AccountID INTO $AccountID
+	FROM
+		`Account` a
+	WHERE
+		a.UUID = $Account
+        OR a.Email = $Account
+        OR a.Username = $Account;
+        
+	IF(LENGTH($AccountID) > 0) THEN
+		BEGIN                
+			SELECT
+				sh.SessionUUID,
+				sh.AccountUUID,
+				sh.AccountUsername,
+				sh.EntityUUID,
+				sh.EntityHandle,
+				sh.IPAddress,
+				sh.UserAgent,
+				sh.CreatedDateTimeUTC,
+				sh.ExpirationDateTimeUTC,
+				sh.RemainingTime
+			FROM
+				`vwSessionHelper` sh
+			WHERE
+				sh.AccountID = $AccountID;
+        END;
+	END IF;
+END//
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS CleanupSessions;
+
+DELIMITER //
+CREATE PROCEDURE CleanupSessions
+()
+BEGIN
+	DELETE FROM `Session` WHERE TIMESTAMPDIFF(SECOND, UTC_TIMESTAMP(), ExpirationDateTimeUTC) < 0;
+END//
+DELIMITER ;

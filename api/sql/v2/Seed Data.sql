@@ -20,6 +20,13 @@ CALL ModifyEntityDetail("Midge", '{"breed": "Cavalier King Charles Spaniel", "co
 
 CALL CreateFriendship(1, 2);
 
+CALL CreateSession(
+	"MrStretch",
+    JSON_OBJECT("IP", "localhost", "UserAgent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0")
+);
+-- CALL DestroySession("MrStretch");
+-- CALL HasSession("MrStretch");
+
 -- CALL CreateImagePost("MrStretch", 1, "GIF", @UUID);
 -- CALL CreateImagePost("SarahTheGreat", 1, "GIF", @UUID);
 -- CALL CreateImagePost("MrStretch", 1, "PNG", @UUID);

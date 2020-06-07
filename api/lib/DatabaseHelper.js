@@ -36,6 +36,7 @@ export default class DatabaseHelper {
                         resolve({
                             first: (results[ 0 ] || [])[ 0 ],
                             all: results[ 0 ] || [],
+                            hasResults: results[ 0 ].length > 0,
                             results,
                             fields
                         });
