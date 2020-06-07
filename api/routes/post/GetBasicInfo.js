@@ -9,7 +9,7 @@ export default obj => (req, res) => {
     /**
      * 0: $UUID (UUID)
      */
-    obj.DB.Call("GetPost", [ uuid ])
+    obj.DatabaseHelper.Call("GetPost", [ uuid ])
     .then(results => res.send(results.first))
     .catch(e => res.sendStatus(204));
 };

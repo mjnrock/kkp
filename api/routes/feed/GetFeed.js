@@ -10,7 +10,7 @@ export default obj => (req, res) => {
      * 0: $Entity (Handle|UUID)
      * 1: $BeginDateTime (DATETIME(3)|NULL)
      */
-    obj.DB.Call("GetFeed", [ handle, [ "NULL" ] ])
+    obj.DatabaseHelper.Call("GetFeed", [ handle, [ "NULL" ] ])
     .then(results => res.send(results.all))
     .catch(e => res.sendStatus(204));
 };

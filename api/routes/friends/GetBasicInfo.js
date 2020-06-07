@@ -6,7 +6,7 @@ export default obj => (req, res) => {
         return res.sendStatus(204);
     }
 
-    obj.DB.Call("GetFriends", [ handle ])
+    obj.DatabaseHelper.Call("GetFriends", [ handle ])
     .then(results => res.send(results.all))
     .catch(e => res.sendStatus(204));
 };

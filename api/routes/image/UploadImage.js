@@ -2,9 +2,9 @@ import path from "path";
 import multer from "multer";
 
 export default obj => (req, res) => {
-    const token = obj.TOKENIZER.DecryptToken(req.header("X-Auth"));
+    const token = obj.TokenHelper.DecryptToken(req.header("X-Auth"));
     const entity = req.query.entity;
-    let dbdata = {};
+    let DatabaseHelperdata = {};
     console.log("/image/upload", entity, token);
     
     // if(token && (Date.now() < token.timestamp + token.expiration)) {
@@ -21,11 +21,11 @@ export default obj => (req, res) => {
                  * 2: $Extension (Key<AssetExtension>)
                  * 3: OUT $UUID
                  */
-                obj.DB.Call("CreateImagePost", [ entity, (path.extname(file.originalname) || "").replace(/[^0-9a-z]/gi, ""), [ "@NULL" ] ])
+                obj.DatabaseHelper.Call("CreateImagePost", [ entity, (path.extname(file.originalname) || "").replace(/[^0-9a-z]/gi, ""), [ "@NULL" ] ])
                 .then(results => {     
-                    dbdata = (results.first || {});
+                    DatabaseHelperdata = (results.first || {});
                     
-                    cb(null, dbdata.Filename);
+                    cb(null, DatabaseHelperdata.Filename);
                 })
                 .catch(e => res.sendStatus(204));
             }
@@ -58,7 +58,7 @@ export default obj => (req, res) => {
                 return res.send(err);
             }
 
-            return res.send(dbdata);
+            return res.send(DatabaseHelperdata);
         });
     }
 };

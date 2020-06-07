@@ -6,17 +6,6 @@ import Routes from "./routes/package";
 const APP = express();
 const PORT = 3001;
 
-const DB = new Lib.DatabaseHelper({
-    connectionLimit: 10,
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "kkp",
-});
-const TOKENIZER = new Lib.TokenHelper({
-    password: Date.now(),
-});
-
 APP.use(express.urlencoded({ extended: true }));
 APP.use(express.json({ limit: "10MB" }));
 APP.use(express.raw());
@@ -32,8 +21,16 @@ APP.disable("x-powered-by");
 
 const RoutesObject = {
     RootDirectory: __dirname,
-    DB,
-    TOKENIZER
+    DatabaseHelper: new Lib.DatabaseHelper({
+        connectionLimit: 10,
+        host: "localhost",
+        user: "root",
+        password: "",
+        database: "kkp",
+    }),
+    TokenHelper: new Lib.TokenHelper({
+        password: Date.now(),
+    })
 };
 
 APP.post("/login", Routes.Login(RoutesObject));
@@ -51,5 +48,5 @@ APP.get("/post/:uuid", Routes.Post.GetBasicInfo(RoutesObject));
 APP.get("/feed/:handle", Routes.Feed.GetFeed(RoutesObject));
 
 APP.listen(PORT, () =>
-    console.log(`KiKi Pupus API listening on port ${PORT}!`),
+    console.log(`KiKi Pupus API listening on port: ${ PORT }`),
 );

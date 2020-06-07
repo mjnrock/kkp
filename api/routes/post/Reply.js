@@ -1,6 +1,6 @@
 export default obj => (req, res) => {
     const message = req.body;
-    const token = obj.TOKENIZER.DecryptToken(req.header("X-Auth"));
+    const token = obj.TokenHelper.DecryptToken(req.header("X-Auth"));
     const { post, entity, reply } = message;
     console.log("/post/react", post, entity, reply, token);
 
@@ -8,7 +8,7 @@ export default obj => (req, res) => {
         return res.sendStatus(204);
     }
 
-    obj.DB.Call("CreateReplyPost", [ entity, post, reply ])
+    obj.DatabaseHelper.Call("CreateReplyPost", [ entity, post, reply ])
     .then(results => res.send(results.first))
     .catch(e => res.sendStatus(204));
 };

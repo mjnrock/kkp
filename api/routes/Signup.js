@@ -8,7 +8,7 @@ export default obj => (req, res) => {
         return res.sendStatus(204);
     }
 
-    obj.DB.query(`CALL SignUp(?, ?, @NULL)`, [ email, password ], function (error, resultSets, fields) {
+    obj.DatabaseHelper.query(`CALL SignUp(?, ?, @NULL)`, [ email, password ], function (error, resultSets, fields) {
         const [ results ] = resultSets || [[]];
     
         if(results[ 0 ]) {

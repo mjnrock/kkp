@@ -7,9 +7,9 @@ export default obj => (req, res) => {
         return res.sendStatus(204);
     }
 
-    obj.DB.Call("Login", [ email, password, [ "@UUID" ]])
+    obj.DatabaseHelper.Call("Login", [ email, password, [ "@UUID" ]])
     .then(results => {
-        const token = obj.TOKENIZER.CreateToken({
+        const token = obj.TokenHelper.CreateToken({
             email,
             password,
             expiration: 60 * 60 * 24 * 1000,
