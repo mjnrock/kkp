@@ -1,5 +1,5 @@
-import GetBasicInfo from "./GetBasicInfo";
+import GetFamily from "./GetFamily";
 
 export default {
-    GetBasicInfo,
+    GetFamily,
 };

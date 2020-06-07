@@ -1,9 +1,9 @@
 import Reply from "./Reply";
 import React from "./React";
-import GetBasicInfo from "./GetBasicInfo";
+import GetPost from "./GetPost";
 
 export default {
     Reply,
     React,
-    GetBasicInfo,
+    GetPost,
 };

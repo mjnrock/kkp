@@ -33,6 +33,7 @@ const RoutesObject = {
     })
 };
 
+//? All of these Routes are composed functions, so (req, res) will get passed by express
 APP.post("/login", Routes.Login(RoutesObject));
 APP.post("/signup", Routes.Signup(RoutesObject));
 
@@ -41,10 +42,10 @@ APP.post("/post/react", Routes.Post.React(RoutesObject));
 APP.post("/image/upload", Routes.Image.UploadImage(RoutesObject));
 APP.post("/image/modify", Routes.Image.ModifyImage(RoutesObject));
 
-APP.get("/entity/:handle", Routes.Entity.GetBasicInfo(RoutesObject));
-APP.get("/friends/:handle", Routes.Friends.GetBasicInfo(RoutesObject));
-APP.get("/family/:handle", Routes.Family.GetBasicInfo(RoutesObject));
-APP.get("/post/:uuid", Routes.Post.GetBasicInfo(RoutesObject));
+APP.get("/entity/:handle", Routes.Entity.GetEntity(RoutesObject));
+APP.get("/family/:handle", Routes.Family.GetFamily(RoutesObject));
+APP.get("/friends/:handle", Routes.Friends.GetFriends(RoutesObject));
+APP.get("/post/:uuid", Routes.Post.GetPost(RoutesObject));
 APP.get("/feed/:handle", Routes.Feed.GetFeed(RoutesObject));
 
 APP.listen(PORT, () =>

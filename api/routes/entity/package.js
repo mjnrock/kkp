@@ -1,5 +1,5 @@
-import GetBasicInfo from "./GetBasicInfo";
+import GetEntity from "./GetEntity";
 
 export default {
-    GetBasicInfo,
+    GetEntity,
 };

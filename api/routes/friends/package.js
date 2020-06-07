@@ -1,5 +1,5 @@
-import GetBasicInfo from "./GetBasicInfo";
+import GetFriends from "./GetFriends";
 
 export default {
-    GetBasicInfo,
+    GetFriends,
 };
